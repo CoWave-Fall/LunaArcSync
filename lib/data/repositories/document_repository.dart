@@ -1,16 +1,26 @@
+// lib/data/repositories/document_repository.dart
+
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:luna_arc_sync/core/api/api_client.dart';
 import 'package:luna_arc_sync/data/models/document_models.dart' as doc_models;
 import 'package:luna_arc_sync/data/models/page_models.dart' as page_models;
+// 导入 state 文件以使用枚举
+import 'package:luna_arc_sync/presentation/documents/cubit/document_list_state.dart';
+
 
 // 定义新的抽象接口 IDocumentRepository
 abstract class IDocumentRepository {
+  // --- 1. 更新 getDocuments 签名 ---
   Future<page_models.PaginatedResult<doc_models.Document>> getDocuments({
     required int pageNumber,
     int pageSize = 10,
+    SortBy sortBy = SortBy.updatedAt,
+    SortOrder sortOrder = SortOrder.desc,
+    List<String> filterTags = const [],
   });
 
+  // ... 其他方法签名保持不变 ...
   Future<doc_models.Document> createDocument({
     required String title,
     required List<String> tags,
@@ -38,7 +48,6 @@ abstract class IDocumentRepository {
 
   Future<void> reorderPages(String documentId, List<Map<String, dynamic>> pageOrders);
 
-  /// 使用 "insert" 模式将一个 Page 添加到文档的指定顺序
   Future<void> insertPage(String documentId, String pageId, int newOrder);
 
   Future<doc_models.DocumentStats> getStats();
@@ -52,17 +61,32 @@ class DocumentRepository implements IDocumentRepository {
   DocumentRepository(this._apiClient);
 
   @override
+  // --- 2. 实现新的 getDocuments ---
   Future<page_models.PaginatedResult<doc_models.Document>> getDocuments({
     required int pageNumber,
     int pageSize = 10,
+    SortBy sortBy = SortBy.updatedAt,
+    SortOrder sortOrder = SortOrder.desc,
+    List<String> filterTags = const [],
   }) async {
     try {
+      // 构建查询参数
+      final queryParameters = {
+        'pageNumber': pageNumber,
+        'pageSize': pageSize,
+        'sortBy': sortBy.name, // 使用枚举的名称，例如 'updatedAt'
+        'sortOrder': sortOrder.name, // 'asc' or 'desc'
+      };
+
+      // 如果有标签过滤，则添加到查询中
+      // Dio 会自动将 List 格式化为多个同名参数 (e.g., tags=work&tags=urgent)
+      if (filterTags.isNotEmpty) {
+        queryParameters['tags'] = filterTags;
+      }
+      
       final response = await _apiClient.dio.get(
         '/documents',
-        queryParameters: {
-          'pageNumber': pageNumber,
-          'pageSize': pageSize,
-        },
+        queryParameters: queryParameters,
       );
       return page_models.PaginatedResult.fromJson(
         response.data,
@@ -73,6 +97,7 @@ class DocumentRepository implements IDocumentRepository {
     }
   }
 
+  // ... 其他方法的实现保持不变 ...
   @override
   Future<doc_models.Document> createDocument({
     required String title,
@@ -120,9 +145,8 @@ class DocumentRepository implements IDocumentRepository {
         'tags': tags,
       };
 
-      // 修复：将 .get 修改为 .put
       await _apiClient.dio.put(
-        '/documents/$documentId', // 使用 PUT 方法，并传入 documentId
+        '/documents/$documentId',
         data: requestBody,
       );
     } on DioException catch (e) {
@@ -144,7 +168,7 @@ class DocumentRepository implements IDocumentRepository {
       };
 
       await _apiClient.dio.post(
-        '/documents/$documentId/pages', // 使用 POST 方法
+        '/documents/$documentId/pages',
         data: requestBody,
       );
     } on DioException catch (e) {
@@ -192,11 +216,7 @@ class DocumentRepository implements IDocumentRepository {
         data: {'pageOrders': pageOrders},
       );
     } on DioException catch (e) {
-      // 捕获 DioException 以提供更具体的错误信息
       throw Exception('Failed to reorder pages: ${e.message}');
-    } catch (e) {
-      // 捕获其他未知错误
-      rethrow;
     }
   }
 
@@ -208,11 +228,7 @@ class DocumentRepository implements IDocumentRepository {
         data: {'pageId': pageId, 'newOrder': newOrder},
       );
     } on DioException catch (e) {
-      // 捕获 DioException 以提供更具体的错误信息
       throw Exception('Failed to insert page: ${e.message}');
-    } catch (e) {
-      // 捕获其他未知错误
-      rethrow;
     }
   }
 

@@ -1,5 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:luna_arc_sync/l10n/app_localizations.dart';
+import 'package:luna_arc_sync/core/localization/locale_notifier.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:luna_arc_sync/core/di/injection.dart';
@@ -18,7 +22,10 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<AuthCubit>()..checkAuthStatus(),
-      child: const AppView(),
+      child: ChangeNotifierProvider(
+        create: (_) => LocaleNotifier(),
+        child: const AppView(),
+      ),
     );
   }
 }
@@ -93,7 +100,18 @@ class AppView extends StatelessWidget {
             useMaterial3: true,
           ),
           routerConfig: router,
-        );
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+                                        supportedLocales: const [
+            Locale('en'), // English
+            Locale('zh'), // Chinese
+          ],
+          locale: context.watch<LocaleNotifier>().locale,);
+          
       },
     );
   }

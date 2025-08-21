@@ -1,0 +1,15 @@
+{
+    "@@locale": "en",
+    "settingsPageTitle": "Settings",
+    "languageSettingTitle": "Language",
+    "languageSettingSubtitle": "English",
+    "importDatabaseTitle": "Import Database",
+    "exportDatabaseTitle": "Export Database",
+    "darkModeTitle": "Dark Mode",
+    "notificationsTitle": "Notifications",
+    "clearCacheTitle": "Clear Cache",
+    "aboutTitle": "About",
+    "appVersion": "1.0.0",
+    "appLegalese": "© 2025 Your Company",
+    "appInfoPlaceholder": "This is a placeholder for application information."
+}

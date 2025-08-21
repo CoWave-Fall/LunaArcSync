@@ -22,6 +22,9 @@ mixin _$DocumentListState {
   int get pageNumber => throw _privateConstructorUsedError;
   bool get hasReachedMax => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
+  SortBy get sortBy => throw _privateConstructorUsedError;
+  SortOrder get sortOrder => throw _privateConstructorUsedError;
+  List<String> get filterTags => throw _privateConstructorUsedError;
 
   /// Create a copy of DocumentListState
   /// with the given fields replaced by the non-null parameter values.
@@ -43,6 +46,9 @@ abstract class $DocumentListStateCopyWith<$Res> {
     int pageNumber,
     bool hasReachedMax,
     String? errorMessage,
+    SortBy sortBy,
+    SortOrder sortOrder,
+    List<String> filterTags,
   });
 }
 
@@ -66,6 +72,9 @@ class _$DocumentListStateCopyWithImpl<$Res, $Val extends DocumentListState>
     Object? pageNumber = null,
     Object? hasReachedMax = null,
     Object? errorMessage = freezed,
+    Object? sortBy = null,
+    Object? sortOrder = null,
+    Object? filterTags = null,
   }) {
     return _then(
       _value.copyWith(
@@ -89,6 +98,18 @@ class _$DocumentListStateCopyWithImpl<$Res, $Val extends DocumentListState>
                 ? _value.errorMessage
                 : errorMessage // ignore: cast_nullable_to_non_nullable
                       as String?,
+            sortBy: null == sortBy
+                ? _value.sortBy
+                : sortBy // ignore: cast_nullable_to_non_nullable
+                      as SortBy,
+            sortOrder: null == sortOrder
+                ? _value.sortOrder
+                : sortOrder // ignore: cast_nullable_to_non_nullable
+                      as SortOrder,
+            filterTags: null == filterTags
+                ? _value.filterTags
+                : filterTags // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
           )
           as $Val,
     );
@@ -110,6 +131,9 @@ abstract class _$$DocumentListStateImplCopyWith<$Res>
     int pageNumber,
     bool hasReachedMax,
     String? errorMessage,
+    SortBy sortBy,
+    SortOrder sortOrder,
+    List<String> filterTags,
   });
 }
 
@@ -132,6 +156,9 @@ class __$$DocumentListStateImplCopyWithImpl<$Res>
     Object? pageNumber = null,
     Object? hasReachedMax = null,
     Object? errorMessage = freezed,
+    Object? sortBy = null,
+    Object? sortOrder = null,
+    Object? filterTags = null,
   }) {
     return _then(
       _$DocumentListStateImpl(
@@ -155,6 +182,18 @@ class __$$DocumentListStateImplCopyWithImpl<$Res>
             ? _value.errorMessage
             : errorMessage // ignore: cast_nullable_to_non_nullable
                   as String?,
+        sortBy: null == sortBy
+            ? _value.sortBy
+            : sortBy // ignore: cast_nullable_to_non_nullable
+                  as SortBy,
+        sortOrder: null == sortOrder
+            ? _value.sortOrder
+            : sortOrder // ignore: cast_nullable_to_non_nullable
+                  as SortOrder,
+        filterTags: null == filterTags
+            ? _value._filterTags
+            : filterTags // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
       ),
     );
   }
@@ -169,7 +208,11 @@ class _$DocumentListStateImpl implements _DocumentListState {
     this.pageNumber = 1,
     this.hasReachedMax = false,
     this.errorMessage,
-  }) : _documents = documents;
+    this.sortBy = SortBy.updatedAt,
+    this.sortOrder = SortOrder.desc,
+    final List<String> filterTags = const [],
+  }) : _documents = documents,
+       _filterTags = filterTags;
 
   @override
   @JsonKey()
@@ -191,10 +234,24 @@ class _$DocumentListStateImpl implements _DocumentListState {
   final bool hasReachedMax;
   @override
   final String? errorMessage;
+  @override
+  @JsonKey()
+  final SortBy sortBy;
+  @override
+  @JsonKey()
+  final SortOrder sortOrder;
+  final List<String> _filterTags;
+  @override
+  @JsonKey()
+  List<String> get filterTags {
+    if (_filterTags is EqualUnmodifiableListView) return _filterTags;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_filterTags);
+  }
 
   @override
   String toString() {
-    return 'DocumentListState(status: $status, documents: $documents, pageNumber: $pageNumber, hasReachedMax: $hasReachedMax, errorMessage: $errorMessage)';
+    return 'DocumentListState(status: $status, documents: $documents, pageNumber: $pageNumber, hasReachedMax: $hasReachedMax, errorMessage: $errorMessage, sortBy: $sortBy, sortOrder: $sortOrder, filterTags: $filterTags)';
   }
 
   @override
@@ -212,7 +269,14 @@ class _$DocumentListStateImpl implements _DocumentListState {
             (identical(other.hasReachedMax, hasReachedMax) ||
                 other.hasReachedMax == hasReachedMax) &&
             (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
+                other.errorMessage == errorMessage) &&
+            (identical(other.sortBy, sortBy) || other.sortBy == sortBy) &&
+            (identical(other.sortOrder, sortOrder) ||
+                other.sortOrder == sortOrder) &&
+            const DeepCollectionEquality().equals(
+              other._filterTags,
+              _filterTags,
+            ));
   }
 
   @override
@@ -223,6 +287,9 @@ class _$DocumentListStateImpl implements _DocumentListState {
     pageNumber,
     hasReachedMax,
     errorMessage,
+    sortBy,
+    sortOrder,
+    const DeepCollectionEquality().hash(_filterTags),
   );
 
   /// Create a copy of DocumentListState
@@ -244,6 +311,9 @@ abstract class _DocumentListState implements DocumentListState {
     final int pageNumber,
     final bool hasReachedMax,
     final String? errorMessage,
+    final SortBy sortBy,
+    final SortOrder sortOrder,
+    final List<String> filterTags,
   }) = _$DocumentListStateImpl;
 
   @override
@@ -256,6 +326,12 @@ abstract class _DocumentListState implements DocumentListState {
   bool get hasReachedMax;
   @override
   String? get errorMessage;
+  @override
+  SortBy get sortBy;
+  @override
+  SortOrder get sortOrder;
+  @override
+  List<String> get filterTags;
 
   /// Create a copy of DocumentListState
   /// with the given fields replaced by the non-null parameter values.

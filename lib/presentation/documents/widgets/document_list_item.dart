@@ -12,29 +12,11 @@ class DocumentListItem extends StatelessWidget {
     required this.onTap,
   });
 
-  // 辅助函数，根据标签决定图标颜色
-  Color _getIconColorForTags(List<String> tags, BuildContext context) {
-    // 定义标签与颜色的映射关系
-    const Map<String, Color> tagColors = {
-      'work': Colors.blue,
-      'personal': Colors.green,
-      'urgent': Colors.red,
-    };
-    // 检查是否有匹配的标签，返回对应的颜色
-    for (final tag in tags) {
-      if (tagColors.containsKey(tag.toLowerCase())) {
-        return tagColors[tag.toLowerCase()]!;
-      }
-    }
-    // 如果没有，则返回主题的默认 primary color
-    return Theme.of(context).colorScheme.primary;
-  }
-
   // 辅助函数，智能格式化日期
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays < 1 && now.day == date.day) {
       return DateFormat.jm().format(date.toLocal()); // 例如: "5:30 PM"
     } else if (difference.inDays < 7) {
@@ -46,8 +28,6 @@ class DocumentListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = _getIconColorForTags(document.tags, context);
-
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -56,9 +36,9 @@ class DocumentListItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // 1. 图标
-            Icon(Icons.description, color: iconColor, size: 32),
+            Icon(Icons.description, color: Theme.of(context).colorScheme.primary, size: 32),
             const SizedBox(width: 16),
-            
+
             // 2. 名称和标签的垂直列
             Expanded(
               child: Column(
@@ -89,7 +69,7 @@ class DocumentListItem extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16),
-            
+
             // 3. 时间和页面数量
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
