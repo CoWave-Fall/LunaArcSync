@@ -18,6 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final localeNotifier = context.watch<LocaleNotifier>();
+    // final themeNotifier = context.watch<ThemeNotifier>();
 
     return Scaffold(
       appBar: AppBar(
@@ -60,20 +61,14 @@ class _SettingsPageState extends State<SettingsPage> {
           const Divider(),
 
           // Theme Setting (Dark Mode)
-          SwitchListTile(
-            secondary: const Icon(Icons.brightness_4),
-            title: Text(l10n?.darkModeTitle ?? ''),
-            value: _isDarkMode,
-            onChanged: (bool value) {
-              setState(() {
-                _isDarkMode = value;
-                // TODO: Implement actual theme switching logic
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Dark mode ${value ? 'enabled' : 'disabled'}')),
-                );
-              });
-            },
-          ),
+          //SwitchListTile(
+           // secondary: const Icon(Icons.brightness_4),
+           // title: Text(l10n?.darkModeTitle ?? ''),
+            //value: themeNotifier.themeMode == ThemeMode.dark,
+            //onChanged: (bool value) {
+              //themeNotifier.setThemeMode(value ? ThemeMode.dark : ThemeMode.light);
+           // },
+          //),
           const Divider(),
 
           // Notifications Setting

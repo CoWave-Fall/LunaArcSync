@@ -15,6 +15,7 @@ class VersionHistoryState with _$VersionHistoryState {
   const factory VersionHistoryState.success({
     required List<PageVersion> versions,
     required String currentpageId,
+    required String currentVersionId,
   }) = _Success;
   const factory VersionHistoryState.failure({
     required String message,

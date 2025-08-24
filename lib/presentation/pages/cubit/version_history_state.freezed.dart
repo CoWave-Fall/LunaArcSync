@@ -21,7 +21,11 @@ mixin _$VersionHistoryState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<PageVersion> versions, String currentpageId)
+    required TResult Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )
     success,
     required TResult Function(String message) failure,
   }) => throw _privateConstructorUsedError;
@@ -29,7 +33,11 @@ mixin _$VersionHistoryState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<PageVersion> versions, String currentpageId)?
+    TResult? Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )?
     success,
     TResult? Function(String message)? failure,
   }) => throw _privateConstructorUsedError;
@@ -37,7 +45,12 @@ mixin _$VersionHistoryState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<PageVersion> versions, String currentpageId)? success,
+    TResult Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )?
+    success,
     TResult Function(String message)? failure,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
@@ -132,7 +145,11 @@ class _$InitialImpl extends _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<PageVersion> versions, String currentpageId)
+    required TResult Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )
     success,
     required TResult Function(String message) failure,
   }) {
@@ -144,7 +161,11 @@ class _$InitialImpl extends _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<PageVersion> versions, String currentpageId)?
+    TResult? Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )?
     success,
     TResult? Function(String message)? failure,
   }) {
@@ -156,7 +177,12 @@ class _$InitialImpl extends _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<PageVersion> versions, String currentpageId)? success,
+    TResult Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )?
+    success,
     TResult Function(String message)? failure,
     required TResult orElse(),
   }) {
@@ -254,7 +280,11 @@ class _$LoadingImpl extends _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<PageVersion> versions, String currentpageId)
+    required TResult Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )
     success,
     required TResult Function(String message) failure,
   }) {
@@ -266,7 +296,11 @@ class _$LoadingImpl extends _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<PageVersion> versions, String currentpageId)?
+    TResult? Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )?
     success,
     TResult? Function(String message)? failure,
   }) {
@@ -278,7 +312,12 @@ class _$LoadingImpl extends _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<PageVersion> versions, String currentpageId)? success,
+    TResult Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )?
+    success,
     TResult Function(String message)? failure,
     required TResult orElse(),
   }) {
@@ -338,7 +377,11 @@ abstract class _$$SuccessImplCopyWith<$Res> {
     $Res Function(_$SuccessImpl) then,
   ) = __$$SuccessImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<PageVersion> versions, String currentpageId});
+  $Res call({
+    List<PageVersion> versions,
+    String currentpageId,
+    String currentVersionId,
+  });
 }
 
 /// @nodoc
@@ -354,7 +397,11 @@ class __$$SuccessImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? versions = null, Object? currentpageId = null}) {
+  $Res call({
+    Object? versions = null,
+    Object? currentpageId = null,
+    Object? currentVersionId = null,
+  }) {
     return _then(
       _$SuccessImpl(
         versions: null == versions
@@ -364,6 +411,10 @@ class __$$SuccessImplCopyWithImpl<$Res>
         currentpageId: null == currentpageId
             ? _value.currentpageId
             : currentpageId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        currentVersionId: null == currentVersionId
+            ? _value.currentVersionId
+            : currentVersionId // ignore: cast_nullable_to_non_nullable
                   as String,
       ),
     );
@@ -376,6 +427,7 @@ class _$SuccessImpl extends _Success {
   const _$SuccessImpl({
     required final List<PageVersion> versions,
     required this.currentpageId,
+    required this.currentVersionId,
   }) : _versions = versions,
        super._();
 
@@ -389,10 +441,12 @@ class _$SuccessImpl extends _Success {
 
   @override
   final String currentpageId;
+  @override
+  final String currentVersionId;
 
   @override
   String toString() {
-    return 'VersionHistoryState.success(versions: $versions, currentpageId: $currentpageId)';
+    return 'VersionHistoryState.success(versions: $versions, currentpageId: $currentpageId, currentVersionId: $currentVersionId)';
   }
 
   @override
@@ -402,7 +456,9 @@ class _$SuccessImpl extends _Success {
             other is _$SuccessImpl &&
             const DeepCollectionEquality().equals(other._versions, _versions) &&
             (identical(other.currentpageId, currentpageId) ||
-                other.currentpageId == currentpageId));
+                other.currentpageId == currentpageId) &&
+            (identical(other.currentVersionId, currentVersionId) ||
+                other.currentVersionId == currentVersionId));
   }
 
   @override
@@ -410,6 +466,7 @@ class _$SuccessImpl extends _Success {
     runtimeType,
     const DeepCollectionEquality().hash(_versions),
     currentpageId,
+    currentVersionId,
   );
 
   /// Create a copy of VersionHistoryState
@@ -425,11 +482,15 @@ class _$SuccessImpl extends _Success {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<PageVersion> versions, String currentpageId)
+    required TResult Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )
     success,
     required TResult Function(String message) failure,
   }) {
-    return success(versions, currentpageId);
+    return success(versions, currentpageId, currentVersionId);
   }
 
   @override
@@ -437,11 +498,15 @@ class _$SuccessImpl extends _Success {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<PageVersion> versions, String currentpageId)?
+    TResult? Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )?
     success,
     TResult? Function(String message)? failure,
   }) {
-    return success?.call(versions, currentpageId);
+    return success?.call(versions, currentpageId, currentVersionId);
   }
 
   @override
@@ -449,12 +514,17 @@ class _$SuccessImpl extends _Success {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<PageVersion> versions, String currentpageId)? success,
+    TResult Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )?
+    success,
     TResult Function(String message)? failure,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success(versions, currentpageId);
+      return success(versions, currentpageId, currentVersionId);
     }
     return orElse();
   }
@@ -501,11 +571,13 @@ abstract class _Success extends VersionHistoryState {
   const factory _Success({
     required final List<PageVersion> versions,
     required final String currentpageId,
+    required final String currentVersionId,
   }) = _$SuccessImpl;
   const _Success._() : super._();
 
   List<PageVersion> get versions;
   String get currentpageId;
+  String get currentVersionId;
 
   /// Create a copy of VersionHistoryState
   /// with the given fields replaced by the non-null parameter values.
@@ -586,7 +658,11 @@ class _$FailureImpl extends _Failure {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<PageVersion> versions, String currentpageId)
+    required TResult Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )
     success,
     required TResult Function(String message) failure,
   }) {
@@ -598,7 +674,11 @@ class _$FailureImpl extends _Failure {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<PageVersion> versions, String currentpageId)?
+    TResult? Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )?
     success,
     TResult? Function(String message)? failure,
   }) {
@@ -610,7 +690,12 @@ class _$FailureImpl extends _Failure {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<PageVersion> versions, String currentpageId)? success,
+    TResult Function(
+      List<PageVersion> versions,
+      String currentpageId,
+      String currentVersionId,
+    )?
+    success,
     TResult Function(String message)? failure,
     required TResult orElse(),
   }) {

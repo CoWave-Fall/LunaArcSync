@@ -1,10 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:luna_arc_sync/core/api/json_converters.dart';
 import 'package:luna_arc_sync/data/models/page_models.dart';
+import 'package:json_annotation/json_annotation.dart'; // Import this for JsonSerializable
 
 part 'document_models.freezed.dart';
 part 'document_models.g.dart';
 
+@JsonSerializable() // Add this annotation
 @freezed
 class Document with _$Document {
   const factory Document({
@@ -21,6 +23,7 @@ class Document with _$Document {
   factory Document.fromJson(Map<String, dynamic> json) => _$DocumentFromJson(json);
 }
 
+@JsonSerializable() // Add this annotation
 @freezed
 class DocumentDetail with _$DocumentDetail {
   const factory DocumentDetail({
@@ -37,6 +40,7 @@ class DocumentDetail with _$DocumentDetail {
   factory DocumentDetail.fromJson(Map<String, dynamic> json) => _$DocumentDetailFromJson(json);
 }
 
+@JsonSerializable() // Add this annotation
 @freezed
 class DocumentStats with _$DocumentStats {
   const factory DocumentStats({
@@ -45,4 +49,33 @@ class DocumentStats with _$DocumentStats {
   }) = _DocumentStats;
 
   factory DocumentStats.fromJson(Map<String, dynamic> json) => _$DocumentStatsFromJson(json);
+}
+
+@JsonSerializable(genericArgumentFactories: true)
+class PagedResult<T> {
+  final List<T> items;
+  final int pageNumber;
+  final int pageSize;
+  final int totalCount;
+  final int totalPages;
+  final bool hasPreviousPage;
+  final bool hasNextPage;
+
+  PagedResult({
+    required this.items,
+    required this.pageNumber,
+    required this.pageSize,
+    required this.totalCount,
+    required this.totalPages,
+    required this.hasPreviousPage,
+    required this.hasNextPage,
+  });
+
+  factory PagedResult.fromJson(Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
+      _$PagedResultFromJson(json, fromJsonT);
+
+  Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
+      _$PagedResultToJson(this, toJsonT);
+
+  // 无需自定义 fromJson/toJson，交由 json_serializable 自动生成
 }

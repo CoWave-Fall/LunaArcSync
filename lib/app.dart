@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:luna_arc_sync/l10n/app_localizations.dart';
 import 'package:luna_arc_sync/core/localization/locale_notifier.dart';
+import 'package:luna_arc_sync/core/theme/theme_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -20,12 +21,19 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => getIt<AuthCubit>()..checkAuthStatus(),
-      child: ChangeNotifierProvider(
-        create: (_) => LocaleNotifier(),
-        child: const AppView(),
-      ),
+    return MultiProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<AuthCubit>()..checkAuthStatus(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => LocaleNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ThemeNotifier(),
+        ),
+      ],
+      child: const AppView(),
     );
   }
 }
@@ -95,8 +103,13 @@ class AppView extends StatelessWidget {
 
         return MaterialApp.router(
           title: 'Luna Arc Sync',
+          themeMode: context.watch<ThemeNotifier>().themeMode,
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan, brightness: Brightness.dark),
             useMaterial3: true,
           ),
           routerConfig: router,

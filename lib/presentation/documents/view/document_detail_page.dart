@@ -143,8 +143,6 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
 
   Future<void> _showAddPageDialog(BuildContext context) async {
     final docDetailCubit = context.read<DocumentDetailCubit>();
-    // *** MODIFIED ***: Get current page count to determine the next order
-    final int nextOrder = _pages.length;
 
     await showDialog(
       context: context,
@@ -179,9 +177,8 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                         page: page,
                         onTap: () async {
                           try {
-                            // *** MODIFIED ***: Use insertPage method with the new order
-                            await docDetailCubit.insertPage(
-                                page.pageId, nextOrder);
+                            // *** 修正 ***: 使用 addPageToDocument 方法
+                            await docDetailCubit.addPageToDocument(page.pageId);
                             if (dialogContext.mounted) {
                               Navigator.of(dialogContext).pop();
                             }
@@ -216,9 +213,9 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
 
   Future<void> _pickAndUploadFile(BuildContext context) async {
     final cubit = context.read<DocumentDetailCubit>();
-    final result = await FilePicker.platform.pickFiles();
-    // *** MODIFIED ***: Get current page count to determine the next order
-    final int nextOrder = _pages.length;
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
 
     if (result != null) {
       final fileBytes = result.files.single.bytes;
@@ -227,12 +224,11 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
         final title = await _showTitleDialog(context, fileName);
         if (title != null) {
           try {
-            // *** MODIFIED ***: Pass newOrder to the cubit method
+            // *** 修正 ***: 调用移除了 newOrder 参数的 cubit 方法
             await cubit.createPageAndAddToDocument(
               title: title,
               fileBytes: fileBytes,
               fileName: fileName,
-              newOrder: nextOrder,
             );
           } catch (e) {
             if (context.mounted) {
@@ -243,6 +239,36 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                 ),
               );
             }
+          }
+        }
+      }
+    }
+  }
+
+  // *** NEW ***: Method to pick multiple files and start the stitching process.
+  Future<void> _pickAndStitchFiles(BuildContext context) async {
+    final cubit = context.read<DocumentDetailCubit>();
+    final result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      type: FileType.image,
+    );
+
+    if (result != null && result.files.isNotEmpty) {
+      final title = await _showTitleDialog(context, 'Stitched Page');
+      if (title != null) {
+        try {
+          await cubit.createPageByStitching(
+            title: title,
+            files: result.files,
+          );
+        } catch (e) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Failed to start stitching process: $e'),
+                backgroundColor: Colors.red,
+              ),
+            );
           }
         }
       }
@@ -532,6 +558,10 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                 PopupMenuItem(
                   child: const Text('Upload new file'),
                   value: () => _pickAndUploadFile(context),
+                ),
+                PopupMenuItem(
+                  child: const Text('Upload and Stitch Images'),
+                  value: () => _pickAndStitchFiles(context),
                 ),
               ],
               onSelected: (Function callback) {

@@ -23,6 +23,8 @@ class VersionHistoryPage extends StatefulWidget {
 class _VersionHistoryPageState extends State<VersionHistoryPage> {
   // 显示回滚确认对话框的私有方法
   Future<void> _showRevertConfirmationDialog(BuildContext context, String targetVersionId) async {
+    // 从有效的上下文中预先读取 Cubit
+    final cubit = context.read<VersionHistoryCubit>();
     final bool? confirmed = await showDialog<bool>(
       context: context,
       barrierDismissible: false, // 防止在加载时意外关闭
@@ -45,8 +47,8 @@ class _VersionHistoryPageState extends State<VersionHistoryPage> {
                       : () async {
                           setState(() { isLoading = true; });
                           try {
-                            // 调用 Cubit 的方法执行回滚
-                            await context.read<VersionHistoryCubit>().revertToVersion(targetVersionId);
+                            // 使用预先读取的 Cubit 实例
+                            await cubit.revertToVersion(targetVersionId);
                             if (mounted) Navigator.of(dialogContext).pop(true);
                           } catch (e) {
                             if (mounted) Navigator.of(dialogContext).pop(false);
@@ -104,7 +106,7 @@ class _VersionHistoryPageState extends State<VersionHistoryPage> {
                   ],
                 ),
               ),
-              success: (versions, docId) {
+              success: (versions, docId, currentVersionId) {
                 if (versions.isEmpty) {
                   return const Center(child: Text('No version history found.'));
                 }
@@ -114,8 +116,8 @@ class _VersionHistoryPageState extends State<VersionHistoryPage> {
                     itemCount: versions.length,
                     itemBuilder: (context, index) {
                       final version = versions[index];
-                      // 最新的版本（反转后列表的第一个）总是当前版本
-                      final isCurrentVersion = index == 0;
+                      // **修正**: 使用来自状态的 currentVersionId 来判断当前版本
+                      final isCurrentVersion = version.versionId == currentVersionId;
                       final formattedDate = DateFormat.yMMMd().add_jms().format(version.createdAt.toLocal());
 
                       return Card(

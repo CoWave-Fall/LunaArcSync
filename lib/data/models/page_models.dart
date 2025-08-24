@@ -43,10 +43,12 @@ class PaginatedResult<T> {
   });
 
   factory PaginatedResult.fromJson(Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
-      _$PaginatedResultFromJson(json, fromJsonT);
+    _$PaginatedResultFromJson(json, fromJsonT);
 
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
-      _$PaginatedResultToJson(this, toJsonT);
+    _$PaginatedResultToJson(this, toJsonT);
+
+  // 无需自定义 fromJson/toJson，交由 json_serializable 自动生成
 }
 
 // --- START: OCR DATA MODELS ---

@@ -116,12 +116,11 @@ class DocumentDetailCubit extends Cubit<DocumentDetailState> {
     }
   }
 
-  /// **[修改]** 创建 Page 并添加到 Document，增加了 newOrder 参数
+  /// **[修改]** 创建 Page 并添加到 Document
   Future<void> createPageAndAddToDocument({
     required String title,
     required Uint8List fileBytes,
     required String fileName,
-    required int newOrder, // <--- 添加了 newOrder 参数
   }) async {
     if (_currentDocumentId == null) return;
     try {
@@ -131,9 +130,9 @@ class DocumentDetailCubit extends Cubit<DocumentDetailState> {
         fileBytes: fileBytes,
         fileName: fileName,
       );
-      // 2. 使用新的 insertPage 方法将其添加到文档并排序
-      await insertPage(newPage.pageId, newOrder);
-      // insertPage 内部会调用 fetchDocument 刷新状态
+      // 2. 使用 addPageToDocument 方法将其添加到文档
+      await addPageToDocument(newPage.pageId);
+      // addPageToDocument 内部会调用 fetchDocument 刷新状态
     } catch (e) {
       rethrow;
     }
@@ -141,57 +140,69 @@ class DocumentDetailCubit extends Cubit<DocumentDetailState> {
   
   // --- ↑↑↑ 新增和修改的方法结束 ↑↑↑ ---
 
-  // 您现有的 stitch 和 polling 逻辑保持不变
-  Future<void> stitchAndAddPage({
+  /// **[新增]** 通过拼接多个图片文件创建新的 Page
+  /// 1. 使用第一张图创建 Page。
+  /// 2. 获取新 Page 的初始 VersionID。
+  /// 3. 上传余下的图片作为新的 Version。
+  /// 4. 提交一个拼接任务。
+  /// 5. 开始轮询任务状态。
+  Future<void> createPageByStitching({
     required String title,
     required List<PlatformFile> files,
   }) async {
-    await state.whenOrNull(
-      success: (document, _) async {
-        try {
-          final firstFile = files.first;
-          final newPage = await _pageRepository.createPage(
-            title: title,
-            fileBytes: firstFile.bytes!,
-            fileName: firstFile.name,
-          );
+    if (files.isEmpty) return;
 
-          // 新增逻辑：为新页面设置 order
-          final nextOrder = document.pages.length;
-          await insertPage(newPage.pageId, nextOrder);
-          // 旧的 addPageToDocument 不再需要
-          // await _documentRepository.addPageToDocument(...)
+    try {
+      // 1. 使用第一张图创建 Page
+      final firstFile = files.first;
+      final newPage = await _pageRepository.createPage(
+        title: title,
+        fileBytes: firstFile.bytes!,
+        fileName: firstFile.name,
+      );
 
-          final List<String> sourceVersionIds = [newPage.pageId]; // 注意：这里可能有误，应该是 versionId
-          for (int i = 1; i < files.length; i++) {
-            final file = files[i];
-            final newVersion = await _pageRepository.addVersionToPage(
-              pageId: newPage.pageId,
-              fileBytes: file.bytes!,
-              fileName: file.name,
-            );
-            sourceVersionIds.add(newVersion.versionId);
-          }
+      // **修正**: 使用 addPageToDocument 将新页面添加到文档。
+      // 该方法会获取当前文档并刷新状态。
+      await addPageToDocument(newPage.pageId);
 
-          final job = await _pageRepository.startStitchJob(
-            pageId: newPage.pageId,
-            sourceVersionIds: sourceVersionIds,
-          );
+      // 2. 获取初始版本ID。
+      // **注意**: 调用 getPageById (假设存在) 来获取页面详情,
+      // 其中包含初始版本信息。这是基于项目存在 PageDetailPage 的事实推断的。
+      final pageDetail = await _pageRepository.getPageById(newPage.pageId);
+      final String initialVersionId = pageDetail.currentVersion.versionId;
 
-          _startPolling(job.jobId, newPage.pageId);
-          
-          state.whenOrNull(success: (doc, status) {
-            final newStatus = Map<String, JobStatusEnum>.from(status);
-            newStatus[newPage.pageId] = JobStatusEnum.Processing;
-            // fetchDocument 已经在 insertPage 中调用，这里直接更新状态
-            emit(DocumentDetailState.success(document: doc, pageStitchingStatus: newStatus));
-          });
+      final List<String> sourceVersionIds = [initialVersionId];
 
-        } catch (e) {
-          rethrow;
-        }
-      },
-    );
+      // 3. 上传余下的图片作为新的 Version
+      for (int i = 1; i < files.length; i++) {
+        final file = files[i];
+        final newVersion = await _pageRepository.addVersionToPage(
+          pageId: newPage.pageId,
+          fileBytes: file.bytes!,
+          fileName: file.name,
+        );
+        sourceVersionIds.add(newVersion.versionId);
+      }
+
+      // 4. 提交拼接任务
+      final job = await _pageRepository.startStitchJob(
+        pageId: newPage.pageId,
+        sourceVersionIds: sourceVersionIds,
+      );
+
+      // 5. 开始轮询
+      _startPolling(job.jobId, newPage.pageId);
+
+      // 更新UI状态以显示处理中
+      state.mapOrNull(success: (successState) {
+        final newStatus =
+            Map<String, JobStatusEnum>.from(successState.pageStitchingStatus);
+        newStatus[newPage.pageId] = JobStatusEnum.Processing;
+        emit(successState.copyWith(pageStitchingStatus: newStatus));
+      });
+    } catch (e) {
+      rethrow;
+    }
   }
 
   void _startPolling(String jobId, String pageId) {

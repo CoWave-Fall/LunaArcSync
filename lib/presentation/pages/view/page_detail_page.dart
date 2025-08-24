@@ -100,8 +100,8 @@ class _PageDetailPageState extends State<PageDetailPage> {
                   return IconButton(
                     icon: const Icon(Icons.history),
                     tooltip: 'View version history',
-                    onPressed: () {
-                      Navigator.of(context).push(
+                    onPressed: () async {
+                      await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => VersionHistoryPage(
                             pageId: doc.pageId,
@@ -109,6 +109,10 @@ class _PageDetailPageState extends State<PageDetailPage> {
                           ),
                         ),
                       );
+                      // 导航回来后，重新获取页面数据以确保显示的是最新版本
+                      if (mounted) {
+                        context.read<PageDetailCubit>().fetchPage(widget.pageId);
+                      }
                     },
                   );
                 }) ?? const SizedBox.shrink(),

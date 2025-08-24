@@ -3,22 +3,45 @@ import 'package:luna_arc_sync/data/models/document_models.dart';
 
 part 'document_list_state.freezed.dart';
 
-enum DocumentListStatus { initial, loading, success, failure, loadingMore }
-enum SortBy {  updatedAt,  title,  pageCount,}
-enum SortOrder {  asc,  desc,}
+// --- START: NEW SORTING AND FILTERING ---
+
+/// Defines the available sorting options for the document list.
+enum SortOption {
+  dateDesc('Newest First', 'date_desc'),
+  dateAsc('Oldest First', 'date_asc'),
+  titleAsc('Title (A-Z)', 'title_asc'),
+  titleDesc('Title (Z-A)', 'title_desc');
+
+  const SortOption(this.displayName, this.apiValue);
+  final String displayName;
+  final String apiValue;
+}
+
+// --- END: NEW SORTING AND FILTERING ---
+
 
 @freezed
 class DocumentListState with _$DocumentListState {
   const factory DocumentListState({
-    @Default(DocumentListStatus.initial) DocumentListStatus status,
+    // Core list properties
     @Default([]) List<Document> documents,
+    @Default(false) bool isLoading,
+    @Default(null) String? error,
     @Default(1) int pageNumber,
     @Default(false) bool hasReachedMax,
-    String? errorMessage,
 
-    @Default(SortBy.updatedAt) SortBy sortBy,
-    @Default(SortOrder.desc) SortOrder sortOrder,
-    @Default([]) List<String> filterTags,
+    // --- START: NEW SORTING AND FILTERING STATE ---
+
+    // Sorting
+    @Default(SortOption.dateDesc) SortOption sortOption,
+
+    // Tag Filtering
+    @Default([]) List<String> selectedTags,
+    @Default([]) List<String> allTags,
+    @Default(false) bool areTagsLoading,
+    @Default(null) String? tagsError,
+    
+    // --- END: NEW SORTING AND FILTERING STATE ---
 
   }) = _DocumentListState;
 }

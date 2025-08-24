@@ -56,6 +56,7 @@ class OverviewView extends StatelessWidget {
                 ],
               ),
             ),
+            /*
             const SizedBox(height: 24),
             // Three Columns Section
             BlocBuilder<OverviewCubit, OverviewState>(
@@ -77,12 +78,14 @@ class OverviewView extends StatelessWidget {
                 );
               },
             ),
+            */
           ],
         ),
       ),
     );
   }
 
+  /*
   Widget _buildInfoCard(BuildContext context, String title, String value) {
     return Card(
       child: Padding(
@@ -97,4 +100,5 @@ class OverviewView extends StatelessWidget {
       ),
     );
   }
+  */
 }
