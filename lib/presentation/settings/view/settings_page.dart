@@ -11,7 +11,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _isDarkMode = false; // Placeholder for theme state
+  final bool _isDarkMode = false; // Placeholder for theme state
   bool _notificationsEnabled = true; // Placeholder for notifications state
 
   @override

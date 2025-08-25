@@ -24,6 +24,8 @@ import 'package:luna_arc_sync/data/repositories/user_repository.dart' as _i655;
 import 'package:luna_arc_sync/presentation/auth/cubit/auth_cubit.dart' as _i887;
 import 'package:luna_arc_sync/presentation/documents/cubit/document_detail_cubit.dart'
     as _i614;
+import 'package:luna_arc_sync/presentation/documents/cubit/document_list_cubit.dart'
+    as _i921;
 import 'package:luna_arc_sync/presentation/overview/cubit/overview_cubit.dart'
     as _i287;
 import 'package:luna_arc_sync/presentation/pages/cubit/page_detail_cubit.dart'
@@ -62,8 +64,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i757.IJobRepository>(
       () => _i757.JobRepository(gh<_i423.ApiClient>()),
     );
+    gh.lazySingleton<_i393.IDocumentRepository>(
+      () => _i393.DocumentRepository(gh<_i423.ApiClient>()),
+    );
     gh.lazySingleton<_i655.IUserRepository>(
       () => _i655.UserRepository(gh<_i423.ApiClient>()),
+    );
+    gh.factory<_i921.DocumentListCubit>(
+      () => _i921.DocumentListCubit(gh<_i393.IDocumentRepository>()),
     );
     gh.factory<_i464.PageDetailCubit>(
       () => _i464.PageDetailCubit(

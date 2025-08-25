@@ -1,9 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:luna_arc_sync/data/models/document_models.dart';
+import 'package:injectable/injectable.dart';
 import 'package:luna_arc_sync/data/repositories/document_repository.dart';
 import 'document_list_state.dart';
 
+@injectable
 class DocumentListCubit extends Cubit<DocumentListState> {
   final IDocumentRepository _documentRepository;
 
@@ -38,7 +39,7 @@ class DocumentListCubit extends Cubit<DocumentListState> {
         hasReachedMax: hasReachedMax,
         isLoading: false,
       ));
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       if (e.response?.statusCode == 503) {
         emit(state.copyWith(
           isLoading: false,

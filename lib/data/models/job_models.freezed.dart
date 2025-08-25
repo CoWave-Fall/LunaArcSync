@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,364 +9,541 @@ part of 'job_models.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-JobQueuedResponse _$JobQueuedResponseFromJson(Map<String, dynamic> json) {
-  return _JobQueuedResponse.fromJson(json);
-}
 
 /// @nodoc
 mixin _$JobQueuedResponse {
-  String get jobId => throw _privateConstructorUsedError;
-  String get message => throw _privateConstructorUsedError;
+
+ String get jobId; String get message;
+/// Create a copy of JobQueuedResponse
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$JobQueuedResponseCopyWith<JobQueuedResponse> get copyWith => _$JobQueuedResponseCopyWithImpl<JobQueuedResponse>(this as JobQueuedResponse, _$identity);
 
   /// Serializes this JobQueuedResponse to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of JobQueuedResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $JobQueuedResponseCopyWith<JobQueuedResponse> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobQueuedResponse&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.message, message) || other.message == message));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,jobId,message);
+
+@override
+String toString() {
+  return 'JobQueuedResponse(jobId: $jobId, message: $message)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $JobQueuedResponseCopyWith<$Res> {
-  factory $JobQueuedResponseCopyWith(
-    JobQueuedResponse value,
-    $Res Function(JobQueuedResponse) then,
-  ) = _$JobQueuedResponseCopyWithImpl<$Res, JobQueuedResponse>;
-  @useResult
-  $Res call({String jobId, String message});
-}
+abstract mixin class $JobQueuedResponseCopyWith<$Res>  {
+  factory $JobQueuedResponseCopyWith(JobQueuedResponse value, $Res Function(JobQueuedResponse) _then) = _$JobQueuedResponseCopyWithImpl;
+@useResult
+$Res call({
+ String jobId, String message
+});
 
+
+
+
+}
 /// @nodoc
-class _$JobQueuedResponseCopyWithImpl<$Res, $Val extends JobQueuedResponse>
+class _$JobQueuedResponseCopyWithImpl<$Res>
     implements $JobQueuedResponseCopyWith<$Res> {
-  _$JobQueuedResponseCopyWithImpl(this._value, this._then);
+  _$JobQueuedResponseCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final JobQueuedResponse _self;
+  final $Res Function(JobQueuedResponse) _then;
 
-  /// Create a copy of JobQueuedResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? jobId = null, Object? message = null}) {
-    return _then(
-      _value.copyWith(
-            jobId: null == jobId
-                ? _value.jobId
-                : jobId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            message: null == message
-                ? _value.message
-                : message // ignore: cast_nullable_to_non_nullable
-                      as String,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of JobQueuedResponse
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? jobId = null,Object? message = null,}) {
+  return _then(_self.copyWith(
+jobId: null == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
+as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
-abstract class _$$JobQueuedResponseImplCopyWith<$Res>
-    implements $JobQueuedResponseCopyWith<$Res> {
-  factory _$$JobQueuedResponseImplCopyWith(
-    _$JobQueuedResponseImpl value,
-    $Res Function(_$JobQueuedResponseImpl) then,
-  ) = __$$JobQueuedResponseImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String jobId, String message});
 }
 
-/// @nodoc
-class __$$JobQueuedResponseImplCopyWithImpl<$Res>
-    extends _$JobQueuedResponseCopyWithImpl<$Res, _$JobQueuedResponseImpl>
-    implements _$$JobQueuedResponseImplCopyWith<$Res> {
-  __$$JobQueuedResponseImplCopyWithImpl(
-    _$JobQueuedResponseImpl _value,
-    $Res Function(_$JobQueuedResponseImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of JobQueuedResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? jobId = null, Object? message = null}) {
-    return _then(
-      _$JobQueuedResponseImpl(
-        jobId: null == jobId
-            ? _value.jobId
-            : jobId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        message: null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
-  }
+/// Adds pattern-matching-related methods to [JobQueuedResponse].
+extension JobQueuedResponsePatterns on JobQueuedResponse {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _JobQueuedResponse value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _JobQueuedResponse() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _JobQueuedResponse value)  $default,){
+final _that = this;
+switch (_that) {
+case _JobQueuedResponse():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _JobQueuedResponse value)?  $default,){
+final _that = this;
+switch (_that) {
+case _JobQueuedResponse() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String jobId,  String message)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _JobQueuedResponse() when $default != null:
+return $default(_that.jobId,_that.message);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String jobId,  String message)  $default,) {final _that = this;
+switch (_that) {
+case _JobQueuedResponse():
+return $default(_that.jobId,_that.message);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String jobId,  String message)?  $default,) {final _that = this;
+switch (_that) {
+case _JobQueuedResponse() when $default != null:
+return $default(_that.jobId,_that.message);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$JobQueuedResponseImpl implements _JobQueuedResponse {
-  const _$JobQueuedResponseImpl({required this.jobId, required this.message});
 
-  factory _$JobQueuedResponseImpl.fromJson(Map<String, dynamic> json) =>
-      _$$JobQueuedResponseImplFromJson(json);
+class _JobQueuedResponse implements JobQueuedResponse {
+  const _JobQueuedResponse({required this.jobId, required this.message});
+  factory _JobQueuedResponse.fromJson(Map<String, dynamic> json) => _$JobQueuedResponseFromJson(json);
 
-  @override
-  final String jobId;
-  @override
-  final String message;
+@override final  String jobId;
+@override final  String message;
 
-  @override
-  String toString() {
-    return 'JobQueuedResponse(jobId: $jobId, message: $message)';
-  }
+/// Create a copy of JobQueuedResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$JobQueuedResponseCopyWith<_JobQueuedResponse> get copyWith => __$JobQueuedResponseCopyWithImpl<_JobQueuedResponse>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$JobQueuedResponseImpl &&
-            (identical(other.jobId, jobId) || other.jobId == jobId) &&
-            (identical(other.message, message) || other.message == message));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, jobId, message);
-
-  /// Create a copy of JobQueuedResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$JobQueuedResponseImplCopyWith<_$JobQueuedResponseImpl> get copyWith =>
-      __$$JobQueuedResponseImplCopyWithImpl<_$JobQueuedResponseImpl>(
-        this,
-        _$identity,
-      );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$JobQueuedResponseImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$JobQueuedResponseToJson(this, );
 }
 
-abstract class _JobQueuedResponse implements JobQueuedResponse {
-  const factory _JobQueuedResponse({
-    required final String jobId,
-    required final String message,
-  }) = _$JobQueuedResponseImpl;
-
-  factory _JobQueuedResponse.fromJson(Map<String, dynamic> json) =
-      _$JobQueuedResponseImpl.fromJson;
-
-  @override
-  String get jobId;
-  @override
-  String get message;
-
-  /// Create a copy of JobQueuedResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$JobQueuedResponseImplCopyWith<_$JobQueuedResponseImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobQueuedResponse&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.message, message) || other.message == message));
 }
 
-Job _$JobFromJson(Map<String, dynamic> json) {
-  return _Job.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,jobId,message);
+
+@override
+String toString() {
+  return 'JobQueuedResponse(jobId: $jobId, message: $message)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$JobQueuedResponseCopyWith<$Res> implements $JobQueuedResponseCopyWith<$Res> {
+  factory _$JobQueuedResponseCopyWith(_JobQueuedResponse value, $Res Function(_JobQueuedResponse) _then) = __$JobQueuedResponseCopyWithImpl;
+@override @useResult
+$Res call({
+ String jobId, String message
+});
+
+
+
+
+}
+/// @nodoc
+class __$JobQueuedResponseCopyWithImpl<$Res>
+    implements _$JobQueuedResponseCopyWith<$Res> {
+  __$JobQueuedResponseCopyWithImpl(this._self, this._then);
+
+  final _JobQueuedResponse _self;
+  final $Res Function(_JobQueuedResponse) _then;
+
+/// Create a copy of JobQueuedResponse
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? jobId = null,Object? message = null,}) {
+  return _then(_JobQueuedResponse(
+jobId: null == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
+as String,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$Job {
-  String get jobId => throw _privateConstructorUsedError;
-  JobStatusEnum get status => throw _privateConstructorUsedError;
-  String? get errorMessage => throw _privateConstructorUsedError;
+
+ String get jobId; JobStatusEnum get status; String? get errorMessage;
+/// Create a copy of Job
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$JobCopyWith<Job> get copyWith => _$JobCopyWithImpl<Job>(this as Job, _$identity);
 
   /// Serializes this Job to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of Job
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $JobCopyWith<Job> get copyWith => throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Job&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.status, status) || other.status == status)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,jobId,status,errorMessage);
+
+@override
+String toString() {
+  return 'Job(jobId: $jobId, status: $status, errorMessage: $errorMessage)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $JobCopyWith<$Res> {
-  factory $JobCopyWith(Job value, $Res Function(Job) then) =
-      _$JobCopyWithImpl<$Res, Job>;
-  @useResult
-  $Res call({String jobId, JobStatusEnum status, String? errorMessage});
+abstract mixin class $JobCopyWith<$Res>  {
+  factory $JobCopyWith(Job value, $Res Function(Job) _then) = _$JobCopyWithImpl;
+@useResult
+$Res call({
+ String jobId, JobStatusEnum status, String? errorMessage
+});
+
+
+
+
+}
+/// @nodoc
+class _$JobCopyWithImpl<$Res>
+    implements $JobCopyWith<$Res> {
+  _$JobCopyWithImpl(this._self, this._then);
+
+  final Job _self;
+  final $Res Function(Job) _then;
+
+/// Create a copy of Job
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? jobId = null,Object? status = null,Object? errorMessage = freezed,}) {
+  return _then(_self.copyWith(
+jobId: null == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as JobStatusEnum,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
 }
 
-/// @nodoc
-class _$JobCopyWithImpl<$Res, $Val extends Job> implements $JobCopyWith<$Res> {
-  _$JobCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of Job
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? jobId = null,
-    Object? status = null,
-    Object? errorMessage = freezed,
-  }) {
-    return _then(
-      _value.copyWith(
-            jobId: null == jobId
-                ? _value.jobId
-                : jobId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            status: null == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                      as JobStatusEnum,
-            errorMessage: freezed == errorMessage
-                ? _value.errorMessage
-                : errorMessage // ignore: cast_nullable_to_non_nullable
-                      as String?,
-          )
-          as $Val,
-    );
-  }
 }
 
-/// @nodoc
-abstract class _$$JobImplCopyWith<$Res> implements $JobCopyWith<$Res> {
-  factory _$$JobImplCopyWith(_$JobImpl value, $Res Function(_$JobImpl) then) =
-      __$$JobImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String jobId, JobStatusEnum status, String? errorMessage});
+
+/// Adds pattern-matching-related methods to [Job].
+extension JobPatterns on Job {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Job value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Job() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Job value)  $default,){
+final _that = this;
+switch (_that) {
+case _Job():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Job value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Job() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String jobId,  JobStatusEnum status,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Job() when $default != null:
+return $default(_that.jobId,_that.status,_that.errorMessage);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String jobId,  JobStatusEnum status,  String? errorMessage)  $default,) {final _that = this;
+switch (_that) {
+case _Job():
+return $default(_that.jobId,_that.status,_that.errorMessage);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String jobId,  JobStatusEnum status,  String? errorMessage)?  $default,) {final _that = this;
+switch (_that) {
+case _Job() when $default != null:
+return $default(_that.jobId,_that.status,_that.errorMessage);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-class __$$JobImplCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res, _$JobImpl>
-    implements _$$JobImplCopyWith<$Res> {
-  __$$JobImplCopyWithImpl(_$JobImpl _value, $Res Function(_$JobImpl) _then)
-    : super(_value, _then);
-
-  /// Create a copy of Job
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? jobId = null,
-    Object? status = null,
-    Object? errorMessage = freezed,
-  }) {
-    return _then(
-      _$JobImpl(
-        jobId: null == jobId
-            ? _value.jobId
-            : jobId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        status: null == status
-            ? _value.status
-            : status // ignore: cast_nullable_to_non_nullable
-                  as JobStatusEnum,
-        errorMessage: freezed == errorMessage
-            ? _value.errorMessage
-            : errorMessage // ignore: cast_nullable_to_non_nullable
-                  as String?,
-      ),
-    );
-  }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$JobImpl implements _Job {
-  const _$JobImpl({
-    required this.jobId,
-    required this.status,
-    this.errorMessage,
-  });
 
-  factory _$JobImpl.fromJson(Map<String, dynamic> json) =>
-      _$$JobImplFromJson(json);
+class _Job implements Job {
+  const _Job({required this.jobId, required this.status, this.errorMessage});
+  factory _Job.fromJson(Map<String, dynamic> json) => _$JobFromJson(json);
 
-  @override
-  final String jobId;
-  @override
-  final JobStatusEnum status;
-  @override
-  final String? errorMessage;
+@override final  String jobId;
+@override final  JobStatusEnum status;
+@override final  String? errorMessage;
 
-  @override
-  String toString() {
-    return 'Job(jobId: $jobId, status: $status, errorMessage: $errorMessage)';
-  }
+/// Create a copy of Job
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$JobCopyWith<_Job> get copyWith => __$JobCopyWithImpl<_Job>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$JobImpl &&
-            (identical(other.jobId, jobId) || other.jobId == jobId) &&
-            (identical(other.status, status) || other.status == status) &&
-            (identical(other.errorMessage, errorMessage) ||
-                other.errorMessage == errorMessage));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, jobId, status, errorMessage);
-
-  /// Create a copy of Job
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$JobImplCopyWith<_$JobImpl> get copyWith =>
-      __$$JobImplCopyWithImpl<_$JobImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$JobImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$JobToJson(this, );
 }
 
-abstract class _Job implements Job {
-  const factory _Job({
-    required final String jobId,
-    required final JobStatusEnum status,
-    final String? errorMessage,
-  }) = _$JobImpl;
-
-  factory _Job.fromJson(Map<String, dynamic> json) = _$JobImpl.fromJson;
-
-  @override
-  String get jobId;
-  @override
-  JobStatusEnum get status;
-  @override
-  String? get errorMessage;
-
-  /// Create a copy of Job
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$JobImplCopyWith<_$JobImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Job&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.status, status) || other.status == status)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,jobId,status,errorMessage);
+
+@override
+String toString() {
+  return 'Job(jobId: $jobId, status: $status, errorMessage: $errorMessage)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$JobCopyWith<$Res> implements $JobCopyWith<$Res> {
+  factory _$JobCopyWith(_Job value, $Res Function(_Job) _then) = __$JobCopyWithImpl;
+@override @useResult
+$Res call({
+ String jobId, JobStatusEnum status, String? errorMessage
+});
+
+
+
+
+}
+/// @nodoc
+class __$JobCopyWithImpl<$Res>
+    implements _$JobCopyWith<$Res> {
+  __$JobCopyWithImpl(this._self, this._then);
+
+  final _Job _self;
+  final $Res Function(_Job) _then;
+
+/// Create a copy of Job
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? jobId = null,Object? status = null,Object? errorMessage = freezed,}) {
+  return _then(_Job(
+jobId: null == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as JobStatusEnum,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+// dart format on

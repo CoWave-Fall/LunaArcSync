@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,843 +9,401 @@ part of 'page_detail_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
 /// @nodoc
 mixin _$PageDetailState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )
-    success,
-    required TResult Function(String message) failure,
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )?
-    success,
-    TResult? Function(String message)? failure,
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )?
-    success,
-    TResult Function(String message)? failure,
-    required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Failure value) failure,
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Failure value)? failure,
-  }) => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failure value)? failure,
-    required TResult orElse(),
-  }) => throw _privateConstructorUsedError;
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PageDetailState);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'PageDetailState()';
+}
+
+
 }
 
 /// @nodoc
-abstract class $PageDetailStateCopyWith<$Res> {
-  factory $PageDetailStateCopyWith(
-    PageDetailState value,
-    $Res Function(PageDetailState) then,
-  ) = _$PageDetailStateCopyWithImpl<$Res, PageDetailState>;
+class $PageDetailStateCopyWith<$Res>  {
+$PageDetailStateCopyWith(PageDetailState _, $Res Function(PageDetailState) __);
 }
 
-/// @nodoc
-class _$PageDetailStateCopyWithImpl<$Res, $Val extends PageDetailState>
-    implements $PageDetailStateCopyWith<$Res> {
-  _$PageDetailStateCopyWithImpl(this._value, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+/// Adds pattern-matching-related methods to [PageDetailState].
+extension PageDetailStatePatterns on PageDetailState {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// Create a copy of PageDetailState
-  /// with the given fields replaced by the non-null parameter values.
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _Initial value)?  initial,TResult Function( _Loading value)?  loading,TResult Function( _Success value)?  success,TResult Function( _Failure value)?  failure,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial(_that);case _Loading() when loading != null:
+return loading(_that);case _Success() when success != null:
+return success(_that);case _Failure() when failure != null:
+return failure(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _Initial value)  initial,required TResult Function( _Loading value)  loading,required TResult Function( _Success value)  success,required TResult Function( _Failure value)  failure,}){
+final _that = this;
+switch (_that) {
+case _Initial():
+return initial(_that);case _Loading():
+return loading(_that);case _Success():
+return success(_that);case _Failure():
+return failure(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _Initial value)?  initial,TResult? Function( _Loading value)?  loading,TResult? Function( _Success value)?  success,TResult? Function( _Failure value)?  failure,}){
+final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial(_that);case _Loading() when loading != null:
+return loading(_that);case _Success() when success != null:
+return success(_that);case _Failure() when failure != null:
+return failure(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( PageDetail page,  JobStatusEnum ocrStatus,  String? ocrErrorMessage,  String searchQuery,  List<Bbox> highlightedBboxes)?  success,TResult Function( String message)?  failure,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial();case _Loading() when loading != null:
+return loading();case _Success() when success != null:
+return success(_that.page,_that.ocrStatus,_that.ocrErrorMessage,_that.searchQuery,_that.highlightedBboxes);case _Failure() when failure != null:
+return failure(_that.message);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( PageDetail page,  JobStatusEnum ocrStatus,  String? ocrErrorMessage,  String searchQuery,  List<Bbox> highlightedBboxes)  success,required TResult Function( String message)  failure,}) {final _that = this;
+switch (_that) {
+case _Initial():
+return initial();case _Loading():
+return loading();case _Success():
+return success(_that.page,_that.ocrStatus,_that.ocrErrorMessage,_that.searchQuery,_that.highlightedBboxes);case _Failure():
+return failure(_that.message);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( PageDetail page,  JobStatusEnum ocrStatus,  String? ocrErrorMessage,  String searchQuery,  List<Bbox> highlightedBboxes)?  success,TResult? Function( String message)?  failure,}) {final _that = this;
+switch (_that) {
+case _Initial() when initial != null:
+return initial();case _Loading() when loading != null:
+return loading();case _Success() when success != null:
+return success(_that.page,_that.ocrStatus,_that.ocrErrorMessage,_that.searchQuery,_that.highlightedBboxes);case _Failure() when failure != null:
+return failure(_that.message);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-abstract class _$$InitialImplCopyWith<$Res> {
-  factory _$$InitialImplCopyWith(
-    _$InitialImpl value,
-    $Res Function(_$InitialImpl) then,
-  ) = __$$InitialImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$InitialImplCopyWithImpl<$Res>
-    extends _$PageDetailStateCopyWithImpl<$Res, _$InitialImpl>
-    implements _$$InitialImplCopyWith<$Res> {
-  __$$InitialImplCopyWithImpl(
-    _$InitialImpl _value,
-    $Res Function(_$InitialImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of PageDetailState
-  /// with the given fields replaced by the non-null parameter values.
-}
-
-/// @nodoc
-
-class _$InitialImpl implements _Initial {
-  const _$InitialImpl();
-
-  @override
-  String toString() {
-    return 'PageDetailState.initial()';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$InitialImpl);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )
-    success,
-    required TResult Function(String message) failure,
-  }) {
-    return initial();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )?
-    success,
-    TResult? Function(String message)? failure,
-  }) {
-    return initial?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )?
-    success,
-    TResult Function(String message)? failure,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Failure value) failure,
-  }) {
-    return initial(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Failure value)? failure,
-  }) {
-    return initial?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failure value)? failure,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Initial implements PageDetailState {
-  const factory _Initial() = _$InitialImpl;
-}
-
-/// @nodoc
-abstract class _$$LoadingImplCopyWith<$Res> {
-  factory _$$LoadingImplCopyWith(
-    _$LoadingImpl value,
-    $Res Function(_$LoadingImpl) then,
-  ) = __$$LoadingImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$PageDetailStateCopyWithImpl<$Res, _$LoadingImpl>
-    implements _$$LoadingImplCopyWith<$Res> {
-  __$$LoadingImplCopyWithImpl(
-    _$LoadingImpl _value,
-    $Res Function(_$LoadingImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of PageDetailState
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
 
-class _$LoadingImpl implements _Loading {
-  const _$LoadingImpl();
 
-  @override
-  String toString() {
-    return 'PageDetailState.loading()';
-  }
+class _Initial implements PageDetailState {
+  const _Initial();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadingImpl);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )
-    success,
-    required TResult Function(String message) failure,
-  }) {
-    return loading();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )?
-    success,
-    TResult? Function(String message)? failure,
-  }) {
-    return loading?.call();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )?
-    success,
-    TResult Function(String message)? failure,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading();
-    }
-    return orElse();
-  }
 
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Failure value) failure,
-  }) {
-    return loading(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Failure value)? failure,
-  }) {
-    return loading?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failure value)? failure,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Initial);
 }
 
-abstract class _Loading implements PageDetailState {
-  const factory _Loading() = _$LoadingImpl;
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'PageDetailState.initial()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _Loading implements PageDetailState {
+  const _Loading();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Loading);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'PageDetailState.loading()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class _Success implements PageDetailState {
+  const _Success({required this.page, this.ocrStatus = JobStatusEnum.Completed, this.ocrErrorMessage, this.searchQuery = '', final  List<Bbox> highlightedBboxes = const []}): _highlightedBboxes = highlightedBboxes;
+  
+
+ final  PageDetail page;
+@JsonKey() final  JobStatusEnum ocrStatus;
+ final  String? ocrErrorMessage;
+// --- START: NEW SEARCH FIELDS ---
+// The current search query entered by the user.
+@JsonKey() final  String searchQuery;
+// A list of all bounding boxes that match the search query.
+ final  List<Bbox> _highlightedBboxes;
+// A list of all bounding boxes that match the search query.
+@JsonKey() List<Bbox> get highlightedBboxes {
+  if (_highlightedBboxes is EqualUnmodifiableListView) return _highlightedBboxes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_highlightedBboxes);
+}
+
+
+/// Create a copy of PageDetailState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SuccessCopyWith<_Success> get copyWith => __$SuccessCopyWithImpl<_Success>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.page, page) || other.page == page)&&(identical(other.ocrStatus, ocrStatus) || other.ocrStatus == ocrStatus)&&(identical(other.ocrErrorMessage, ocrErrorMessage) || other.ocrErrorMessage == ocrErrorMessage)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&const DeepCollectionEquality().equals(other._highlightedBboxes, _highlightedBboxes));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,page,ocrStatus,ocrErrorMessage,searchQuery,const DeepCollectionEquality().hash(_highlightedBboxes));
+
+@override
+String toString() {
+  return 'PageDetailState.success(page: $page, ocrStatus: $ocrStatus, ocrErrorMessage: $ocrErrorMessage, searchQuery: $searchQuery, highlightedBboxes: $highlightedBboxes)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$SuccessImplCopyWith<$Res> {
-  factory _$$SuccessImplCopyWith(
-    _$SuccessImpl value,
-    $Res Function(_$SuccessImpl) then,
-  ) = __$$SuccessImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({
-    PageDetail page,
-    JobStatusEnum ocrStatus,
-    String? ocrErrorMessage,
-    String searchQuery,
-    List<Bbox> highlightedBboxes,
+abstract mixin class _$SuccessCopyWith<$Res> implements $PageDetailStateCopyWith<$Res> {
+  factory _$SuccessCopyWith(_Success value, $Res Function(_Success) _then) = __$SuccessCopyWithImpl;
+@useResult
+$Res call({
+ PageDetail page, JobStatusEnum ocrStatus, String? ocrErrorMessage, String searchQuery, List<Bbox> highlightedBboxes
+});
+
+
+$PageDetailCopyWith<$Res> get page;
+
+}
+/// @nodoc
+class __$SuccessCopyWithImpl<$Res>
+    implements _$SuccessCopyWith<$Res> {
+  __$SuccessCopyWithImpl(this._self, this._then);
+
+  final _Success _self;
+  final $Res Function(_Success) _then;
+
+/// Create a copy of PageDetailState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? page = null,Object? ocrStatus = null,Object? ocrErrorMessage = freezed,Object? searchQuery = null,Object? highlightedBboxes = null,}) {
+  return _then(_Success(
+page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
+as PageDetail,ocrStatus: null == ocrStatus ? _self.ocrStatus : ocrStatus // ignore: cast_nullable_to_non_nullable
+as JobStatusEnum,ocrErrorMessage: freezed == ocrErrorMessage ? _self.ocrErrorMessage : ocrErrorMessage // ignore: cast_nullable_to_non_nullable
+as String?,searchQuery: null == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+as String,highlightedBboxes: null == highlightedBboxes ? _self._highlightedBboxes : highlightedBboxes // ignore: cast_nullable_to_non_nullable
+as List<Bbox>,
+  ));
+}
+
+/// Create a copy of PageDetailState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PageDetailCopyWith<$Res> get page {
+  
+  return $PageDetailCopyWith<$Res>(_self.page, (value) {
+    return _then(_self.copyWith(page: value));
   });
-
-  $PageDetailCopyWith<$Res> get page;
 }
-
-/// @nodoc
-class __$$SuccessImplCopyWithImpl<$Res>
-    extends _$PageDetailStateCopyWithImpl<$Res, _$SuccessImpl>
-    implements _$$SuccessImplCopyWith<$Res> {
-  __$$SuccessImplCopyWithImpl(
-    _$SuccessImpl _value,
-    $Res Function(_$SuccessImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of PageDetailState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? page = null,
-    Object? ocrStatus = null,
-    Object? ocrErrorMessage = freezed,
-    Object? searchQuery = null,
-    Object? highlightedBboxes = null,
-  }) {
-    return _then(
-      _$SuccessImpl(
-        page: null == page
-            ? _value.page
-            : page // ignore: cast_nullable_to_non_nullable
-                  as PageDetail,
-        ocrStatus: null == ocrStatus
-            ? _value.ocrStatus
-            : ocrStatus // ignore: cast_nullable_to_non_nullable
-                  as JobStatusEnum,
-        ocrErrorMessage: freezed == ocrErrorMessage
-            ? _value.ocrErrorMessage
-            : ocrErrorMessage // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        searchQuery: null == searchQuery
-            ? _value.searchQuery
-            : searchQuery // ignore: cast_nullable_to_non_nullable
-                  as String,
-        highlightedBboxes: null == highlightedBboxes
-            ? _value._highlightedBboxes
-            : highlightedBboxes // ignore: cast_nullable_to_non_nullable
-                  as List<Bbox>,
-      ),
-    );
-  }
-
-  /// Create a copy of PageDetailState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $PageDetailCopyWith<$Res> get page {
-    return $PageDetailCopyWith<$Res>(_value.page, (value) {
-      return _then(_value.copyWith(page: value));
-    });
-  }
 }
 
 /// @nodoc
 
-class _$SuccessImpl implements _Success {
-  const _$SuccessImpl({
-    required this.page,
-    this.ocrStatus = JobStatusEnum.Completed,
-    this.ocrErrorMessage,
-    this.searchQuery = '',
-    final List<Bbox> highlightedBboxes = const [],
-  }) : _highlightedBboxes = highlightedBboxes;
 
-  @override
-  final PageDetail page;
-  @override
-  @JsonKey()
-  final JobStatusEnum ocrStatus;
-  @override
-  final String? ocrErrorMessage;
-  // --- START: NEW SEARCH FIELDS ---
-  // The current search query entered by the user.
-  @override
-  @JsonKey()
-  final String searchQuery;
-  // A list of all bounding boxes that match the search query.
-  final List<Bbox> _highlightedBboxes;
-  // A list of all bounding boxes that match the search query.
-  @override
-  @JsonKey()
-  List<Bbox> get highlightedBboxes {
-    if (_highlightedBboxes is EqualUnmodifiableListView)
-      return _highlightedBboxes;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_highlightedBboxes);
-  }
+class _Failure implements PageDetailState {
+  const _Failure({required this.message});
+  
 
-  @override
-  String toString() {
-    return 'PageDetailState.success(page: $page, ocrStatus: $ocrStatus, ocrErrorMessage: $ocrErrorMessage, searchQuery: $searchQuery, highlightedBboxes: $highlightedBboxes)';
-  }
+ final  String message;
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SuccessImpl &&
-            (identical(other.page, page) || other.page == page) &&
-            (identical(other.ocrStatus, ocrStatus) ||
-                other.ocrStatus == ocrStatus) &&
-            (identical(other.ocrErrorMessage, ocrErrorMessage) ||
-                other.ocrErrorMessage == ocrErrorMessage) &&
-            (identical(other.searchQuery, searchQuery) ||
-                other.searchQuery == searchQuery) &&
-            const DeepCollectionEquality().equals(
-              other._highlightedBboxes,
-              _highlightedBboxes,
-            ));
-  }
+/// Create a copy of PageDetailState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$FailureCopyWith<_Failure> get copyWith => __$FailureCopyWithImpl<_Failure>(this, _$identity);
 
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    page,
-    ocrStatus,
-    ocrErrorMessage,
-    searchQuery,
-    const DeepCollectionEquality().hash(_highlightedBboxes),
-  );
 
-  /// Create a copy of PageDetailState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
-      __$$SuccessImplCopyWithImpl<_$SuccessImpl>(this, _$identity);
 
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )
-    success,
-    required TResult Function(String message) failure,
-  }) {
-    return success(
-      page,
-      ocrStatus,
-      ocrErrorMessage,
-      searchQuery,
-      highlightedBboxes,
-    );
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )?
-    success,
-    TResult? Function(String message)? failure,
-  }) {
-    return success?.call(
-      page,
-      ocrStatus,
-      ocrErrorMessage,
-      searchQuery,
-      highlightedBboxes,
-    );
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )?
-    success,
-    TResult Function(String message)? failure,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(
-        page,
-        ocrStatus,
-        ocrErrorMessage,
-        searchQuery,
-        highlightedBboxes,
-      );
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Failure value) failure,
-  }) {
-    return success(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Failure value)? failure,
-  }) {
-    return success?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failure value)? failure,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(this);
-    }
-    return orElse();
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Failure&&(identical(other.message, message) || other.message == message));
 }
 
-abstract class _Success implements PageDetailState {
-  const factory _Success({
-    required final PageDetail page,
-    final JobStatusEnum ocrStatus,
-    final String? ocrErrorMessage,
-    final String searchQuery,
-    final List<Bbox> highlightedBboxes,
-  }) = _$SuccessImpl;
 
-  PageDetail get page;
-  JobStatusEnum get ocrStatus;
-  String? get ocrErrorMessage; // --- START: NEW SEARCH FIELDS ---
-  // The current search query entered by the user.
-  String
-  get searchQuery; // A list of all bounding boxes that match the search query.
-  List<Bbox> get highlightedBboxes;
+@override
+int get hashCode => Object.hash(runtimeType,message);
 
-  /// Create a copy of PageDetailState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+String toString() {
+  return 'PageDetailState.failure(message: $message)';
+}
+
+
 }
 
 /// @nodoc
-abstract class _$$FailureImplCopyWith<$Res> {
-  factory _$$FailureImplCopyWith(
-    _$FailureImpl value,
-    $Res Function(_$FailureImpl) then,
-  ) = __$$FailureImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String message});
-}
+abstract mixin class _$FailureCopyWith<$Res> implements $PageDetailStateCopyWith<$Res> {
+  factory _$FailureCopyWith(_Failure value, $Res Function(_Failure) _then) = __$FailureCopyWithImpl;
+@useResult
+$Res call({
+ String message
+});
 
+
+
+
+}
 /// @nodoc
-class __$$FailureImplCopyWithImpl<$Res>
-    extends _$PageDetailStateCopyWithImpl<$Res, _$FailureImpl>
-    implements _$$FailureImplCopyWith<$Res> {
-  __$$FailureImplCopyWithImpl(
-    _$FailureImpl _value,
-    $Res Function(_$FailureImpl) _then,
-  ) : super(_value, _then);
+class __$FailureCopyWithImpl<$Res>
+    implements _$FailureCopyWith<$Res> {
+  __$FailureCopyWithImpl(this._self, this._then);
 
-  /// Create a copy of PageDetailState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? message = null}) {
-    return _then(
-      _$FailureImpl(
-        message: null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
-  }
+  final _Failure _self;
+  final $Res Function(_Failure) _then;
+
+/// Create a copy of PageDetailState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+  return _then(_Failure(
+message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
 }
 
-/// @nodoc
 
-class _$FailureImpl implements _Failure {
-  const _$FailureImpl({required this.message});
-
-  @override
-  final String message;
-
-  @override
-  String toString() {
-    return 'PageDetailState.failure(message: $message)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$FailureImpl &&
-            (identical(other.message, message) || other.message == message));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, message);
-
-  /// Create a copy of PageDetailState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$FailureImplCopyWith<_$FailureImpl> get copyWith =>
-      __$$FailureImplCopyWithImpl<_$FailureImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )
-    success,
-    required TResult Function(String message) failure,
-  }) {
-    return failure(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )?
-    success,
-    TResult? Function(String message)? failure,
-  }) {
-    return failure?.call(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(
-      PageDetail page,
-      JobStatusEnum ocrStatus,
-      String? ocrErrorMessage,
-      String searchQuery,
-      List<Bbox> highlightedBboxes,
-    )?
-    success,
-    TResult Function(String message)? failure,
-    required TResult orElse(),
-  }) {
-    if (failure != null) {
-      return failure(message);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Success value) success,
-    required TResult Function(_Failure value) failure,
-  }) {
-    return failure(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Success value)? success,
-    TResult? Function(_Failure value)? failure,
-  }) {
-    return failure?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failure value)? failure,
-    required TResult orElse(),
-  }) {
-    if (failure != null) {
-      return failure(this);
-    }
-    return orElse();
-  }
 }
 
-abstract class _Failure implements PageDetailState {
-  const factory _Failure({required final String message}) = _$FailureImpl;
-
-  String get message;
-
-  /// Create a copy of PageDetailState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$FailureImplCopyWith<_$FailureImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

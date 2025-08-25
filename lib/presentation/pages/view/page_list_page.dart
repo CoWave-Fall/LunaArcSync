@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -234,8 +233,8 @@ class _PageListViewState extends State<PageListView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreatePageDialog(context),
-        child: const Icon(Icons.add),
         tooltip: 'Create a new page',
+        child: const Icon(Icons.add),
       ),
     );
   }

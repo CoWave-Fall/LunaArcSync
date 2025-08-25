@@ -6,24 +6,22 @@ part of 'job_models.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$JobQueuedResponseImpl _$$JobQueuedResponseImplFromJson(
-  Map<String, dynamic> json,
-) => _$JobQueuedResponseImpl(
-  jobId: json['jobId'] as String,
-  message: json['message'] as String,
-);
+_JobQueuedResponse _$JobQueuedResponseFromJson(Map<String, dynamic> json) =>
+    _JobQueuedResponse(
+      jobId: json['jobId'] as String,
+      message: json['message'] as String,
+    );
 
-Map<String, dynamic> _$$JobQueuedResponseImplToJson(
-  _$JobQueuedResponseImpl instance,
-) => <String, dynamic>{'jobId': instance.jobId, 'message': instance.message};
+Map<String, dynamic> _$JobQueuedResponseToJson(_JobQueuedResponse instance) =>
+    <String, dynamic>{'jobId': instance.jobId, 'message': instance.message};
 
-_$JobImpl _$$JobImplFromJson(Map<String, dynamic> json) => _$JobImpl(
+_Job _$JobFromJson(Map<String, dynamic> json) => _Job(
   jobId: json['jobId'] as String,
   status: $enumDecode(_$JobStatusEnumEnumMap, json['status']),
   errorMessage: json['errorMessage'] as String?,
 );
 
-Map<String, dynamic> _$$JobImplToJson(_$JobImpl instance) => <String, dynamic>{
+Map<String, dynamic> _$JobToJson(_Job instance) => <String, dynamic>{
   'jobId': instance.jobId,
   'status': _$JobStatusEnumEnumMap[instance.status]!,
   'errorMessage': instance.errorMessage,

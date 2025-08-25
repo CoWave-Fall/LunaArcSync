@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,1652 +9,2003 @@ part of 'page_models.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-Page _$PageFromJson(Map<String, dynamic> json) {
-  return _Page.fromJson(json);
-}
 
 /// @nodoc
 mixin _$Page {
-  String get pageId => throw _privateConstructorUsedError;
-  String get title => throw _privateConstructorUsedError;
-  @HighPrecisionDateTimeConverter()
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  @HighPrecisionDateTimeConverter()
-  DateTime get updatedAt => throw _privateConstructorUsedError;
-  int get order => throw _privateConstructorUsedError;
+
+ String get pageId; String get title;@HighPrecisionDateTimeConverter() DateTime get createdAt;@HighPrecisionDateTimeConverter() DateTime get updatedAt; int get order;
+/// Create a copy of Page
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PageCopyWith<Page> get copyWith => _$PageCopyWithImpl<Page>(this as Page, _$identity);
 
   /// Serializes this Page to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of Page
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $PageCopyWith<Page> get copyWith => throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Page&&(identical(other.pageId, pageId) || other.pageId == pageId)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.order, order) || other.order == order));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,pageId,title,createdAt,updatedAt,order);
+
+@override
+String toString() {
+  return 'Page(pageId: $pageId, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, order: $order)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $PageCopyWith<$Res> {
-  factory $PageCopyWith(Page value, $Res Function(Page) then) =
-      _$PageCopyWithImpl<$Res, Page>;
-  @useResult
-  $Res call({
-    String pageId,
-    String title,
-    @HighPrecisionDateTimeConverter() DateTime createdAt,
-    @HighPrecisionDateTimeConverter() DateTime updatedAt,
-    int order,
-  });
-}
+abstract mixin class $PageCopyWith<$Res>  {
+  factory $PageCopyWith(Page value, $Res Function(Page) _then) = _$PageCopyWithImpl;
+@useResult
+$Res call({
+ String pageId, String title,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int order
+});
 
+
+
+
+}
 /// @nodoc
-class _$PageCopyWithImpl<$Res, $Val extends Page>
+class _$PageCopyWithImpl<$Res>
     implements $PageCopyWith<$Res> {
-  _$PageCopyWithImpl(this._value, this._then);
+  _$PageCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final Page _self;
+  final $Res Function(Page) _then;
 
-  /// Create a copy of Page
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? pageId = null,
-    Object? title = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
-    Object? order = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            pageId: null == pageId
-                ? _value.pageId
-                : pageId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            title: null == title
-                ? _value.title
-                : title // ignore: cast_nullable_to_non_nullable
-                      as String,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            updatedAt: null == updatedAt
-                ? _value.updatedAt
-                : updatedAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            order: null == order
-                ? _value.order
-                : order // ignore: cast_nullable_to_non_nullable
-                      as int,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of Page
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? pageId = null,Object? title = null,Object? createdAt = null,Object? updatedAt = null,Object? order = null,}) {
+  return _then(_self.copyWith(
+pageId: null == pageId ? _self.pageId : pageId // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,order: null == order ? _self.order : order // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-abstract class _$$PageImplCopyWith<$Res> implements $PageCopyWith<$Res> {
-  factory _$$PageImplCopyWith(
-    _$PageImpl value,
-    $Res Function(_$PageImpl) then,
-  ) = __$$PageImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    String pageId,
-    String title,
-    @HighPrecisionDateTimeConverter() DateTime createdAt,
-    @HighPrecisionDateTimeConverter() DateTime updatedAt,
-    int order,
-  });
 }
 
-/// @nodoc
-class __$$PageImplCopyWithImpl<$Res>
-    extends _$PageCopyWithImpl<$Res, _$PageImpl>
-    implements _$$PageImplCopyWith<$Res> {
-  __$$PageImplCopyWithImpl(_$PageImpl _value, $Res Function(_$PageImpl) _then)
-    : super(_value, _then);
 
-  /// Create a copy of Page
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? pageId = null,
-    Object? title = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
-    Object? order = null,
-  }) {
-    return _then(
-      _$PageImpl(
-        pageId: null == pageId
-            ? _value.pageId
-            : pageId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        title: null == title
-            ? _value.title
-            : title // ignore: cast_nullable_to_non_nullable
-                  as String,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        updatedAt: null == updatedAt
-            ? _value.updatedAt
-            : updatedAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        order: null == order
-            ? _value.order
-            : order // ignore: cast_nullable_to_non_nullable
-                  as int,
-      ),
-    );
-  }
+/// Adds pattern-matching-related methods to [Page].
+extension PagePatterns on Page {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Page value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Page() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Page value)  $default,){
+final _that = this;
+switch (_that) {
+case _Page():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Page value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Page() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int order)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Page() when $default != null:
+return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.order);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int order)  $default,) {final _that = this;
+switch (_that) {
+case _Page():
+return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.order);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int order)?  $default,) {final _that = this;
+switch (_that) {
+case _Page() when $default != null:
+return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.order);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$PageImpl implements _Page {
-  const _$PageImpl({
-    required this.pageId,
-    required this.title,
-    @HighPrecisionDateTimeConverter() required this.createdAt,
-    @HighPrecisionDateTimeConverter() required this.updatedAt,
-    this.order = 0,
-  });
 
-  factory _$PageImpl.fromJson(Map<String, dynamic> json) =>
-      _$$PageImplFromJson(json);
+class _Page implements Page {
+  const _Page({required this.pageId, required this.title, @HighPrecisionDateTimeConverter() required this.createdAt, @HighPrecisionDateTimeConverter() required this.updatedAt, this.order = 0});
+  factory _Page.fromJson(Map<String, dynamic> json) => _$PageFromJson(json);
 
-  @override
-  final String pageId;
-  @override
-  final String title;
-  @override
-  @HighPrecisionDateTimeConverter()
-  final DateTime createdAt;
-  @override
-  @HighPrecisionDateTimeConverter()
-  final DateTime updatedAt;
-  @override
-  @JsonKey()
-  final int order;
+@override final  String pageId;
+@override final  String title;
+@override@HighPrecisionDateTimeConverter() final  DateTime createdAt;
+@override@HighPrecisionDateTimeConverter() final  DateTime updatedAt;
+@override@JsonKey() final  int order;
 
-  @override
-  String toString() {
-    return 'Page(pageId: $pageId, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, order: $order)';
-  }
+/// Create a copy of Page
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$PageCopyWith<_Page> get copyWith => __$PageCopyWithImpl<_Page>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PageImpl &&
-            (identical(other.pageId, pageId) || other.pageId == pageId) &&
-            (identical(other.title, title) || other.title == title) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt) &&
-            (identical(other.order, order) || other.order == order));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, pageId, title, createdAt, updatedAt, order);
-
-  /// Create a copy of Page
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PageImplCopyWith<_$PageImpl> get copyWith =>
-      __$$PageImplCopyWithImpl<_$PageImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$PageImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$PageToJson(this, );
 }
 
-abstract class _Page implements Page {
-  const factory _Page({
-    required final String pageId,
-    required final String title,
-    @HighPrecisionDateTimeConverter() required final DateTime createdAt,
-    @HighPrecisionDateTimeConverter() required final DateTime updatedAt,
-    final int order,
-  }) = _$PageImpl;
-
-  factory _Page.fromJson(Map<String, dynamic> json) = _$PageImpl.fromJson;
-
-  @override
-  String get pageId;
-  @override
-  String get title;
-  @override
-  @HighPrecisionDateTimeConverter()
-  DateTime get createdAt;
-  @override
-  @HighPrecisionDateTimeConverter()
-  DateTime get updatedAt;
-  @override
-  int get order;
-
-  /// Create a copy of Page
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PageImplCopyWith<_$PageImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Page&&(identical(other.pageId, pageId) || other.pageId == pageId)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.order, order) || other.order == order));
 }
 
-Bbox _$BboxFromJson(Map<String, dynamic> json) {
-  return _Bbox.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,pageId,title,createdAt,updatedAt,order);
+
+@override
+String toString() {
+  return 'Page(pageId: $pageId, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, order: $order)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$PageCopyWith<$Res> implements $PageCopyWith<$Res> {
+  factory _$PageCopyWith(_Page value, $Res Function(_Page) _then) = __$PageCopyWithImpl;
+@override @useResult
+$Res call({
+ String pageId, String title,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int order
+});
+
+
+
+
+}
+/// @nodoc
+class __$PageCopyWithImpl<$Res>
+    implements _$PageCopyWith<$Res> {
+  __$PageCopyWithImpl(this._self, this._then);
+
+  final _Page _self;
+  final $Res Function(_Page) _then;
+
+/// Create a copy of Page
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? pageId = null,Object? title = null,Object? createdAt = null,Object? updatedAt = null,Object? order = null,}) {
+  return _then(_Page(
+pageId: null == pageId ? _self.pageId : pageId // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,order: null == order ? _self.order : order // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$Bbox {
-  int get x1 => throw _privateConstructorUsedError;
-  int get y1 => throw _privateConstructorUsedError;
-  int get x2 => throw _privateConstructorUsedError;
-  int get y2 => throw _privateConstructorUsedError;
+
+ int get x1; int get y1; int get x2; int get y2;
+/// Create a copy of Bbox
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$BboxCopyWith<Bbox> get copyWith => _$BboxCopyWithImpl<Bbox>(this as Bbox, _$identity);
 
   /// Serializes this Bbox to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of Bbox
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $BboxCopyWith<Bbox> get copyWith => throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Bbox&&(identical(other.x1, x1) || other.x1 == x1)&&(identical(other.y1, y1) || other.y1 == y1)&&(identical(other.x2, x2) || other.x2 == x2)&&(identical(other.y2, y2) || other.y2 == y2));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,x1,y1,x2,y2);
+
+@override
+String toString() {
+  return 'Bbox(x1: $x1, y1: $y1, x2: $x2, y2: $y2)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $BboxCopyWith<$Res> {
-  factory $BboxCopyWith(Bbox value, $Res Function(Bbox) then) =
-      _$BboxCopyWithImpl<$Res, Bbox>;
-  @useResult
-  $Res call({int x1, int y1, int x2, int y2});
-}
+abstract mixin class $BboxCopyWith<$Res>  {
+  factory $BboxCopyWith(Bbox value, $Res Function(Bbox) _then) = _$BboxCopyWithImpl;
+@useResult
+$Res call({
+ int x1, int y1, int x2, int y2
+});
 
+
+
+
+}
 /// @nodoc
-class _$BboxCopyWithImpl<$Res, $Val extends Bbox>
+class _$BboxCopyWithImpl<$Res>
     implements $BboxCopyWith<$Res> {
-  _$BboxCopyWithImpl(this._value, this._then);
+  _$BboxCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final Bbox _self;
+  final $Res Function(Bbox) _then;
 
-  /// Create a copy of Bbox
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? x1 = null,
-    Object? y1 = null,
-    Object? x2 = null,
-    Object? y2 = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            x1: null == x1
-                ? _value.x1
-                : x1 // ignore: cast_nullable_to_non_nullable
-                      as int,
-            y1: null == y1
-                ? _value.y1
-                : y1 // ignore: cast_nullable_to_non_nullable
-                      as int,
-            x2: null == x2
-                ? _value.x2
-                : x2 // ignore: cast_nullable_to_non_nullable
-                      as int,
-            y2: null == y2
-                ? _value.y2
-                : y2 // ignore: cast_nullable_to_non_nullable
-                      as int,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of Bbox
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? x1 = null,Object? y1 = null,Object? x2 = null,Object? y2 = null,}) {
+  return _then(_self.copyWith(
+x1: null == x1 ? _self.x1 : x1 // ignore: cast_nullable_to_non_nullable
+as int,y1: null == y1 ? _self.y1 : y1 // ignore: cast_nullable_to_non_nullable
+as int,x2: null == x2 ? _self.x2 : x2 // ignore: cast_nullable_to_non_nullable
+as int,y2: null == y2 ? _self.y2 : y2 // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-abstract class _$$BboxImplCopyWith<$Res> implements $BboxCopyWith<$Res> {
-  factory _$$BboxImplCopyWith(
-    _$BboxImpl value,
-    $Res Function(_$BboxImpl) then,
-  ) = __$$BboxImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({int x1, int y1, int x2, int y2});
 }
 
-/// @nodoc
-class __$$BboxImplCopyWithImpl<$Res>
-    extends _$BboxCopyWithImpl<$Res, _$BboxImpl>
-    implements _$$BboxImplCopyWith<$Res> {
-  __$$BboxImplCopyWithImpl(_$BboxImpl _value, $Res Function(_$BboxImpl) _then)
-    : super(_value, _then);
 
-  /// Create a copy of Bbox
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? x1 = null,
-    Object? y1 = null,
-    Object? x2 = null,
-    Object? y2 = null,
-  }) {
-    return _then(
-      _$BboxImpl(
-        x1: null == x1
-            ? _value.x1
-            : x1 // ignore: cast_nullable_to_non_nullable
-                  as int,
-        y1: null == y1
-            ? _value.y1
-            : y1 // ignore: cast_nullable_to_non_nullable
-                  as int,
-        x2: null == x2
-            ? _value.x2
-            : x2 // ignore: cast_nullable_to_non_nullable
-                  as int,
-        y2: null == y2
-            ? _value.y2
-            : y2 // ignore: cast_nullable_to_non_nullable
-                  as int,
-      ),
-    );
-  }
+/// Adds pattern-matching-related methods to [Bbox].
+extension BboxPatterns on Bbox {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Bbox value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Bbox() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Bbox value)  $default,){
+final _that = this;
+switch (_that) {
+case _Bbox():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Bbox value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Bbox() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int x1,  int y1,  int x2,  int y2)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Bbox() when $default != null:
+return $default(_that.x1,_that.y1,_that.x2,_that.y2);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int x1,  int y1,  int x2,  int y2)  $default,) {final _that = this;
+switch (_that) {
+case _Bbox():
+return $default(_that.x1,_that.y1,_that.x2,_that.y2);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int x1,  int y1,  int x2,  int y2)?  $default,) {final _that = this;
+switch (_that) {
+case _Bbox() when $default != null:
+return $default(_that.x1,_that.y1,_that.x2,_that.y2);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$BboxImpl implements _Bbox {
-  const _$BboxImpl({
-    required this.x1,
-    required this.y1,
-    required this.x2,
-    required this.y2,
-  });
 
-  factory _$BboxImpl.fromJson(Map<String, dynamic> json) =>
-      _$$BboxImplFromJson(json);
+class _Bbox implements Bbox {
+  const _Bbox({required this.x1, required this.y1, required this.x2, required this.y2});
+  factory _Bbox.fromJson(Map<String, dynamic> json) => _$BboxFromJson(json);
 
-  @override
-  final int x1;
-  @override
-  final int y1;
-  @override
-  final int x2;
-  @override
-  final int y2;
+@override final  int x1;
+@override final  int y1;
+@override final  int x2;
+@override final  int y2;
 
-  @override
-  String toString() {
-    return 'Bbox(x1: $x1, y1: $y1, x2: $x2, y2: $y2)';
-  }
+/// Create a copy of Bbox
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$BboxCopyWith<_Bbox> get copyWith => __$BboxCopyWithImpl<_Bbox>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$BboxImpl &&
-            (identical(other.x1, x1) || other.x1 == x1) &&
-            (identical(other.y1, y1) || other.y1 == y1) &&
-            (identical(other.x2, x2) || other.x2 == x2) &&
-            (identical(other.y2, y2) || other.y2 == y2));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, x1, y1, x2, y2);
-
-  /// Create a copy of Bbox
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$BboxImplCopyWith<_$BboxImpl> get copyWith =>
-      __$$BboxImplCopyWithImpl<_$BboxImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$BboxImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$BboxToJson(this, );
 }
 
-abstract class _Bbox implements Bbox {
-  const factory _Bbox({
-    required final int x1,
-    required final int y1,
-    required final int x2,
-    required final int y2,
-  }) = _$BboxImpl;
-
-  factory _Bbox.fromJson(Map<String, dynamic> json) = _$BboxImpl.fromJson;
-
-  @override
-  int get x1;
-  @override
-  int get y1;
-  @override
-  int get x2;
-  @override
-  int get y2;
-
-  /// Create a copy of Bbox
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$BboxImplCopyWith<_$BboxImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Bbox&&(identical(other.x1, x1) || other.x1 == x1)&&(identical(other.y1, y1) || other.y1 == y1)&&(identical(other.x2, x2) || other.x2 == x2)&&(identical(other.y2, y2) || other.y2 == y2));
 }
 
-OcrWord _$OcrWordFromJson(Map<String, dynamic> json) {
-  return _OcrWord.fromJson(json);
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,x1,y1,x2,y2);
+
+@override
+String toString() {
+  return 'Bbox(x1: $x1, y1: $y1, x2: $x2, y2: $y2)';
 }
+
+
+}
+
+/// @nodoc
+abstract mixin class _$BboxCopyWith<$Res> implements $BboxCopyWith<$Res> {
+  factory _$BboxCopyWith(_Bbox value, $Res Function(_Bbox) _then) = __$BboxCopyWithImpl;
+@override @useResult
+$Res call({
+ int x1, int y1, int x2, int y2
+});
+
+
+
+
+}
+/// @nodoc
+class __$BboxCopyWithImpl<$Res>
+    implements _$BboxCopyWith<$Res> {
+  __$BboxCopyWithImpl(this._self, this._then);
+
+  final _Bbox _self;
+  final $Res Function(_Bbox) _then;
+
+/// Create a copy of Bbox
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? x1 = null,Object? y1 = null,Object? x2 = null,Object? y2 = null,}) {
+  return _then(_Bbox(
+x1: null == x1 ? _self.x1 : x1 // ignore: cast_nullable_to_non_nullable
+as int,y1: null == y1 ? _self.y1 : y1 // ignore: cast_nullable_to_non_nullable
+as int,x2: null == x2 ? _self.x2 : x2 // ignore: cast_nullable_to_non_nullable
+as int,y2: null == y2 ? _self.y2 : y2 // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$OcrWord {
-  String get text => throw _privateConstructorUsedError;
-  Bbox get bbox => throw _privateConstructorUsedError;
-  double get confidence => throw _privateConstructorUsedError;
+
+ String get text; Bbox get bbox; double get confidence;
+/// Create a copy of OcrWord
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$OcrWordCopyWith<OcrWord> get copyWith => _$OcrWordCopyWithImpl<OcrWord>(this as OcrWord, _$identity);
 
   /// Serializes this OcrWord to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of OcrWord
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $OcrWordCopyWith<OcrWord> get copyWith => throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OcrWord&&(identical(other.text, text) || other.text == text)&&(identical(other.bbox, bbox) || other.bbox == bbox)&&(identical(other.confidence, confidence) || other.confidence == confidence));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,text,bbox,confidence);
+
+@override
+String toString() {
+  return 'OcrWord(text: $text, bbox: $bbox, confidence: $confidence)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $OcrWordCopyWith<$Res> {
-  factory $OcrWordCopyWith(OcrWord value, $Res Function(OcrWord) then) =
-      _$OcrWordCopyWithImpl<$Res, OcrWord>;
-  @useResult
-  $Res call({String text, Bbox bbox, double confidence});
+abstract mixin class $OcrWordCopyWith<$Res>  {
+  factory $OcrWordCopyWith(OcrWord value, $Res Function(OcrWord) _then) = _$OcrWordCopyWithImpl;
+@useResult
+$Res call({
+ String text, Bbox bbox, double confidence
+});
 
-  $BboxCopyWith<$Res> get bbox;
+
+$BboxCopyWith<$Res> get bbox;
+
 }
-
 /// @nodoc
-class _$OcrWordCopyWithImpl<$Res, $Val extends OcrWord>
+class _$OcrWordCopyWithImpl<$Res>
     implements $OcrWordCopyWith<$Res> {
-  _$OcrWordCopyWithImpl(this._value, this._then);
+  _$OcrWordCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final OcrWord _self;
+  final $Res Function(OcrWord) _then;
 
-  /// Create a copy of OcrWord
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? text = null,
-    Object? bbox = null,
-    Object? confidence = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            text: null == text
-                ? _value.text
-                : text // ignore: cast_nullable_to_non_nullable
-                      as String,
-            bbox: null == bbox
-                ? _value.bbox
-                : bbox // ignore: cast_nullable_to_non_nullable
-                      as Bbox,
-            confidence: null == confidence
-                ? _value.confidence
-                : confidence // ignore: cast_nullable_to_non_nullable
-                      as double,
-          )
-          as $Val,
-    );
-  }
-
-  /// Create a copy of OcrWord
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $BboxCopyWith<$Res> get bbox {
-    return $BboxCopyWith<$Res>(_value.bbox, (value) {
-      return _then(_value.copyWith(bbox: value) as $Val);
-    });
-  }
+/// Create a copy of OcrWord
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? text = null,Object? bbox = null,Object? confidence = null,}) {
+  return _then(_self.copyWith(
+text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+as String,bbox: null == bbox ? _self.bbox : bbox // ignore: cast_nullable_to_non_nullable
+as Bbox,confidence: null == confidence ? _self.confidence : confidence // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
+}
+/// Create a copy of OcrWord
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BboxCopyWith<$Res> get bbox {
+  
+  return $BboxCopyWith<$Res>(_self.bbox, (value) {
+    return _then(_self.copyWith(bbox: value));
+  });
+}
 }
 
-/// @nodoc
-abstract class _$$OcrWordImplCopyWith<$Res> implements $OcrWordCopyWith<$Res> {
-  factory _$$OcrWordImplCopyWith(
-    _$OcrWordImpl value,
-    $Res Function(_$OcrWordImpl) then,
-  ) = __$$OcrWordImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String text, Bbox bbox, double confidence});
 
-  @override
-  $BboxCopyWith<$Res> get bbox;
+/// Adds pattern-matching-related methods to [OcrWord].
+extension OcrWordPatterns on OcrWord {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _OcrWord value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _OcrWord() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _OcrWord value)  $default,){
+final _that = this;
+switch (_that) {
+case _OcrWord():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _OcrWord value)?  $default,){
+final _that = this;
+switch (_that) {
+case _OcrWord() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String text,  Bbox bbox,  double confidence)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _OcrWord() when $default != null:
+return $default(_that.text,_that.bbox,_that.confidence);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String text,  Bbox bbox,  double confidence)  $default,) {final _that = this;
+switch (_that) {
+case _OcrWord():
+return $default(_that.text,_that.bbox,_that.confidence);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String text,  Bbox bbox,  double confidence)?  $default,) {final _that = this;
+switch (_that) {
+case _OcrWord() when $default != null:
+return $default(_that.text,_that.bbox,_that.confidence);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-class __$$OcrWordImplCopyWithImpl<$Res>
-    extends _$OcrWordCopyWithImpl<$Res, _$OcrWordImpl>
-    implements _$$OcrWordImplCopyWith<$Res> {
-  __$$OcrWordImplCopyWithImpl(
-    _$OcrWordImpl _value,
-    $Res Function(_$OcrWordImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of OcrWord
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? text = null,
-    Object? bbox = null,
-    Object? confidence = null,
-  }) {
-    return _then(
-      _$OcrWordImpl(
-        text: null == text
-            ? _value.text
-            : text // ignore: cast_nullable_to_non_nullable
-                  as String,
-        bbox: null == bbox
-            ? _value.bbox
-            : bbox // ignore: cast_nullable_to_non_nullable
-                  as Bbox,
-        confidence: null == confidence
-            ? _value.confidence
-            : confidence // ignore: cast_nullable_to_non_nullable
-                  as double,
-      ),
-    );
-  }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$OcrWordImpl implements _OcrWord {
-  const _$OcrWordImpl({
-    required this.text,
-    required this.bbox,
-    required this.confidence,
+
+class _OcrWord implements OcrWord {
+  const _OcrWord({required this.text, required this.bbox, required this.confidence});
+  factory _OcrWord.fromJson(Map<String, dynamic> json) => _$OcrWordFromJson(json);
+
+@override final  String text;
+@override final  Bbox bbox;
+@override final  double confidence;
+
+/// Create a copy of OcrWord
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$OcrWordCopyWith<_OcrWord> get copyWith => __$OcrWordCopyWithImpl<_OcrWord>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$OcrWordToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OcrWord&&(identical(other.text, text) || other.text == text)&&(identical(other.bbox, bbox) || other.bbox == bbox)&&(identical(other.confidence, confidence) || other.confidence == confidence));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,text,bbox,confidence);
+
+@override
+String toString() {
+  return 'OcrWord(text: $text, bbox: $bbox, confidence: $confidence)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$OcrWordCopyWith<$Res> implements $OcrWordCopyWith<$Res> {
+  factory _$OcrWordCopyWith(_OcrWord value, $Res Function(_OcrWord) _then) = __$OcrWordCopyWithImpl;
+@override @useResult
+$Res call({
+ String text, Bbox bbox, double confidence
+});
+
+
+@override $BboxCopyWith<$Res> get bbox;
+
+}
+/// @nodoc
+class __$OcrWordCopyWithImpl<$Res>
+    implements _$OcrWordCopyWith<$Res> {
+  __$OcrWordCopyWithImpl(this._self, this._then);
+
+  final _OcrWord _self;
+  final $Res Function(_OcrWord) _then;
+
+/// Create a copy of OcrWord
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? text = null,Object? bbox = null,Object? confidence = null,}) {
+  return _then(_OcrWord(
+text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+as String,bbox: null == bbox ? _self.bbox : bbox // ignore: cast_nullable_to_non_nullable
+as Bbox,confidence: null == confidence ? _self.confidence : confidence // ignore: cast_nullable_to_non_nullable
+as double,
+  ));
+}
+
+/// Create a copy of OcrWord
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BboxCopyWith<$Res> get bbox {
+  
+  return $BboxCopyWith<$Res>(_self.bbox, (value) {
+    return _then(_self.copyWith(bbox: value));
   });
-
-  factory _$OcrWordImpl.fromJson(Map<String, dynamic> json) =>
-      _$$OcrWordImplFromJson(json);
-
-  @override
-  final String text;
-  @override
-  final Bbox bbox;
-  @override
-  final double confidence;
-
-  @override
-  String toString() {
-    return 'OcrWord(text: $text, bbox: $bbox, confidence: $confidence)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$OcrWordImpl &&
-            (identical(other.text, text) || other.text == text) &&
-            (identical(other.bbox, bbox) || other.bbox == bbox) &&
-            (identical(other.confidence, confidence) ||
-                other.confidence == confidence));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, text, bbox, confidence);
-
-  /// Create a copy of OcrWord
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$OcrWordImplCopyWith<_$OcrWordImpl> get copyWith =>
-      __$$OcrWordImplCopyWithImpl<_$OcrWordImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$OcrWordImplToJson(this);
-  }
+}
 }
 
-abstract class _OcrWord implements OcrWord {
-  const factory _OcrWord({
-    required final String text,
-    required final Bbox bbox,
-    required final double confidence,
-  }) = _$OcrWordImpl;
-
-  factory _OcrWord.fromJson(Map<String, dynamic> json) = _$OcrWordImpl.fromJson;
-
-  @override
-  String get text;
-  @override
-  Bbox get bbox;
-  @override
-  double get confidence;
-
-  /// Create a copy of OcrWord
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$OcrWordImplCopyWith<_$OcrWordImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-OcrLine _$OcrLineFromJson(Map<String, dynamic> json) {
-  return _OcrLine.fromJson(json);
-}
 
 /// @nodoc
 mixin _$OcrLine {
-  List<OcrWord> get words => throw _privateConstructorUsedError;
-  String get text => throw _privateConstructorUsedError;
-  Bbox get bbox => throw _privateConstructorUsedError;
+
+ List<OcrWord> get words; String get text; Bbox get bbox;
+/// Create a copy of OcrLine
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$OcrLineCopyWith<OcrLine> get copyWith => _$OcrLineCopyWithImpl<OcrLine>(this as OcrLine, _$identity);
 
   /// Serializes this OcrLine to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of OcrLine
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $OcrLineCopyWith<OcrLine> get copyWith => throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OcrLine&&const DeepCollectionEquality().equals(other.words, words)&&(identical(other.text, text) || other.text == text)&&(identical(other.bbox, bbox) || other.bbox == bbox));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(words),text,bbox);
+
+@override
+String toString() {
+  return 'OcrLine(words: $words, text: $text, bbox: $bbox)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $OcrLineCopyWith<$Res> {
-  factory $OcrLineCopyWith(OcrLine value, $Res Function(OcrLine) then) =
-      _$OcrLineCopyWithImpl<$Res, OcrLine>;
-  @useResult
-  $Res call({List<OcrWord> words, String text, Bbox bbox});
+abstract mixin class $OcrLineCopyWith<$Res>  {
+  factory $OcrLineCopyWith(OcrLine value, $Res Function(OcrLine) _then) = _$OcrLineCopyWithImpl;
+@useResult
+$Res call({
+ List<OcrWord> words, String text, Bbox bbox
+});
 
-  $BboxCopyWith<$Res> get bbox;
+
+$BboxCopyWith<$Res> get bbox;
+
 }
-
 /// @nodoc
-class _$OcrLineCopyWithImpl<$Res, $Val extends OcrLine>
+class _$OcrLineCopyWithImpl<$Res>
     implements $OcrLineCopyWith<$Res> {
-  _$OcrLineCopyWithImpl(this._value, this._then);
+  _$OcrLineCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final OcrLine _self;
+  final $Res Function(OcrLine) _then;
 
-  /// Create a copy of OcrLine
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? words = null, Object? text = null, Object? bbox = null}) {
-    return _then(
-      _value.copyWith(
-            words: null == words
-                ? _value.words
-                : words // ignore: cast_nullable_to_non_nullable
-                      as List<OcrWord>,
-            text: null == text
-                ? _value.text
-                : text // ignore: cast_nullable_to_non_nullable
-                      as String,
-            bbox: null == bbox
-                ? _value.bbox
-                : bbox // ignore: cast_nullable_to_non_nullable
-                      as Bbox,
-          )
-          as $Val,
-    );
-  }
-
-  /// Create a copy of OcrLine
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $BboxCopyWith<$Res> get bbox {
-    return $BboxCopyWith<$Res>(_value.bbox, (value) {
-      return _then(_value.copyWith(bbox: value) as $Val);
-    });
-  }
+/// Create a copy of OcrLine
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? words = null,Object? text = null,Object? bbox = null,}) {
+  return _then(_self.copyWith(
+words: null == words ? _self.words : words // ignore: cast_nullable_to_non_nullable
+as List<OcrWord>,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+as String,bbox: null == bbox ? _self.bbox : bbox // ignore: cast_nullable_to_non_nullable
+as Bbox,
+  ));
+}
+/// Create a copy of OcrLine
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BboxCopyWith<$Res> get bbox {
+  
+  return $BboxCopyWith<$Res>(_self.bbox, (value) {
+    return _then(_self.copyWith(bbox: value));
+  });
+}
 }
 
-/// @nodoc
-abstract class _$$OcrLineImplCopyWith<$Res> implements $OcrLineCopyWith<$Res> {
-  factory _$$OcrLineImplCopyWith(
-    _$OcrLineImpl value,
-    $Res Function(_$OcrLineImpl) then,
-  ) = __$$OcrLineImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({List<OcrWord> words, String text, Bbox bbox});
 
-  @override
-  $BboxCopyWith<$Res> get bbox;
+/// Adds pattern-matching-related methods to [OcrLine].
+extension OcrLinePatterns on OcrLine {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _OcrLine value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _OcrLine() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _OcrLine value)  $default,){
+final _that = this;
+switch (_that) {
+case _OcrLine():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _OcrLine value)?  $default,){
+final _that = this;
+switch (_that) {
+case _OcrLine() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<OcrWord> words,  String text,  Bbox bbox)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _OcrLine() when $default != null:
+return $default(_that.words,_that.text,_that.bbox);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<OcrWord> words,  String text,  Bbox bbox)  $default,) {final _that = this;
+switch (_that) {
+case _OcrLine():
+return $default(_that.words,_that.text,_that.bbox);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<OcrWord> words,  String text,  Bbox bbox)?  $default,) {final _that = this;
+switch (_that) {
+case _OcrLine() when $default != null:
+return $default(_that.words,_that.text,_that.bbox);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-class __$$OcrLineImplCopyWithImpl<$Res>
-    extends _$OcrLineCopyWithImpl<$Res, _$OcrLineImpl>
-    implements _$$OcrLineImplCopyWith<$Res> {
-  __$$OcrLineImplCopyWithImpl(
-    _$OcrLineImpl _value,
-    $Res Function(_$OcrLineImpl) _then,
-  ) : super(_value, _then);
-
-  /// Create a copy of OcrLine
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({Object? words = null, Object? text = null, Object? bbox = null}) {
-    return _then(
-      _$OcrLineImpl(
-        words: null == words
-            ? _value._words
-            : words // ignore: cast_nullable_to_non_nullable
-                  as List<OcrWord>,
-        text: null == text
-            ? _value.text
-            : text // ignore: cast_nullable_to_non_nullable
-                  as String,
-        bbox: null == bbox
-            ? _value.bbox
-            : bbox // ignore: cast_nullable_to_non_nullable
-                  as Bbox,
-      ),
-    );
-  }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$OcrLineImpl implements _OcrLine {
-  const _$OcrLineImpl({
-    required final List<OcrWord> words,
-    required this.text,
-    required this.bbox,
-  }) : _words = words;
 
-  factory _$OcrLineImpl.fromJson(Map<String, dynamic> json) =>
-      _$$OcrLineImplFromJson(json);
+class _OcrLine implements OcrLine {
+  const _OcrLine({required final  List<OcrWord> words, required this.text, required this.bbox}): _words = words;
+  factory _OcrLine.fromJson(Map<String, dynamic> json) => _$OcrLineFromJson(json);
 
-  final List<OcrWord> _words;
-  @override
-  List<OcrWord> get words {
-    if (_words is EqualUnmodifiableListView) return _words;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_words);
-  }
-
-  @override
-  final String text;
-  @override
-  final Bbox bbox;
-
-  @override
-  String toString() {
-    return 'OcrLine(words: $words, text: $text, bbox: $bbox)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$OcrLineImpl &&
-            const DeepCollectionEquality().equals(other._words, _words) &&
-            (identical(other.text, text) || other.text == text) &&
-            (identical(other.bbox, bbox) || other.bbox == bbox));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_words),
-    text,
-    bbox,
-  );
-
-  /// Create a copy of OcrLine
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$OcrLineImplCopyWith<_$OcrLineImpl> get copyWith =>
-      __$$OcrLineImplCopyWithImpl<_$OcrLineImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$OcrLineImplToJson(this);
-  }
+ final  List<OcrWord> _words;
+@override List<OcrWord> get words {
+  if (_words is EqualUnmodifiableListView) return _words;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_words);
 }
 
-abstract class _OcrLine implements OcrLine {
-  const factory _OcrLine({
-    required final List<OcrWord> words,
-    required final String text,
-    required final Bbox bbox,
-  }) = _$OcrLineImpl;
+@override final  String text;
+@override final  Bbox bbox;
 
-  factory _OcrLine.fromJson(Map<String, dynamic> json) = _$OcrLineImpl.fromJson;
+/// Create a copy of OcrLine
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$OcrLineCopyWith<_OcrLine> get copyWith => __$OcrLineCopyWithImpl<_OcrLine>(this, _$identity);
 
-  @override
-  List<OcrWord> get words;
-  @override
-  String get text;
-  @override
-  Bbox get bbox;
-
-  /// Create a copy of OcrLine
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$OcrLineImplCopyWith<_$OcrLineImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$OcrLineToJson(this, );
 }
 
-OcrResult _$OcrResultFromJson(Map<String, dynamic> json) {
-  return _OcrResult.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OcrLine&&const DeepCollectionEquality().equals(other._words, _words)&&(identical(other.text, text) || other.text == text)&&(identical(other.bbox, bbox) || other.bbox == bbox));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_words),text,bbox);
+
+@override
+String toString() {
+  return 'OcrLine(words: $words, text: $text, bbox: $bbox)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$OcrLineCopyWith<$Res> implements $OcrLineCopyWith<$Res> {
+  factory _$OcrLineCopyWith(_OcrLine value, $Res Function(_OcrLine) _then) = __$OcrLineCopyWithImpl;
+@override @useResult
+$Res call({
+ List<OcrWord> words, String text, Bbox bbox
+});
+
+
+@override $BboxCopyWith<$Res> get bbox;
+
+}
+/// @nodoc
+class __$OcrLineCopyWithImpl<$Res>
+    implements _$OcrLineCopyWith<$Res> {
+  __$OcrLineCopyWithImpl(this._self, this._then);
+
+  final _OcrLine _self;
+  final $Res Function(_OcrLine) _then;
+
+/// Create a copy of OcrLine
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? words = null,Object? text = null,Object? bbox = null,}) {
+  return _then(_OcrLine(
+words: null == words ? _self._words : words // ignore: cast_nullable_to_non_nullable
+as List<OcrWord>,text: null == text ? _self.text : text // ignore: cast_nullable_to_non_nullable
+as String,bbox: null == bbox ? _self.bbox : bbox // ignore: cast_nullable_to_non_nullable
+as Bbox,
+  ));
+}
+
+/// Create a copy of OcrLine
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BboxCopyWith<$Res> get bbox {
+  
+  return $BboxCopyWith<$Res>(_self.bbox, (value) {
+    return _then(_self.copyWith(bbox: value));
+  });
+}
+}
+
 
 /// @nodoc
 mixin _$OcrResult {
-  List<OcrLine> get lines => throw _privateConstructorUsedError;
-  int get imageWidth => throw _privateConstructorUsedError;
-  int get imageHeight => throw _privateConstructorUsedError;
+
+ List<OcrLine> get lines; int get imageWidth; int get imageHeight;
+/// Create a copy of OcrResult
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$OcrResultCopyWith<OcrResult> get copyWith => _$OcrResultCopyWithImpl<OcrResult>(this as OcrResult, _$identity);
 
   /// Serializes this OcrResult to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of OcrResult
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $OcrResultCopyWith<OcrResult> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OcrResult&&const DeepCollectionEquality().equals(other.lines, lines)&&(identical(other.imageWidth, imageWidth) || other.imageWidth == imageWidth)&&(identical(other.imageHeight, imageHeight) || other.imageHeight == imageHeight));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(lines),imageWidth,imageHeight);
+
+@override
+String toString() {
+  return 'OcrResult(lines: $lines, imageWidth: $imageWidth, imageHeight: $imageHeight)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $OcrResultCopyWith<$Res> {
-  factory $OcrResultCopyWith(OcrResult value, $Res Function(OcrResult) then) =
-      _$OcrResultCopyWithImpl<$Res, OcrResult>;
-  @useResult
-  $Res call({List<OcrLine> lines, int imageWidth, int imageHeight});
-}
+abstract mixin class $OcrResultCopyWith<$Res>  {
+  factory $OcrResultCopyWith(OcrResult value, $Res Function(OcrResult) _then) = _$OcrResultCopyWithImpl;
+@useResult
+$Res call({
+ List<OcrLine> lines, int imageWidth, int imageHeight
+});
 
+
+
+
+}
 /// @nodoc
-class _$OcrResultCopyWithImpl<$Res, $Val extends OcrResult>
+class _$OcrResultCopyWithImpl<$Res>
     implements $OcrResultCopyWith<$Res> {
-  _$OcrResultCopyWithImpl(this._value, this._then);
+  _$OcrResultCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final OcrResult _self;
+  final $Res Function(OcrResult) _then;
 
-  /// Create a copy of OcrResult
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? lines = null,
-    Object? imageWidth = null,
-    Object? imageHeight = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            lines: null == lines
-                ? _value.lines
-                : lines // ignore: cast_nullable_to_non_nullable
-                      as List<OcrLine>,
-            imageWidth: null == imageWidth
-                ? _value.imageWidth
-                : imageWidth // ignore: cast_nullable_to_non_nullable
-                      as int,
-            imageHeight: null == imageHeight
-                ? _value.imageHeight
-                : imageHeight // ignore: cast_nullable_to_non_nullable
-                      as int,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of OcrResult
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? lines = null,Object? imageWidth = null,Object? imageHeight = null,}) {
+  return _then(_self.copyWith(
+lines: null == lines ? _self.lines : lines // ignore: cast_nullable_to_non_nullable
+as List<OcrLine>,imageWidth: null == imageWidth ? _self.imageWidth : imageWidth // ignore: cast_nullable_to_non_nullable
+as int,imageHeight: null == imageHeight ? _self.imageHeight : imageHeight // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
 
-/// @nodoc
-abstract class _$$OcrResultImplCopyWith<$Res>
-    implements $OcrResultCopyWith<$Res> {
-  factory _$$OcrResultImplCopyWith(
-    _$OcrResultImpl value,
-    $Res Function(_$OcrResultImpl) then,
-  ) = __$$OcrResultImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({List<OcrLine> lines, int imageWidth, int imageHeight});
 }
 
-/// @nodoc
-class __$$OcrResultImplCopyWithImpl<$Res>
-    extends _$OcrResultCopyWithImpl<$Res, _$OcrResultImpl>
-    implements _$$OcrResultImplCopyWith<$Res> {
-  __$$OcrResultImplCopyWithImpl(
-    _$OcrResultImpl _value,
-    $Res Function(_$OcrResultImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of OcrResult
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? lines = null,
-    Object? imageWidth = null,
-    Object? imageHeight = null,
-  }) {
-    return _then(
-      _$OcrResultImpl(
-        lines: null == lines
-            ? _value._lines
-            : lines // ignore: cast_nullable_to_non_nullable
-                  as List<OcrLine>,
-        imageWidth: null == imageWidth
-            ? _value.imageWidth
-            : imageWidth // ignore: cast_nullable_to_non_nullable
-                  as int,
-        imageHeight: null == imageHeight
-            ? _value.imageHeight
-            : imageHeight // ignore: cast_nullable_to_non_nullable
-                  as int,
-      ),
-    );
-  }
+/// Adds pattern-matching-related methods to [OcrResult].
+extension OcrResultPatterns on OcrResult {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _OcrResult value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _OcrResult() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _OcrResult value)  $default,){
+final _that = this;
+switch (_that) {
+case _OcrResult():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _OcrResult value)?  $default,){
+final _that = this;
+switch (_that) {
+case _OcrResult() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<OcrLine> lines,  int imageWidth,  int imageHeight)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _OcrResult() when $default != null:
+return $default(_that.lines,_that.imageWidth,_that.imageHeight);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<OcrLine> lines,  int imageWidth,  int imageHeight)  $default,) {final _that = this;
+switch (_that) {
+case _OcrResult():
+return $default(_that.lines,_that.imageWidth,_that.imageHeight);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<OcrLine> lines,  int imageWidth,  int imageHeight)?  $default,) {final _that = this;
+switch (_that) {
+case _OcrResult() when $default != null:
+return $default(_that.lines,_that.imageWidth,_that.imageHeight);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$OcrResultImpl implements _OcrResult {
-  const _$OcrResultImpl({
-    required final List<OcrLine> lines,
-    required this.imageWidth,
-    required this.imageHeight,
-  }) : _lines = lines;
 
-  factory _$OcrResultImpl.fromJson(Map<String, dynamic> json) =>
-      _$$OcrResultImplFromJson(json);
+class _OcrResult implements OcrResult {
+  const _OcrResult({required final  List<OcrLine> lines, required this.imageWidth, required this.imageHeight}): _lines = lines;
+  factory _OcrResult.fromJson(Map<String, dynamic> json) => _$OcrResultFromJson(json);
 
-  final List<OcrLine> _lines;
-  @override
-  List<OcrLine> get lines {
-    if (_lines is EqualUnmodifiableListView) return _lines;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_lines);
-  }
-
-  @override
-  final int imageWidth;
-  @override
-  final int imageHeight;
-
-  @override
-  String toString() {
-    return 'OcrResult(lines: $lines, imageWidth: $imageWidth, imageHeight: $imageHeight)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$OcrResultImpl &&
-            const DeepCollectionEquality().equals(other._lines, _lines) &&
-            (identical(other.imageWidth, imageWidth) ||
-                other.imageWidth == imageWidth) &&
-            (identical(other.imageHeight, imageHeight) ||
-                other.imageHeight == imageHeight));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_lines),
-    imageWidth,
-    imageHeight,
-  );
-
-  /// Create a copy of OcrResult
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$OcrResultImplCopyWith<_$OcrResultImpl> get copyWith =>
-      __$$OcrResultImplCopyWithImpl<_$OcrResultImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$OcrResultImplToJson(this);
-  }
+ final  List<OcrLine> _lines;
+@override List<OcrLine> get lines {
+  if (_lines is EqualUnmodifiableListView) return _lines;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_lines);
 }
 
-abstract class _OcrResult implements OcrResult {
-  const factory _OcrResult({
-    required final List<OcrLine> lines,
-    required final int imageWidth,
-    required final int imageHeight,
-  }) = _$OcrResultImpl;
+@override final  int imageWidth;
+@override final  int imageHeight;
 
-  factory _OcrResult.fromJson(Map<String, dynamic> json) =
-      _$OcrResultImpl.fromJson;
+/// Create a copy of OcrResult
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$OcrResultCopyWith<_OcrResult> get copyWith => __$OcrResultCopyWithImpl<_OcrResult>(this, _$identity);
 
-  @override
-  List<OcrLine> get lines;
-  @override
-  int get imageWidth;
-  @override
-  int get imageHeight;
-
-  /// Create a copy of OcrResult
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$OcrResultImplCopyWith<_$OcrResultImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$OcrResultToJson(this, );
 }
 
-PageVersion _$PageVersionFromJson(Map<String, dynamic> json) {
-  return _PageVersion.fromJson(json);
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OcrResult&&const DeepCollectionEquality().equals(other._lines, _lines)&&(identical(other.imageWidth, imageWidth) || other.imageWidth == imageWidth)&&(identical(other.imageHeight, imageHeight) || other.imageHeight == imageHeight));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_lines),imageWidth,imageHeight);
+
+@override
+String toString() {
+  return 'OcrResult(lines: $lines, imageWidth: $imageWidth, imageHeight: $imageHeight)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$OcrResultCopyWith<$Res> implements $OcrResultCopyWith<$Res> {
+  factory _$OcrResultCopyWith(_OcrResult value, $Res Function(_OcrResult) _then) = __$OcrResultCopyWithImpl;
+@override @useResult
+$Res call({
+ List<OcrLine> lines, int imageWidth, int imageHeight
+});
+
+
+
+
+}
+/// @nodoc
+class __$OcrResultCopyWithImpl<$Res>
+    implements _$OcrResultCopyWith<$Res> {
+  __$OcrResultCopyWithImpl(this._self, this._then);
+
+  final _OcrResult _self;
+  final $Res Function(_OcrResult) _then;
+
+/// Create a copy of OcrResult
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? lines = null,Object? imageWidth = null,Object? imageHeight = null,}) {
+  return _then(_OcrResult(
+lines: null == lines ? _self._lines : lines // ignore: cast_nullable_to_non_nullable
+as List<OcrLine>,imageWidth: null == imageWidth ? _self.imageWidth : imageWidth // ignore: cast_nullable_to_non_nullable
+as int,imageHeight: null == imageHeight ? _self.imageHeight : imageHeight // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
 
 /// @nodoc
 mixin _$PageVersion {
-  String get versionId => throw _privateConstructorUsedError;
-  int get versionNumber => throw _privateConstructorUsedError;
-  String? get message => throw _privateConstructorUsedError;
-  @HighPrecisionDateTimeConverter()
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  OcrResult? get ocrResult => throw _privateConstructorUsedError;
+
+ String get versionId; int get versionNumber; String? get message;@HighPrecisionDateTimeConverter() DateTime get createdAt; OcrResult? get ocrResult;
+/// Create a copy of PageVersion
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PageVersionCopyWith<PageVersion> get copyWith => _$PageVersionCopyWithImpl<PageVersion>(this as PageVersion, _$identity);
 
   /// Serializes this PageVersion to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of PageVersion
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $PageVersionCopyWith<PageVersion> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PageVersion&&(identical(other.versionId, versionId) || other.versionId == versionId)&&(identical(other.versionNumber, versionNumber) || other.versionNumber == versionNumber)&&(identical(other.message, message) || other.message == message)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.ocrResult, ocrResult) || other.ocrResult == ocrResult));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,versionId,versionNumber,message,createdAt,ocrResult);
+
+@override
+String toString() {
+  return 'PageVersion(versionId: $versionId, versionNumber: $versionNumber, message: $message, createdAt: $createdAt, ocrResult: $ocrResult)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $PageVersionCopyWith<$Res> {
-  factory $PageVersionCopyWith(
-    PageVersion value,
-    $Res Function(PageVersion) then,
-  ) = _$PageVersionCopyWithImpl<$Res, PageVersion>;
-  @useResult
-  $Res call({
-    String versionId,
-    int versionNumber,
-    String? message,
-    @HighPrecisionDateTimeConverter() DateTime createdAt,
-    OcrResult? ocrResult,
-  });
+abstract mixin class $PageVersionCopyWith<$Res>  {
+  factory $PageVersionCopyWith(PageVersion value, $Res Function(PageVersion) _then) = _$PageVersionCopyWithImpl;
+@useResult
+$Res call({
+ String versionId, int versionNumber, String? message,@HighPrecisionDateTimeConverter() DateTime createdAt, OcrResult? ocrResult
+});
 
-  $OcrResultCopyWith<$Res>? get ocrResult;
+
+$OcrResultCopyWith<$Res>? get ocrResult;
+
 }
-
 /// @nodoc
-class _$PageVersionCopyWithImpl<$Res, $Val extends PageVersion>
+class _$PageVersionCopyWithImpl<$Res>
     implements $PageVersionCopyWith<$Res> {
-  _$PageVersionCopyWithImpl(this._value, this._then);
+  _$PageVersionCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final PageVersion _self;
+  final $Res Function(PageVersion) _then;
 
-  /// Create a copy of PageVersion
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? versionId = null,
-    Object? versionNumber = null,
-    Object? message = freezed,
-    Object? createdAt = null,
-    Object? ocrResult = freezed,
-  }) {
-    return _then(
-      _value.copyWith(
-            versionId: null == versionId
-                ? _value.versionId
-                : versionId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            versionNumber: null == versionNumber
-                ? _value.versionNumber
-                : versionNumber // ignore: cast_nullable_to_non_nullable
-                      as int,
-            message: freezed == message
-                ? _value.message
-                : message // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            ocrResult: freezed == ocrResult
-                ? _value.ocrResult
-                : ocrResult // ignore: cast_nullable_to_non_nullable
-                      as OcrResult?,
-          )
-          as $Val,
-    );
-  }
-
-  /// Create a copy of PageVersion
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $OcrResultCopyWith<$Res>? get ocrResult {
-    if (_value.ocrResult == null) {
-      return null;
-    }
-
-    return $OcrResultCopyWith<$Res>(_value.ocrResult!, (value) {
-      return _then(_value.copyWith(ocrResult: value) as $Val);
-    });
-  }
+/// Create a copy of PageVersion
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? versionId = null,Object? versionNumber = null,Object? message = freezed,Object? createdAt = null,Object? ocrResult = freezed,}) {
+  return _then(_self.copyWith(
+versionId: null == versionId ? _self.versionId : versionId // ignore: cast_nullable_to_non_nullable
+as String,versionNumber: null == versionNumber ? _self.versionNumber : versionNumber // ignore: cast_nullable_to_non_nullable
+as int,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,ocrResult: freezed == ocrResult ? _self.ocrResult : ocrResult // ignore: cast_nullable_to_non_nullable
+as OcrResult?,
+  ));
 }
+/// Create a copy of PageVersion
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$OcrResultCopyWith<$Res>? get ocrResult {
+    if (_self.ocrResult == null) {
+    return null;
+  }
 
-/// @nodoc
-abstract class _$$PageVersionImplCopyWith<$Res>
-    implements $PageVersionCopyWith<$Res> {
-  factory _$$PageVersionImplCopyWith(
-    _$PageVersionImpl value,
-    $Res Function(_$PageVersionImpl) then,
-  ) = __$$PageVersionImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    String versionId,
-    int versionNumber,
-    String? message,
-    @HighPrecisionDateTimeConverter() DateTime createdAt,
-    OcrResult? ocrResult,
+  return $OcrResultCopyWith<$Res>(_self.ocrResult!, (value) {
+    return _then(_self.copyWith(ocrResult: value));
   });
-
-  @override
-  $OcrResultCopyWith<$Res>? get ocrResult;
+}
 }
 
-/// @nodoc
-class __$$PageVersionImplCopyWithImpl<$Res>
-    extends _$PageVersionCopyWithImpl<$Res, _$PageVersionImpl>
-    implements _$$PageVersionImplCopyWith<$Res> {
-  __$$PageVersionImplCopyWithImpl(
-    _$PageVersionImpl _value,
-    $Res Function(_$PageVersionImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of PageVersion
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? versionId = null,
-    Object? versionNumber = null,
-    Object? message = freezed,
-    Object? createdAt = null,
-    Object? ocrResult = freezed,
-  }) {
-    return _then(
-      _$PageVersionImpl(
-        versionId: null == versionId
-            ? _value.versionId
-            : versionId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        versionNumber: null == versionNumber
-            ? _value.versionNumber
-            : versionNumber // ignore: cast_nullable_to_non_nullable
-                  as int,
-        message: freezed == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        ocrResult: freezed == ocrResult
-            ? _value.ocrResult
-            : ocrResult // ignore: cast_nullable_to_non_nullable
-                  as OcrResult?,
-      ),
-    );
-  }
+/// Adds pattern-matching-related methods to [PageVersion].
+extension PageVersionPatterns on PageVersion {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PageVersion value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _PageVersion() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PageVersion value)  $default,){
+final _that = this;
+switch (_that) {
+case _PageVersion():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PageVersion value)?  $default,){
+final _that = this;
+switch (_that) {
+case _PageVersion() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String versionId,  int versionNumber,  String? message, @HighPrecisionDateTimeConverter()  DateTime createdAt,  OcrResult? ocrResult)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _PageVersion() when $default != null:
+return $default(_that.versionId,_that.versionNumber,_that.message,_that.createdAt,_that.ocrResult);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String versionId,  int versionNumber,  String? message, @HighPrecisionDateTimeConverter()  DateTime createdAt,  OcrResult? ocrResult)  $default,) {final _that = this;
+switch (_that) {
+case _PageVersion():
+return $default(_that.versionId,_that.versionNumber,_that.message,_that.createdAt,_that.ocrResult);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String versionId,  int versionNumber,  String? message, @HighPrecisionDateTimeConverter()  DateTime createdAt,  OcrResult? ocrResult)?  $default,) {final _that = this;
+switch (_that) {
+case _PageVersion() when $default != null:
+return $default(_that.versionId,_that.versionNumber,_that.message,_that.createdAt,_that.ocrResult);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$PageVersionImpl implements _PageVersion {
-  const _$PageVersionImpl({
-    required this.versionId,
-    required this.versionNumber,
-    this.message,
-    @HighPrecisionDateTimeConverter() required this.createdAt,
-    this.ocrResult,
+
+class _PageVersion implements PageVersion {
+  const _PageVersion({required this.versionId, required this.versionNumber, this.message, @HighPrecisionDateTimeConverter() required this.createdAt, this.ocrResult});
+  factory _PageVersion.fromJson(Map<String, dynamic> json) => _$PageVersionFromJson(json);
+
+@override final  String versionId;
+@override final  int versionNumber;
+@override final  String? message;
+@override@HighPrecisionDateTimeConverter() final  DateTime createdAt;
+@override final  OcrResult? ocrResult;
+
+/// Create a copy of PageVersion
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$PageVersionCopyWith<_PageVersion> get copyWith => __$PageVersionCopyWithImpl<_PageVersion>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$PageVersionToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PageVersion&&(identical(other.versionId, versionId) || other.versionId == versionId)&&(identical(other.versionNumber, versionNumber) || other.versionNumber == versionNumber)&&(identical(other.message, message) || other.message == message)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.ocrResult, ocrResult) || other.ocrResult == ocrResult));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,versionId,versionNumber,message,createdAt,ocrResult);
+
+@override
+String toString() {
+  return 'PageVersion(versionId: $versionId, versionNumber: $versionNumber, message: $message, createdAt: $createdAt, ocrResult: $ocrResult)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$PageVersionCopyWith<$Res> implements $PageVersionCopyWith<$Res> {
+  factory _$PageVersionCopyWith(_PageVersion value, $Res Function(_PageVersion) _then) = __$PageVersionCopyWithImpl;
+@override @useResult
+$Res call({
+ String versionId, int versionNumber, String? message,@HighPrecisionDateTimeConverter() DateTime createdAt, OcrResult? ocrResult
+});
+
+
+@override $OcrResultCopyWith<$Res>? get ocrResult;
+
+}
+/// @nodoc
+class __$PageVersionCopyWithImpl<$Res>
+    implements _$PageVersionCopyWith<$Res> {
+  __$PageVersionCopyWithImpl(this._self, this._then);
+
+  final _PageVersion _self;
+  final $Res Function(_PageVersion) _then;
+
+/// Create a copy of PageVersion
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? versionId = null,Object? versionNumber = null,Object? message = freezed,Object? createdAt = null,Object? ocrResult = freezed,}) {
+  return _then(_PageVersion(
+versionId: null == versionId ? _self.versionId : versionId // ignore: cast_nullable_to_non_nullable
+as String,versionNumber: null == versionNumber ? _self.versionNumber : versionNumber // ignore: cast_nullable_to_non_nullable
+as int,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,ocrResult: freezed == ocrResult ? _self.ocrResult : ocrResult // ignore: cast_nullable_to_non_nullable
+as OcrResult?,
+  ));
+}
+
+/// Create a copy of PageVersion
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$OcrResultCopyWith<$Res>? get ocrResult {
+    if (_self.ocrResult == null) {
+    return null;
+  }
+
+  return $OcrResultCopyWith<$Res>(_self.ocrResult!, (value) {
+    return _then(_self.copyWith(ocrResult: value));
   });
-
-  factory _$PageVersionImpl.fromJson(Map<String, dynamic> json) =>
-      _$$PageVersionImplFromJson(json);
-
-  @override
-  final String versionId;
-  @override
-  final int versionNumber;
-  @override
-  final String? message;
-  @override
-  @HighPrecisionDateTimeConverter()
-  final DateTime createdAt;
-  @override
-  final OcrResult? ocrResult;
-
-  @override
-  String toString() {
-    return 'PageVersion(versionId: $versionId, versionNumber: $versionNumber, message: $message, createdAt: $createdAt, ocrResult: $ocrResult)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PageVersionImpl &&
-            (identical(other.versionId, versionId) ||
-                other.versionId == versionId) &&
-            (identical(other.versionNumber, versionNumber) ||
-                other.versionNumber == versionNumber) &&
-            (identical(other.message, message) || other.message == message) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.ocrResult, ocrResult) ||
-                other.ocrResult == ocrResult));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    versionId,
-    versionNumber,
-    message,
-    createdAt,
-    ocrResult,
-  );
-
-  /// Create a copy of PageVersion
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PageVersionImplCopyWith<_$PageVersionImpl> get copyWith =>
-      __$$PageVersionImplCopyWithImpl<_$PageVersionImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$PageVersionImplToJson(this);
-  }
+}
 }
 
-abstract class _PageVersion implements PageVersion {
-  const factory _PageVersion({
-    required final String versionId,
-    required final int versionNumber,
-    final String? message,
-    @HighPrecisionDateTimeConverter() required final DateTime createdAt,
-    final OcrResult? ocrResult,
-  }) = _$PageVersionImpl;
-
-  factory _PageVersion.fromJson(Map<String, dynamic> json) =
-      _$PageVersionImpl.fromJson;
-
-  @override
-  String get versionId;
-  @override
-  int get versionNumber;
-  @override
-  String? get message;
-  @override
-  @HighPrecisionDateTimeConverter()
-  DateTime get createdAt;
-  @override
-  OcrResult? get ocrResult;
-
-  /// Create a copy of PageVersion
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PageVersionImplCopyWith<_$PageVersionImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-PageDetail _$PageDetailFromJson(Map<String, dynamic> json) {
-  return _PageDetail.fromJson(json);
-}
 
 /// @nodoc
 mixin _$PageDetail {
-  String get pageId => throw _privateConstructorUsedError;
-  String get title => throw _privateConstructorUsedError;
-  @HighPrecisionDateTimeConverter()
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  @HighPrecisionDateTimeConverter()
-  DateTime get updatedAt => throw _privateConstructorUsedError;
-  PageVersion get currentVersion => throw _privateConstructorUsedError;
-  int get totalVersions => throw _privateConstructorUsedError;
+
+ String get pageId; String get title;@HighPrecisionDateTimeConverter() DateTime get createdAt;@HighPrecisionDateTimeConverter() DateTime get updatedAt; PageVersion get currentVersion; int get totalVersions;
+/// Create a copy of PageDetail
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PageDetailCopyWith<PageDetail> get copyWith => _$PageDetailCopyWithImpl<PageDetail>(this as PageDetail, _$identity);
 
   /// Serializes this PageDetail to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of PageDetail
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $PageDetailCopyWith<PageDetail> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PageDetail&&(identical(other.pageId, pageId) || other.pageId == pageId)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.currentVersion, currentVersion) || other.currentVersion == currentVersion)&&(identical(other.totalVersions, totalVersions) || other.totalVersions == totalVersions));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,pageId,title,createdAt,updatedAt,currentVersion,totalVersions);
+
+@override
+String toString() {
+  return 'PageDetail(pageId: $pageId, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, currentVersion: $currentVersion, totalVersions: $totalVersions)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $PageDetailCopyWith<$Res> {
-  factory $PageDetailCopyWith(
-    PageDetail value,
-    $Res Function(PageDetail) then,
-  ) = _$PageDetailCopyWithImpl<$Res, PageDetail>;
-  @useResult
-  $Res call({
-    String pageId,
-    String title,
-    @HighPrecisionDateTimeConverter() DateTime createdAt,
-    @HighPrecisionDateTimeConverter() DateTime updatedAt,
-    PageVersion currentVersion,
-    int totalVersions,
-  });
+abstract mixin class $PageDetailCopyWith<$Res>  {
+  factory $PageDetailCopyWith(PageDetail value, $Res Function(PageDetail) _then) = _$PageDetailCopyWithImpl;
+@useResult
+$Res call({
+ String pageId, String title,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, PageVersion currentVersion, int totalVersions
+});
 
-  $PageVersionCopyWith<$Res> get currentVersion;
+
+$PageVersionCopyWith<$Res> get currentVersion;
+
 }
-
 /// @nodoc
-class _$PageDetailCopyWithImpl<$Res, $Val extends PageDetail>
+class _$PageDetailCopyWithImpl<$Res>
     implements $PageDetailCopyWith<$Res> {
-  _$PageDetailCopyWithImpl(this._value, this._then);
+  _$PageDetailCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final PageDetail _self;
+  final $Res Function(PageDetail) _then;
 
-  /// Create a copy of PageDetail
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? pageId = null,
-    Object? title = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
-    Object? currentVersion = null,
-    Object? totalVersions = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            pageId: null == pageId
-                ? _value.pageId
-                : pageId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            title: null == title
-                ? _value.title
-                : title // ignore: cast_nullable_to_non_nullable
-                      as String,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            updatedAt: null == updatedAt
-                ? _value.updatedAt
-                : updatedAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            currentVersion: null == currentVersion
-                ? _value.currentVersion
-                : currentVersion // ignore: cast_nullable_to_non_nullable
-                      as PageVersion,
-            totalVersions: null == totalVersions
-                ? _value.totalVersions
-                : totalVersions // ignore: cast_nullable_to_non_nullable
-                      as int,
-          )
-          as $Val,
-    );
-  }
-
-  /// Create a copy of PageDetail
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $PageVersionCopyWith<$Res> get currentVersion {
-    return $PageVersionCopyWith<$Res>(_value.currentVersion, (value) {
-      return _then(_value.copyWith(currentVersion: value) as $Val);
-    });
-  }
+/// Create a copy of PageDetail
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? pageId = null,Object? title = null,Object? createdAt = null,Object? updatedAt = null,Object? currentVersion = null,Object? totalVersions = null,}) {
+  return _then(_self.copyWith(
+pageId: null == pageId ? _self.pageId : pageId // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,currentVersion: null == currentVersion ? _self.currentVersion : currentVersion // ignore: cast_nullable_to_non_nullable
+as PageVersion,totalVersions: null == totalVersions ? _self.totalVersions : totalVersions // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
 }
-
-/// @nodoc
-abstract class _$$PageDetailImplCopyWith<$Res>
-    implements $PageDetailCopyWith<$Res> {
-  factory _$$PageDetailImplCopyWith(
-    _$PageDetailImpl value,
-    $Res Function(_$PageDetailImpl) then,
-  ) = __$$PageDetailImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    String pageId,
-    String title,
-    @HighPrecisionDateTimeConverter() DateTime createdAt,
-    @HighPrecisionDateTimeConverter() DateTime updatedAt,
-    PageVersion currentVersion,
-    int totalVersions,
+/// Create a copy of PageDetail
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PageVersionCopyWith<$Res> get currentVersion {
+  
+  return $PageVersionCopyWith<$Res>(_self.currentVersion, (value) {
+    return _then(_self.copyWith(currentVersion: value));
   });
-
-  @override
-  $PageVersionCopyWith<$Res> get currentVersion;
+}
 }
 
-/// @nodoc
-class __$$PageDetailImplCopyWithImpl<$Res>
-    extends _$PageDetailCopyWithImpl<$Res, _$PageDetailImpl>
-    implements _$$PageDetailImplCopyWith<$Res> {
-  __$$PageDetailImplCopyWithImpl(
-    _$PageDetailImpl _value,
-    $Res Function(_$PageDetailImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of PageDetail
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? pageId = null,
-    Object? title = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
-    Object? currentVersion = null,
-    Object? totalVersions = null,
-  }) {
-    return _then(
-      _$PageDetailImpl(
-        pageId: null == pageId
-            ? _value.pageId
-            : pageId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        title: null == title
-            ? _value.title
-            : title // ignore: cast_nullable_to_non_nullable
-                  as String,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        updatedAt: null == updatedAt
-            ? _value.updatedAt
-            : updatedAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        currentVersion: null == currentVersion
-            ? _value.currentVersion
-            : currentVersion // ignore: cast_nullable_to_non_nullable
-                  as PageVersion,
-        totalVersions: null == totalVersions
-            ? _value.totalVersions
-            : totalVersions // ignore: cast_nullable_to_non_nullable
-                  as int,
-      ),
-    );
-  }
+/// Adds pattern-matching-related methods to [PageDetail].
+extension PageDetailPatterns on PageDetail {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PageDetail value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _PageDetail() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PageDetail value)  $default,){
+final _that = this;
+switch (_that) {
+case _PageDetail():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PageDetail value)?  $default,){
+final _that = this;
+switch (_that) {
+case _PageDetail() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  PageVersion currentVersion,  int totalVersions)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _PageDetail() when $default != null:
+return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.currentVersion,_that.totalVersions);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  PageVersion currentVersion,  int totalVersions)  $default,) {final _that = this;
+switch (_that) {
+case _PageDetail():
+return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.currentVersion,_that.totalVersions);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  PageVersion currentVersion,  int totalVersions)?  $default,) {final _that = this;
+switch (_that) {
+case _PageDetail() when $default != null:
+return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.currentVersion,_that.totalVersions);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$PageDetailImpl implements _PageDetail {
-  const _$PageDetailImpl({
-    required this.pageId,
-    required this.title,
-    @HighPrecisionDateTimeConverter() required this.createdAt,
-    @HighPrecisionDateTimeConverter() required this.updatedAt,
-    required this.currentVersion,
-    required this.totalVersions,
+
+class _PageDetail implements PageDetail {
+  const _PageDetail({required this.pageId, required this.title, @HighPrecisionDateTimeConverter() required this.createdAt, @HighPrecisionDateTimeConverter() required this.updatedAt, required this.currentVersion, required this.totalVersions});
+  factory _PageDetail.fromJson(Map<String, dynamic> json) => _$PageDetailFromJson(json);
+
+@override final  String pageId;
+@override final  String title;
+@override@HighPrecisionDateTimeConverter() final  DateTime createdAt;
+@override@HighPrecisionDateTimeConverter() final  DateTime updatedAt;
+@override final  PageVersion currentVersion;
+@override final  int totalVersions;
+
+/// Create a copy of PageDetail
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$PageDetailCopyWith<_PageDetail> get copyWith => __$PageDetailCopyWithImpl<_PageDetail>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$PageDetailToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PageDetail&&(identical(other.pageId, pageId) || other.pageId == pageId)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.currentVersion, currentVersion) || other.currentVersion == currentVersion)&&(identical(other.totalVersions, totalVersions) || other.totalVersions == totalVersions));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,pageId,title,createdAt,updatedAt,currentVersion,totalVersions);
+
+@override
+String toString() {
+  return 'PageDetail(pageId: $pageId, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, currentVersion: $currentVersion, totalVersions: $totalVersions)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$PageDetailCopyWith<$Res> implements $PageDetailCopyWith<$Res> {
+  factory _$PageDetailCopyWith(_PageDetail value, $Res Function(_PageDetail) _then) = __$PageDetailCopyWithImpl;
+@override @useResult
+$Res call({
+ String pageId, String title,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, PageVersion currentVersion, int totalVersions
+});
+
+
+@override $PageVersionCopyWith<$Res> get currentVersion;
+
+}
+/// @nodoc
+class __$PageDetailCopyWithImpl<$Res>
+    implements _$PageDetailCopyWith<$Res> {
+  __$PageDetailCopyWithImpl(this._self, this._then);
+
+  final _PageDetail _self;
+  final $Res Function(_PageDetail) _then;
+
+/// Create a copy of PageDetail
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? pageId = null,Object? title = null,Object? createdAt = null,Object? updatedAt = null,Object? currentVersion = null,Object? totalVersions = null,}) {
+  return _then(_PageDetail(
+pageId: null == pageId ? _self.pageId : pageId // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,currentVersion: null == currentVersion ? _self.currentVersion : currentVersion // ignore: cast_nullable_to_non_nullable
+as PageVersion,totalVersions: null == totalVersions ? _self.totalVersions : totalVersions // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+/// Create a copy of PageDetail
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PageVersionCopyWith<$Res> get currentVersion {
+  
+  return $PageVersionCopyWith<$Res>(_self.currentVersion, (value) {
+    return _then(_self.copyWith(currentVersion: value));
   });
-
-  factory _$PageDetailImpl.fromJson(Map<String, dynamic> json) =>
-      _$$PageDetailImplFromJson(json);
-
-  @override
-  final String pageId;
-  @override
-  final String title;
-  @override
-  @HighPrecisionDateTimeConverter()
-  final DateTime createdAt;
-  @override
-  @HighPrecisionDateTimeConverter()
-  final DateTime updatedAt;
-  @override
-  final PageVersion currentVersion;
-  @override
-  final int totalVersions;
-
-  @override
-  String toString() {
-    return 'PageDetail(pageId: $pageId, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, currentVersion: $currentVersion, totalVersions: $totalVersions)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$PageDetailImpl &&
-            (identical(other.pageId, pageId) || other.pageId == pageId) &&
-            (identical(other.title, title) || other.title == title) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt) &&
-            (identical(other.currentVersion, currentVersion) ||
-                other.currentVersion == currentVersion) &&
-            (identical(other.totalVersions, totalVersions) ||
-                other.totalVersions == totalVersions));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    pageId,
-    title,
-    createdAt,
-    updatedAt,
-    currentVersion,
-    totalVersions,
-  );
-
-  /// Create a copy of PageDetail
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$PageDetailImplCopyWith<_$PageDetailImpl> get copyWith =>
-      __$$PageDetailImplCopyWithImpl<_$PageDetailImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$PageDetailImplToJson(this);
-  }
+}
 }
 
-abstract class _PageDetail implements PageDetail {
-  const factory _PageDetail({
-    required final String pageId,
-    required final String title,
-    @HighPrecisionDateTimeConverter() required final DateTime createdAt,
-    @HighPrecisionDateTimeConverter() required final DateTime updatedAt,
-    required final PageVersion currentVersion,
-    required final int totalVersions,
-  }) = _$PageDetailImpl;
-
-  factory _PageDetail.fromJson(Map<String, dynamic> json) =
-      _$PageDetailImpl.fromJson;
-
-  @override
-  String get pageId;
-  @override
-  String get title;
-  @override
-  @HighPrecisionDateTimeConverter()
-  DateTime get createdAt;
-  @override
-  @HighPrecisionDateTimeConverter()
-  DateTime get updatedAt;
-  @override
-  PageVersion get currentVersion;
-  @override
-  int get totalVersions;
-
-  /// Create a copy of PageDetail
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$PageDetailImplCopyWith<_$PageDetailImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

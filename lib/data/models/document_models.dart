@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:luna_arc_sync/core/api/json_converters.dart';
 import 'package:luna_arc_sync/data/models/page_models.dart';
-import 'package:json_annotation/json_annotation.dart'; // Import this for JsonSerializable
+// Import this for JsonSerializable
 
 part 'document_models.freezed.dart';
 part 'document_models.g.dart';
@@ -10,7 +10,7 @@ part 'document_models.g.dart';
 @freezed
 class Document with _$Document {
   const factory Document({
-    required String documentId,
+    @JsonKey(name: 'id') required String documentId,
     required String title,
     @Default([]) List<String> tags,
     @HighPrecisionDateTimeConverter()
@@ -27,7 +27,7 @@ class Document with _$Document {
 @freezed
 class DocumentDetail with _$DocumentDetail {
   const factory DocumentDetail({
-    required String documentId,
+    required String id,
     required String title,
     @Default([]) List<String> tags,
     @HighPrecisionDateTimeConverter()
@@ -76,6 +76,4 @@ class PagedResult<T> {
 
   Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
       _$PagedResultToJson(this, toJsonT);
-
-  // 无需自定义 fromJson/toJson，交由 json_serializable 自动生成
 }

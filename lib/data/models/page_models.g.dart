@@ -32,7 +32,7 @@ Map<String, dynamic> _$PaginatedResultToJson<T>(
   'hasNextPage': instance.hasNextPage,
 };
 
-_$PageImpl _$$PageImplFromJson(Map<String, dynamic> json) => _$PageImpl(
+_Page _$PageFromJson(Map<String, dynamic> json) => _Page(
   pageId: json['pageId'] as String,
   title: json['title'] as String,
   createdAt: const HighPrecisionDateTimeConverter().fromJson(
@@ -44,94 +44,86 @@ _$PageImpl _$$PageImplFromJson(Map<String, dynamic> json) => _$PageImpl(
   order: (json['order'] as num?)?.toInt() ?? 0,
 );
 
-Map<String, dynamic> _$$PageImplToJson(_$PageImpl instance) =>
-    <String, dynamic>{
-      'pageId': instance.pageId,
-      'title': instance.title,
-      'createdAt': const HighPrecisionDateTimeConverter().toJson(
-        instance.createdAt,
-      ),
-      'updatedAt': const HighPrecisionDateTimeConverter().toJson(
-        instance.updatedAt,
-      ),
-      'order': instance.order,
-    };
+Map<String, dynamic> _$PageToJson(_Page instance) => <String, dynamic>{
+  'pageId': instance.pageId,
+  'title': instance.title,
+  'createdAt': const HighPrecisionDateTimeConverter().toJson(
+    instance.createdAt,
+  ),
+  'updatedAt': const HighPrecisionDateTimeConverter().toJson(
+    instance.updatedAt,
+  ),
+  'order': instance.order,
+};
 
-_$BboxImpl _$$BboxImplFromJson(Map<String, dynamic> json) => _$BboxImpl(
+_Bbox _$BboxFromJson(Map<String, dynamic> json) => _Bbox(
   x1: (json['x1'] as num).toInt(),
   y1: (json['y1'] as num).toInt(),
   x2: (json['x2'] as num).toInt(),
   y2: (json['y2'] as num).toInt(),
 );
 
-Map<String, dynamic> _$$BboxImplToJson(_$BboxImpl instance) =>
-    <String, dynamic>{
-      'x1': instance.x1,
-      'y1': instance.y1,
-      'x2': instance.x2,
-      'y2': instance.y2,
-    };
+Map<String, dynamic> _$BboxToJson(_Bbox instance) => <String, dynamic>{
+  'x1': instance.x1,
+  'y1': instance.y1,
+  'x2': instance.x2,
+  'y2': instance.y2,
+};
 
-_$OcrWordImpl _$$OcrWordImplFromJson(Map<String, dynamic> json) =>
-    _$OcrWordImpl(
-      text: json['text'] as String,
-      bbox: Bbox.fromJson(json['bbox'] as Map<String, dynamic>),
-      confidence: (json['confidence'] as num).toDouble(),
-    );
+_OcrWord _$OcrWordFromJson(Map<String, dynamic> json) => _OcrWord(
+  text: json['text'] as String,
+  bbox: Bbox.fromJson(json['bbox'] as Map<String, dynamic>),
+  confidence: (json['confidence'] as num).toDouble(),
+);
 
-Map<String, dynamic> _$$OcrWordImplToJson(_$OcrWordImpl instance) =>
-    <String, dynamic>{
-      'text': instance.text,
-      'bbox': instance.bbox,
-      'confidence': instance.confidence,
-    };
+Map<String, dynamic> _$OcrWordToJson(_OcrWord instance) => <String, dynamic>{
+  'text': instance.text,
+  'bbox': instance.bbox,
+  'confidence': instance.confidence,
+};
 
-_$OcrLineImpl _$$OcrLineImplFromJson(Map<String, dynamic> json) =>
-    _$OcrLineImpl(
-      words: (json['words'] as List<dynamic>)
-          .map((e) => OcrWord.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      text: json['text'] as String,
-      bbox: Bbox.fromJson(json['bbox'] as Map<String, dynamic>),
-    );
+_OcrLine _$OcrLineFromJson(Map<String, dynamic> json) => _OcrLine(
+  words: (json['words'] as List<dynamic>)
+      .map((e) => OcrWord.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  text: json['text'] as String,
+  bbox: Bbox.fromJson(json['bbox'] as Map<String, dynamic>),
+);
 
-Map<String, dynamic> _$$OcrLineImplToJson(_$OcrLineImpl instance) =>
-    <String, dynamic>{
-      'words': instance.words,
-      'text': instance.text,
-      'bbox': instance.bbox,
-    };
+Map<String, dynamic> _$OcrLineToJson(_OcrLine instance) => <String, dynamic>{
+  'words': instance.words,
+  'text': instance.text,
+  'bbox': instance.bbox,
+};
 
-_$OcrResultImpl _$$OcrResultImplFromJson(Map<String, dynamic> json) =>
-    _$OcrResultImpl(
-      lines: (json['lines'] as List<dynamic>)
-          .map((e) => OcrLine.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      imageWidth: (json['imageWidth'] as num).toInt(),
-      imageHeight: (json['imageHeight'] as num).toInt(),
-    );
+_OcrResult _$OcrResultFromJson(Map<String, dynamic> json) => _OcrResult(
+  lines: (json['lines'] as List<dynamic>)
+      .map((e) => OcrLine.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  imageWidth: (json['imageWidth'] as num).toInt(),
+  imageHeight: (json['imageHeight'] as num).toInt(),
+);
 
-Map<String, dynamic> _$$OcrResultImplToJson(_$OcrResultImpl instance) =>
+Map<String, dynamic> _$OcrResultToJson(_OcrResult instance) =>
     <String, dynamic>{
       'lines': instance.lines,
       'imageWidth': instance.imageWidth,
       'imageHeight': instance.imageHeight,
     };
 
-_$PageVersionImpl _$$PageVersionImplFromJson(Map<String, dynamic> json) =>
-    _$PageVersionImpl(
-      versionId: json['versionId'] as String,
-      versionNumber: (json['versionNumber'] as num).toInt(),
-      message: json['message'] as String?,
-      createdAt: const HighPrecisionDateTimeConverter().fromJson(
-        json['createdAt'] as String,
-      ),
-      ocrResult: json['ocrResult'] == null
-          ? null
-          : OcrResult.fromJson(json['ocrResult'] as Map<String, dynamic>),
-    );
+_PageVersion _$PageVersionFromJson(Map<String, dynamic> json) => _PageVersion(
+  versionId: json['versionId'] as String,
+  versionNumber: (json['versionNumber'] as num).toInt(),
+  message: json['message'] as String?,
+  createdAt: const HighPrecisionDateTimeConverter().fromJson(
+    json['createdAt'] as String,
+  ),
+  ocrResult: json['ocrResult'] == null
+      ? null
+      : OcrResult.fromJson(json['ocrResult'] as Map<String, dynamic>),
+);
 
-Map<String, dynamic> _$$PageVersionImplToJson(_$PageVersionImpl instance) =>
+Map<String, dynamic> _$PageVersionToJson(_PageVersion instance) =>
     <String, dynamic>{
       'versionId': instance.versionId,
       'versionNumber': instance.versionNumber,
@@ -142,23 +134,22 @@ Map<String, dynamic> _$$PageVersionImplToJson(_$PageVersionImpl instance) =>
       'ocrResult': instance.ocrResult,
     };
 
-_$PageDetailImpl _$$PageDetailImplFromJson(Map<String, dynamic> json) =>
-    _$PageDetailImpl(
-      pageId: json['pageId'] as String,
-      title: json['title'] as String,
-      createdAt: const HighPrecisionDateTimeConverter().fromJson(
-        json['createdAt'] as String,
-      ),
-      updatedAt: const HighPrecisionDateTimeConverter().fromJson(
-        json['updatedAt'] as String,
-      ),
-      currentVersion: PageVersion.fromJson(
-        json['currentVersion'] as Map<String, dynamic>,
-      ),
-      totalVersions: (json['totalVersions'] as num).toInt(),
-    );
+_PageDetail _$PageDetailFromJson(Map<String, dynamic> json) => _PageDetail(
+  pageId: json['pageId'] as String,
+  title: json['title'] as String,
+  createdAt: const HighPrecisionDateTimeConverter().fromJson(
+    json['createdAt'] as String,
+  ),
+  updatedAt: const HighPrecisionDateTimeConverter().fromJson(
+    json['updatedAt'] as String,
+  ),
+  currentVersion: PageVersion.fromJson(
+    json['currentVersion'] as Map<String, dynamic>,
+  ),
+  totalVersions: (json['totalVersions'] as num).toInt(),
+);
 
-Map<String, dynamic> _$$PageDetailImplToJson(_$PageDetailImpl instance) =>
+Map<String, dynamic> _$PageDetailToJson(_PageDetail instance) =>
     <String, dynamic>{
       'pageId': instance.pageId,
       'title': instance.title,

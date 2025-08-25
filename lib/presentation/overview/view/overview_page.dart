@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:luna_arc_sync/core/di/injection.dart';
 import 'package:luna_arc_sync/presentation/overview/cubit/overview_cubit.dart';
-import 'package:luna_arc_sync/presentation/overview/cubit/overview_state.dart';
 
 class OverviewPage extends StatelessWidget {
   const OverviewPage({super.key});

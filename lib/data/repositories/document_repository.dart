@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:luna_arc_sync/core/api/api_client.dart';
 import 'package:luna_arc_sync/data/models/document_models.dart';
 
@@ -25,6 +26,7 @@ abstract class IDocumentRepository {
   Future<DocumentStats> getStats();
 }
 
+@LazySingleton(as: IDocumentRepository)
 class DocumentRepository implements IDocumentRepository {
   final ApiClient _apiClient;
 
