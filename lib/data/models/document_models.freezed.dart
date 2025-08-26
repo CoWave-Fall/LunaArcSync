@@ -11,19 +11,16 @@ part of 'document_models.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$Document {
 
-@JsonKey(name: 'id') String get documentId; String get title; List<String> get tags;@HighPrecisionDateTimeConverter() DateTime get createdAt;@HighPrecisionDateTimeConverter() DateTime get updatedAt; int get pageCount;
+ String get documentId; String get title; List<String> get tags;@HighPrecisionDateTimeConverter() DateTime get createdAt;@HighPrecisionDateTimeConverter() DateTime get updatedAt; int get pageCount;
 /// Create a copy of Document
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $DocumentCopyWith<Document> get copyWith => _$DocumentCopyWithImpl<Document>(this as Document, _$identity);
 
-  /// Serializes this Document to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is Document&&(identical(other.documentId, documentId) || other.documentId == documentId)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.pageCount, pageCount) || other.pageCount == pageCount));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,documentId,title,const DeepCollectionEquality().hash(tags),createdAt,updatedAt,pageCount);
 
@@ -48,7 +45,7 @@ abstract mixin class $DocumentCopyWith<$Res>  {
   factory $DocumentCopyWith(Document value, $Res Function(Document) _then) = _$DocumentCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') String documentId, String title, List<String> tags,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int pageCount
+ String documentId, String title, List<String> tags,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int pageCount
 });
 
 
@@ -158,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int pageCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int pageCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Document() when $default != null:
 return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pageCount);case _:
@@ -179,7 +176,7 @@ return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.up
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int pageCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int pageCount)  $default,) {final _that = this;
 switch (_that) {
 case _Document():
 return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pageCount);case _:
@@ -199,7 +196,7 @@ return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.up
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int pageCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int pageCount)?  $default,) {final _that = this;
 switch (_that) {
 case _Document() when $default != null:
 return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pageCount);case _:
@@ -211,13 +208,13 @@ return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.up
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _Document implements Document {
-  const _Document({@JsonKey(name: 'id') required this.documentId, required this.title, final  List<String> tags = const [], @HighPrecisionDateTimeConverter() required this.createdAt, @HighPrecisionDateTimeConverter() required this.updatedAt, this.pageCount = 0}): _tags = tags;
-  factory _Document.fromJson(Map<String, dynamic> json) => _$DocumentFromJson(json);
+  const _Document({required this.documentId, required this.title, final  List<String> tags = const [], @HighPrecisionDateTimeConverter() required this.createdAt, @HighPrecisionDateTimeConverter() required this.updatedAt, this.pageCount = 0}): _tags = tags;
+  
 
-@override@JsonKey(name: 'id') final  String documentId;
+@override final  String documentId;
 @override final  String title;
  final  List<String> _tags;
 @override@JsonKey() List<String> get tags {
@@ -236,17 +233,14 @@ class _Document implements Document {
 @pragma('vm:prefer-inline')
 _$DocumentCopyWith<_Document> get copyWith => __$DocumentCopyWithImpl<_Document>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$DocumentToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _Document&&(identical(other.documentId, documentId) || other.documentId == documentId)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.pageCount, pageCount) || other.pageCount == pageCount));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,documentId,title,const DeepCollectionEquality().hash(_tags),createdAt,updatedAt,pageCount);
 
@@ -263,7 +257,7 @@ abstract mixin class _$DocumentCopyWith<$Res> implements $DocumentCopyWith<$Res>
   factory _$DocumentCopyWith(_Document value, $Res Function(_Document) _then) = __$DocumentCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') String documentId, String title, List<String> tags,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int pageCount
+ String documentId, String title, List<String> tags,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int pageCount
 });
 
 
@@ -295,19 +289,16 @@ as int,
 
 }
 
-
 /// @nodoc
 mixin _$DocumentDetail {
 
-@JsonKey(name: 'id') String get documentId; String get title; List<String> get tags;@HighPrecisionDateTimeConverter() DateTime get createdAt;@HighPrecisionDateTimeConverter() DateTime get updatedAt; List<Page> get pages;
+ String get documentId; String get title; List<String> get tags;@HighPrecisionDateTimeConverter() DateTime get createdAt;@HighPrecisionDateTimeConverter() DateTime get updatedAt; List<Page> get pages;
 /// Create a copy of DocumentDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $DocumentDetailCopyWith<DocumentDetail> get copyWith => _$DocumentDetailCopyWithImpl<DocumentDetail>(this as DocumentDetail, _$identity);
 
-  /// Serializes this DocumentDetail to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -315,7 +306,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is DocumentDetail&&(identical(other.documentId, documentId) || other.documentId == documentId)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.pages, pages));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,documentId,title,const DeepCollectionEquality().hash(tags),createdAt,updatedAt,const DeepCollectionEquality().hash(pages));
 
@@ -332,7 +323,7 @@ abstract mixin class $DocumentDetailCopyWith<$Res>  {
   factory $DocumentDetailCopyWith(DocumentDetail value, $Res Function(DocumentDetail) _then) = _$DocumentDetailCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') String documentId, String title, List<String> tags,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, List<Page> pages
+ String documentId, String title, List<String> tags,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, List<Page> pages
 });
 
 
@@ -442,7 +433,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  List<Page> pages)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  List<Page> pages)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DocumentDetail() when $default != null:
 return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pages);case _:
@@ -463,7 +454,7 @@ return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.up
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  List<Page> pages)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  List<Page> pages)  $default,) {final _that = this;
 switch (_that) {
 case _DocumentDetail():
 return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pages);case _:
@@ -483,7 +474,7 @@ return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.up
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  List<Page> pages)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  List<Page> pages)?  $default,) {final _that = this;
 switch (_that) {
 case _DocumentDetail() when $default != null:
 return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pages);case _:
@@ -495,13 +486,13 @@ return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.up
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _DocumentDetail implements DocumentDetail {
-  const _DocumentDetail({@JsonKey(name: 'id') required this.documentId, required this.title, final  List<String> tags = const [], @HighPrecisionDateTimeConverter() required this.createdAt, @HighPrecisionDateTimeConverter() required this.updatedAt, final  List<Page> pages = const []}): _tags = tags,_pages = pages;
-  factory _DocumentDetail.fromJson(Map<String, dynamic> json) => _$DocumentDetailFromJson(json);
+  const _DocumentDetail({required this.documentId, required this.title, final  List<String> tags = const [], @HighPrecisionDateTimeConverter() required this.createdAt, @HighPrecisionDateTimeConverter() required this.updatedAt, final  List<Page> pages = const []}): _tags = tags,_pages = pages;
+  
 
-@override@JsonKey(name: 'id') final  String documentId;
+@override final  String documentId;
 @override final  String title;
  final  List<String> _tags;
 @override@JsonKey() List<String> get tags {
@@ -526,17 +517,14 @@ class _DocumentDetail implements DocumentDetail {
 @pragma('vm:prefer-inline')
 _$DocumentDetailCopyWith<_DocumentDetail> get copyWith => __$DocumentDetailCopyWithImpl<_DocumentDetail>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$DocumentDetailToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _DocumentDetail&&(identical(other.documentId, documentId) || other.documentId == documentId)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._pages, _pages));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,documentId,title,const DeepCollectionEquality().hash(_tags),createdAt,updatedAt,const DeepCollectionEquality().hash(_pages));
 
@@ -553,7 +541,7 @@ abstract mixin class _$DocumentDetailCopyWith<$Res> implements $DocumentDetailCo
   factory _$DocumentDetailCopyWith(_DocumentDetail value, $Res Function(_DocumentDetail) _then) = __$DocumentDetailCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') String documentId, String title, List<String> tags,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, List<Page> pages
+ String documentId, String title, List<String> tags,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, List<Page> pages
 });
 
 
@@ -585,7 +573,6 @@ as List<Page>,
 
 }
 
-
 /// @nodoc
 mixin _$DocumentStats {
 
@@ -596,8 +583,6 @@ mixin _$DocumentStats {
 @pragma('vm:prefer-inline')
 $DocumentStatsCopyWith<DocumentStats> get copyWith => _$DocumentStatsCopyWithImpl<DocumentStats>(this as DocumentStats, _$identity);
 
-  /// Serializes this DocumentStats to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -605,7 +590,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is DocumentStats&&(identical(other.totalDocuments, totalDocuments) || other.totalDocuments == totalDocuments)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,totalDocuments,totalPages);
 
@@ -781,11 +766,11 @@ return $default(_that.totalDocuments,_that.totalPages);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _DocumentStats implements DocumentStats {
   const _DocumentStats({required this.totalDocuments, required this.totalPages});
-  factory _DocumentStats.fromJson(Map<String, dynamic> json) => _$DocumentStatsFromJson(json);
+  
 
 @override final  int totalDocuments;
 @override final  int totalPages;
@@ -796,17 +781,14 @@ class _DocumentStats implements DocumentStats {
 @pragma('vm:prefer-inline')
 _$DocumentStatsCopyWith<_DocumentStats> get copyWith => __$DocumentStatsCopyWithImpl<_DocumentStats>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$DocumentStatsToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _DocumentStats&&(identical(other.totalDocuments, totalDocuments) || other.totalDocuments == totalDocuments)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,totalDocuments,totalPages);
 

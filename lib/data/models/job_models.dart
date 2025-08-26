@@ -1,7 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-
 part 'job_models.freezed.dart';
 part 'job_models.g.dart';
 
@@ -10,7 +9,7 @@ enum JobStatusEnum { Queued, Processing, Completed, Failed }
 
 // 用于 POST /api/jobs/... 成功后返回的模型
 @freezed
-class JobQueuedResponse with _$JobQueuedResponse {
+abstract class JobQueuedResponse with _$JobQueuedResponse {
   const factory JobQueuedResponse({
     required String jobId,
     required String message,
@@ -22,7 +21,7 @@ class JobQueuedResponse with _$JobQueuedResponse {
 
 // 用于 GET /api/jobs/{jobId} 返回的模型
 @freezed
-class Job with _$Job {
+abstract class Job with _$Job {
   const factory Job({
     required String jobId,
     required JobStatusEnum status,

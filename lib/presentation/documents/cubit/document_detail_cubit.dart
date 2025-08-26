@@ -94,7 +94,7 @@ class DocumentDetailCubit extends Cubit<DocumentDetailState> {
 
   /// **[新增]** 使用 "set" 模式对所有 Page 进行重排序
   /// 对应 API: POST /api/documents/{documentId}/pages/reorder/set
-  Future<void> reorderPages(List<Map<String, dynamic>> pageOrders) async {
+    Future<void> reorderPages(List<Map<String, dynamic>> pageOrders) async {
     if (_currentDocumentId == null) return;
     try {
       await _documentRepository.reorderPages(_currentDocumentId!, pageOrders);

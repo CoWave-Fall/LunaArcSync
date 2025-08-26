@@ -1,12 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:luna_arc_sync/core/api/json_converters.dart';
-
 part 'page_models.freezed.dart';
 part 'page_models.g.dart';
 
 // Model for a single page item in the list
 @freezed
-class Page with _$Page {
+abstract class Page with _$Page {
   const factory Page({
     required String pageId,
     required String title,
@@ -55,7 +54,7 @@ class PaginatedResult<T> {
 // (确保旧的 OcrResult 定义已完全被以下内容替换)
 
 @freezed
-class Bbox with _$Bbox {
+abstract class Bbox with _$Bbox {
   const factory Bbox({
     required int x1,
     required int y1,
@@ -67,7 +66,7 @@ class Bbox with _$Bbox {
 }
 
 @freezed
-class OcrWord with _$OcrWord {
+abstract class OcrWord with _$OcrWord {
   const factory OcrWord({
     required String text,
     required Bbox bbox,
@@ -78,7 +77,7 @@ class OcrWord with _$OcrWord {
 }
 
 @freezed
-class OcrLine with _$OcrLine {
+abstract class OcrLine with _$OcrLine {
   const factory OcrLine({
     required List<OcrWord> words,
     required String text,
@@ -89,7 +88,7 @@ class OcrLine with _$OcrLine {
 }
 
 @freezed
-class OcrResult with _$OcrResult {
+abstract class OcrResult with _$OcrResult {
   const factory OcrResult({
     required List<OcrLine> lines,
     required int imageWidth,
@@ -102,7 +101,7 @@ class OcrResult with _$OcrResult {
 // --- END: OCR DATA MODELS ---
 
 @freezed
-class PageVersion with _$PageVersion {
+abstract class PageVersion with _$PageVersion {
   const factory PageVersion({
     required String versionId,
     required int versionNumber,
@@ -116,7 +115,7 @@ class PageVersion with _$PageVersion {
 }
 
 @freezed
-class PageDetail with _$PageDetail {
+abstract class PageDetail with _$PageDetail {
   const factory PageDetail({
     required String pageId,
     required String title,
@@ -128,5 +127,6 @@ class PageDetail with _$PageDetail {
     required int totalVersions,
   }) = _PageDetail;
 
-  factory PageDetail.fromJson(Map<String, dynamic> json) => _$PageDetailFromJson(json);
+  factory PageDetail.fromJson(Map<String, dynamic> json) =>
+      _$PageDetailFromJson(json);
 }

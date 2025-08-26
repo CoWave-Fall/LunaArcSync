@@ -37,22 +37,35 @@ class DocumentRepository implements IDocumentRepository {
     required int pageNumber,
     String? sortBy,
     List<String>? tags,
-  }) {
-    return _apiClient.getDocuments(
-      pageNumber: pageNumber,
-      sortBy: sortBy,
-      tags: tags,
+  }) async {
+    final queryParams = <String, dynamic>{'pageNumber': pageNumber};
+    if (sortBy != null) {
+      queryParams['sortBy'] = sortBy;
+    }
+    if (tags != null && tags.isNotEmpty) {
+      queryParams['tags'] = tags.join(',');
+    }
+    final response = await _apiClient.dio.get(
+      '/documents',
+      queryParameters: queryParams,
     );
+    return PagedResult.fromJson(
+        response.data, (json) => Document.fromJson(json as Map<String, dynamic>));
   }
 
   @override
-  Future<DocumentDetail> getDocumentById(String documentId) {
-    return _apiClient.getDocumentById(documentId);
+  Future<DocumentDetail> getDocumentById(String documentId) async {
+    final response = await _apiClient.dio.get('/documents/$documentId');
+    return DocumentDetail.fromJson(response.data);
   }
-  
+
   @override
-  Future<Document> createDocument(String title) {
-    return _apiClient.createDocument(title);
+  Future<Document> createDocument(String title) async {
+    final response = await _apiClient.dio.post(
+      '/documents',
+      data: {'title': title},
+    );
+    return Document.fromJson(response.data);
   }
 
   @override
@@ -60,40 +73,52 @@ class DocumentRepository implements IDocumentRepository {
     required String documentId,
     required String title,
     required List<String> tags,
-  }) {
-    return _apiClient.updateDocument(documentId, {'title': title, 'tags': tags});
+  }) async {
+    await _apiClient.dio.put('/documents/$documentId', data: {'title': title, 'tags': tags});
   }
 
   @override
-  Future<void> deleteDocument(String documentId) {
-    return _apiClient.deleteDocument(documentId);
+  Future<void> deleteDocument(String documentId) async {
+    await _apiClient.dio.delete('/documents/$documentId');
   }
 
   @override
   Future<void> addPageToDocument({
     required String documentId,
     required String pageId,
-  }) {
-    return _apiClient.addPageToDocument(documentId, pageId);
+  }) async {
+    await _apiClient.dio.post(
+      '/documents/$documentId/pages',
+      data: {'pageId': pageId},
+    );
   }
 
   @override
-  Future<void> reorderPages(String documentId, List<Map<String, dynamic>> pageOrders) {
-    return _apiClient.reorderPages(documentId, pageOrders);
+  Future<void> reorderPages(
+      String documentId, List<Map<String, dynamic>> pageOrders) async {
+    await _apiClient.dio.post(
+      '/documents/$documentId/pages/reorder/set',
+      data: {'pageOrders': pageOrders},
+    );
   }
 
   @override
-  Future<void> insertPage(String documentId, String pageId, int newOrder) {
-    return _apiClient.insertPage(documentId, pageId, newOrder);
+  Future<void> insertPage(String documentId, String pageId, int newOrder) async {
+    await _apiClient.dio.post(
+      '/documents/$documentId/pages/reorder/insert',
+      data: {'pageId': pageId, 'newOrder': newOrder},
+    );
   }
 
   @override
-  Future<List<String>> getAllTags() {
-    return _apiClient.getAllTags();
+  Future<List<String>> getAllTags() async {
+    final response = await _apiClient.dio.get('/documents/tags');
+    return List<String>.from(response.data);
   }
 
   @override
-  Future<DocumentStats> getStats() {
-    return _apiClient.getStats();
+  Future<DocumentStats> getStats() async {
+    final response = await _apiClient.dio.get('/documents/stats');
+    return DocumentStats.fromJson(response.data);
   }
 }

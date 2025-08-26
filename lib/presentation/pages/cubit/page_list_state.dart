@@ -7,7 +7,7 @@ part 'page_list_state.freezed.dart';
 enum PageListStatus { initial, loading, success, failure, loadingMore }
 
 @freezed
-class PageListState with _$PageListState {
+abstract class PageListState with _$PageListState {
   const factory PageListState({
     @Default(PageListStatus.initial) PageListStatus status,
     @Default([]) List<Page> pages,

@@ -21,7 +21,7 @@ enum SortOption {
 
 
 @freezed
-class DocumentListState with _$DocumentListState {
+abstract class DocumentListState with _$DocumentListState {
   const factory DocumentListState({
     // Core list properties
     @Default([]) List<Document> documents,

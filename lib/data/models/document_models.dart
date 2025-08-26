@@ -2,15 +2,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:luna_arc_sync/core/api/json_converters.dart';
 import 'package:luna_arc_sync/data/models/page_models.dart';
 // Import this for JsonSerializable
-
 part 'document_models.freezed.dart';
 part 'document_models.g.dart';
 
-@JsonSerializable() // Add this annotation
 @freezed
-class Document with _$Document {
+abstract class Document with _$Document {
   const factory Document({
-    @JsonKey(name: 'id') required String documentId,
+    required String documentId,
     required String title,
     @Default([]) List<String> tags,
     @HighPrecisionDateTimeConverter()
@@ -20,14 +18,22 @@ class Document with _$Document {
     @Default(0) int pageCount,
   }) = _Document;
 
-  factory Document.fromJson(Map<String, dynamic> json) => _$DocumentFromJson(json);
+  factory Document.fromJson(Map<String, dynamic> json) {
+    return Document(
+      documentId: json['documentId'] as String,
+      title: json['title'] as String,
+      tags: (json['tags'] as List<dynamic>? ?? []).map((e) => e as String).toList(),
+      createdAt: const HighPrecisionDateTimeConverter().fromJson(json['createdAt'] as String),
+      updatedAt: const HighPrecisionDateTimeConverter().fromJson(json['updatedAt'] as String),
+      pageCount: json['pageCount'] as int? ?? 0,
+    );
+  }
 }
 
-@JsonSerializable() // Add this annotation
 @freezed
-class DocumentDetail with _$DocumentDetail {
+abstract class DocumentDetail with _$DocumentDetail {
   const factory DocumentDetail({
-    required String id,
+    required String documentId,
     required String title,
     @Default([]) List<String> tags,
     @HighPrecisionDateTimeConverter()
@@ -37,18 +43,31 @@ class DocumentDetail with _$DocumentDetail {
     @Default([]) List<Page> pages,
   }) = _DocumentDetail;
 
-  factory DocumentDetail.fromJson(Map<String, dynamic> json) => _$DocumentDetailFromJson(json);
+  factory DocumentDetail.fromJson(Map<String, dynamic> json) {
+    return DocumentDetail(
+      documentId: json['documentId'] as String,
+      title: json['title'] as String,
+      tags: (json['tags'] as List<dynamic>? ?? []).map((e) => e as String).toList(),
+      createdAt: const HighPrecisionDateTimeConverter().fromJson(json['createdAt'] as String),
+      updatedAt: const HighPrecisionDateTimeConverter().fromJson(json['updatedAt'] as String),
+      pages: (json['pages'] as List<dynamic>? ?? []).map((e) => Page.fromJson(e as Map<String, dynamic>)).toList(),
+    );
+  }
 }
 
-@JsonSerializable() // Add this annotation
 @freezed
-class DocumentStats with _$DocumentStats {
+abstract class DocumentStats with _$DocumentStats {
   const factory DocumentStats({
     required int totalDocuments,
     required int totalPages,
   }) = _DocumentStats;
 
-  factory DocumentStats.fromJson(Map<String, dynamic> json) => _$DocumentStatsFromJson(json);
+  factory DocumentStats.fromJson(Map<String, dynamic> json) {
+    return DocumentStats(
+      totalDocuments: json['totalDocuments'] as int,
+      totalPages: json['totalPages'] as int,
+    );
+  }
 }
 
 @JsonSerializable(genericArgumentFactories: true)
