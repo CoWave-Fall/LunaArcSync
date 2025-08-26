@@ -12,5 +12,7 @@
     "aboutTitle": "关于",
     "appVersion": "1.0.0",
     "appLegalese": "© 2025 你的公司",
-    "appInfoPlaceholder": "这是应用程序信息的占位符。"
+    "appInfoPlaceholder": "这是应用程序信息的占位符。",
+    "overviewAppBarTitle": "概览",
+    "overviewRecentActivity": "最近活动"
 }

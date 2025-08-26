@@ -43,4 +43,10 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get appInfoPlaceholder => '这是应用程序信息的占位符。';
+
+  @override
+  String get overviewAppBarTitle => '概览';
+
+  @override
+  String get overviewRecentActivity => '最近活动';
 }

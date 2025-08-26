@@ -44,4 +44,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get appInfoPlaceholder =>
       'This is a placeholder for application information.';
+
+  @override
+  String get overviewAppBarTitle => 'Overview';
+
+  @override
+  String get overviewRecentActivity => 'Recent Activity';
 }

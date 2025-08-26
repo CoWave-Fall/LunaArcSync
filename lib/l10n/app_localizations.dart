@@ -169,6 +169,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This is a placeholder for application information.'**
   String get appInfoPlaceholder;
+
+  /// No description provided for @overviewAppBarTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overviewAppBarTitle;
+
+  /// No description provided for @overviewRecentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get overviewRecentActivity;
 }
 
 class _AppLocalizationsDelegate

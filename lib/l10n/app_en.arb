@@ -11,5 +11,7 @@
     "aboutTitle": "About",
     "appVersion": "1.0.0",
     "appLegalese": "© 2025 Your Company",
-    "appInfoPlaceholder": "This is a placeholder for application information."
+    "appInfoPlaceholder": "This is a placeholder for application information.",
+    "overviewAppBarTitle": "Overview",
+    "overviewRecentActivity": "Recent Activity"
 }
