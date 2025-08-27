@@ -12,6 +12,19 @@ class MainShell extends StatelessWidget {
     final String location = GoRouterState.of(context).uri.toString();
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Luna Arc Sync'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            tooltip: 'Search',
+            onPressed: () {
+              context.go('/search');
+            },
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
       body: Row(
         children: [
           // 左侧导航栏

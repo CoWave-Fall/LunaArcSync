@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:luna_arc_sync/core/api/api_client.dart';
+import 'package:luna_arc_sync/core/api/authenticated_image_provider.dart';
 import 'package:luna_arc_sync/core/di/injection.dart';
-import 'package:luna_arc_sync/core/storage/secure_storage_service.dart';
 import 'package:luna_arc_sync/data/models/job_models.dart';
 import 'package:luna_arc_sync/presentation/pages/cubit/page_detail_cubit.dart';
 import 'package:luna_arc_sync/presentation/pages/cubit/page_detail_state.dart';
@@ -22,14 +22,6 @@ class _PageDetailPageState extends State<PageDetailPage> {
   bool _isSearchVisible = false;
   final _searchController = TextEditingController();
 
-  late final Future<String?> _tokenFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _tokenFuture = getIt<SecureStorageService>().getToken();
-  }
-
   @override
   void dispose() {
     _searchController.dispose();
@@ -43,7 +35,7 @@ class _PageDetailPageState extends State<PageDetailPage> {
       child: BlocConsumer<PageDetailCubit, PageDetailState>(
         listener: (context, state) {
           state.whenOrNull(
-            success: (_, ocrStatus, ocrErrorMessage, __, ___) {
+            success: (_, ocrStatus, ocrErrorMessage, _, _) {
               if (ocrStatus == JobStatusEnum.Failed && ocrErrorMessage != null) {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
@@ -94,8 +86,6 @@ class _PageDetailPageState extends State<PageDetailPage> {
                   }
                   return const SizedBox.shrink();
                 }) ?? const SizedBox.shrink(),
-
-                // --- START: 新增的历史按钮 ---
                 state.whenOrNull(success: (doc, _, __, ___, ____) {
                   return IconButton(
                     icon: const Icon(Icons.history),
@@ -109,15 +99,12 @@ class _PageDetailPageState extends State<PageDetailPage> {
                           ),
                         ),
                       );
-                      // 导航回来后，重新获取页面数据以确保显示的是最新版本
                       if (mounted) {
                         context.read<PageDetailCubit>().fetchPage(widget.pageId);
                       }
                     },
                   );
                 }) ?? const SizedBox.shrink(),
-                // --- END: 新增的历史按钮 ---
-                
                 state.whenOrNull(success: (doc, ocrStatus, _, __, ___) {
                   if (ocrStatus != JobStatusEnum.Processing) {
                     return IconButton(
@@ -155,63 +142,48 @@ class _PageDetailPageState extends State<PageDetailPage> {
                 return Stack(
                   fit: StackFit.expand,
                   children: [
-                    FutureBuilder<String?>(
-                      future: _tokenFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
-                        }
-                        if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-                          return const Center(child: Text('Could not get auth token for image.'));
-                        }
-                        final token = snapshot.data!;
-                        final headers = {'Authorization': 'Bearer $token'};
-
-                        return InteractiveViewer(
-                          maxScale: 5.0,
-                          child: Center(
-                            child: Stack(
-                              children: [
-                                Image.network(
-                                  imageUrl,
-                                  headers: headers,
-                                  loadingBuilder: (context, child, progress) {
-                                    if (progress == null) return child;
-                                    return const Center(child: CircularProgressIndicator());
-                                  },
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.error, color: Colors.red, size: 50),
-                                          SizedBox(height: 8),
-                                          Text("Failed to load image."),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                                if (ocrResult != null) ...[
-                                  if (highlightedBboxes.isNotEmpty)
-                                    Positioned.fill(
-                                      child: HighlightOverlay(
-                                        bboxes: highlightedBboxes,
-                                        imageWidth: ocrResult.imageWidth,
-                                        imageHeight: ocrResult.imageHeight,
-                                      ),
-                                    ),
-                                  Positioned.fill(
-                                    child: OcrTextOverlay(
-                                      ocrResult: ocrResult,
-                                    ),
+                    InteractiveViewer(
+                      maxScale: 5.0,
+                      child: Center(
+                        child: Stack(
+                          children: [
+                            Image(
+                              image: AuthenticatedImageProvider(imageUrl, apiClient),
+                              loadingBuilder: (context, child, progress) {
+                                if (progress == null) return child;
+                                return const Center(child: CircularProgressIndicator());
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.error, color: Colors.red, size: 50),
+                                      SizedBox(height: 8),
+                                      Text("Failed to load image."),
+                                    ],
                                   ),
-                                ],
-                              ],
+                                );
+                              },
                             ),
-                          ),
-                        );
-                      },
+                            if (ocrResult != null) ...[
+                              if (highlightedBboxes.isNotEmpty)
+                                Positioned.fill(
+                                  child: HighlightOverlay(
+                                    bboxes: highlightedBboxes,
+                                    imageWidth: ocrResult.imageWidth,
+                                    imageHeight: ocrResult.imageHeight,
+                                  ),
+                                ),
+                              Positioned.fill(
+                                child: OcrTextOverlay(
+                                  ocrResult: ocrResult,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
                     ),
                     if (ocrStatus == JobStatusEnum.Processing)
                       Container(

@@ -1,15 +1,13 @@
 // 文件路径: lib/presentation/documents/cubit/document_detail_cubit.dart
 
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:luna_arc_sync/core/api/api_client.dart';
-import 'package:luna_arc_sync/data/models/document_models.dart';
 import 'package:luna_arc_sync/data/models/job_models.dart';
-import 'package:luna_arc_sync/data/models/page_models.dart' as page_models;
 import 'package:luna_arc_sync/data/repositories/document_repository.dart'
     as doc_repo;
 import 'package:luna_arc_sync/data/repositories/job_repository.dart';
@@ -80,7 +78,9 @@ class DocumentDetailCubit extends Cubit<DocumentDetailState> {
             emit(successState.copyWith(document: enrichedDocument));
           }
         } catch (e) {
-          print('Error enriching pages with thumbnails: $e');
+          if (kDebugMode) {
+            print('Error enriching pages with thumbnails: $e');
+          }
         }
       },
     );

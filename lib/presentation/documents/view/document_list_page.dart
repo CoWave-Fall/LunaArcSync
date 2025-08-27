@@ -59,49 +59,69 @@ class _DocumentListViewState extends State<_DocumentListView> {
   Future<void> _showCreateDocumentDialog(BuildContext context) async {
     final titleController = TextEditingController();
     final formKey = GlobalKey<FormState>();
+    final cubit = context.read<DocumentListCubit>();
 
-    final newDocument = await showDialog<Document>(
+    await showDialog<void>(
       context: context,
       builder: (dialogContext) {
-        return AlertDialog(
-          title: const Text('Create New Document'),
-          content: Form(
-            key: formKey,
-            child: TextFormField(
-              controller: titleController,
-              decoration: const InputDecoration(labelText: 'Document Title'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Title cannot be empty';
-                }
-                return null;
-              },
+        bool isLoading = false;
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            title: const Text('Create New Document'),
+            content: Form(
+              key: formKey,
+              child: TextFormField(
+                controller: titleController,
+                decoration: const InputDecoration(labelText: 'Document Title'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Title cannot be empty';
+                  }
+                  return null;
+                },
+              ),
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (formKey.currentState!.validate()) {
-                  // Here you would typically call a cubit method to create the document
-                  // For now, we'll just pop with a dummy document
-                  final newDoc = Document(documentId: 'new', title: titleController.text, createdAt: DateTime.now(), updatedAt: DateTime.now(), pageCount: 0, tags: []);
-                   Navigator.of(dialogContext).pop(newDoc);
-                }
-              },
-              child: const Text('Create'),
-            ),
-          ],
-        );
+            actions: [
+              TextButton(
+                onPressed: isLoading ? null : () => Navigator.of(dialogContext).pop(),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: isLoading
+                    ? null
+                    : () async {
+                        if (formKey.currentState!.validate()) {
+                          setState(() => isLoading = true);
+                          try {
+                            await cubit.createDocument(titleController.text);
+                            if (mounted) Navigator.of(dialogContext).pop();
+                          } catch (e) {
+                            // The cubit now handles error states, but we can show a snackbar here if needed
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Failed to create document: $e'), backgroundColor: Colors.red),
+                              );
+                            }
+                          } finally {
+                             if (mounted) {
+                                setState(() => isLoading = false);
+                             }
+                          }
+                        }
+                      },
+                child: isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Text('Create'),
+              ),
+            ],
+          );
+        });
       },
     );
-
-    if (newDocument != null && mounted) {
-      // Potentially refresh or navigate
-    }
   }
 
   // --- START: SORTING AND FILTERING DIALOGS ---
@@ -141,8 +161,8 @@ class _DocumentListViewState extends State<_DocumentListView> {
 
   void _showFilterDialog(BuildContext context) {
     final cubit = context.read<DocumentListCubit>();
-    // Fetch tags when the dialog is opened if they haven't been loaded yet
-    if (cubit.state.allTags.isEmpty && !cubit.state.areTagsLoading) {
+    // Always fetch the latest tags when the dialog is opened.
+    if (!cubit.state.areTagsLoading) {
       cubit.fetchAllTags();
     }
 
@@ -266,7 +286,7 @@ class _FilterDialogContentState extends State<_FilterDialogContent> {
   @override
   void initState() {
     super.initState();
-    _tempSelectedTags = context.read<DocumentListCubit>().state.selectedTags;
+    _tempSelectedTags = List<String>.from(context.read<DocumentListCubit>().state.selectedTags);
   }
 
   @override

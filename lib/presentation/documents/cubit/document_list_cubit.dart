@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:intl/intl.dart';
 import 'package:luna_arc_sync/data/repositories/document_repository.dart';
 import 'document_list_state.dart';
 
@@ -78,6 +79,34 @@ class DocumentListCubit extends Cubit<DocumentListState> {
   Future<void> applyTagFilter(List<String> tags) async {
     emit(state.copyWith(selectedTags: tags));
     await fetchDocuments(isRefresh: true);
+  }
+
+  Future<void> createDocument(String title) async {
+    try {
+      // 1. Create the document with the title
+      final newDocument = await _documentRepository.createDocument(title);
+
+      // 2. Calculate the default tag
+      final now = DateTime.now();
+      final year = now.year;
+      // Calculate the week of the year manually
+      final dayOfYear = now.difference(DateTime(year, 1, 1)).inDays + 1;
+      final week = (dayOfYear / 7).ceil();
+      final defaultTag = '$year年${week}周';
+
+      // 3. Update the newly created document with the default tag
+      await _documentRepository.updateDocument(
+        documentId: newDocument.documentId,
+        title: newDocument.title, // Pass the original title back
+        tags: [defaultTag], // Set the tags list with the default tag
+      );
+
+      // 4. After creating and updating, refresh the list to show the new document
+      await fetchDocuments(isRefresh: true);
+    } catch (e) {
+      // Optionally, emit a specific error state for creation failure
+      emit(state.copyWith(error: 'Failed to create document: ${e.toString()}'));
+    }
   }
 
   void refresh() {

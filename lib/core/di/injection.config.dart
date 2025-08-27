@@ -17,10 +17,14 @@ import 'package:luna_arc_sync/core/di/register_module.dart' as _i742;
 import 'package:luna_arc_sync/core/storage/secure_storage_service.dart'
     as _i972;
 import 'package:luna_arc_sync/data/repositories/auth_repository.dart' as _i125;
+import 'package:luna_arc_sync/data/repositories/data_transfer_repository.dart'
+    as _i630;
 import 'package:luna_arc_sync/data/repositories/document_repository.dart'
     as _i393;
 import 'package:luna_arc_sync/data/repositories/job_repository.dart' as _i757;
 import 'package:luna_arc_sync/data/repositories/page_repository.dart' as _i431;
+import 'package:luna_arc_sync/data/repositories/search_repository.dart'
+    as _i693;
 import 'package:luna_arc_sync/data/repositories/user_repository.dart' as _i655;
 import 'package:luna_arc_sync/presentation/auth/cubit/auth_cubit.dart' as _i887;
 import 'package:luna_arc_sync/presentation/documents/cubit/document_detail_cubit.dart'
@@ -35,6 +39,10 @@ import 'package:luna_arc_sync/presentation/pages/cubit/page_list_cubit.dart'
     as _i576;
 import 'package:luna_arc_sync/presentation/pages/cubit/version_history_cubit.dart'
     as _i47;
+import 'package:luna_arc_sync/presentation/search/cubit/search_cubit.dart'
+    as _i235;
+import 'package:luna_arc_sync/presentation/settings/cubit/data_transfer_cubit.dart'
+    as _i199;
 import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_notifier.dart'
     as _i22;
 
@@ -69,6 +77,9 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i972.SecureStorageService>(),
       ),
     );
+    gh.lazySingleton<_i630.IDataTransferRepository>(
+      () => _i630.DataTransferRepository(gh<_i423.ApiClient>()),
+    );
     gh.lazySingleton<_i431.IPageRepository>(
       () => _i431.PageRepository(gh<_i423.ApiClient>()),
     );
@@ -86,6 +97,15 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i655.IUserRepository>(
       () => _i655.UserRepository(gh<_i423.ApiClient>()),
+    );
+    gh.factory<_i199.DataTransferCubit>(
+      () => _i199.DataTransferCubit(gh<_i630.IDataTransferRepository>()),
+    );
+    gh.lazySingleton<_i693.ISearchRepository>(
+      () => _i693.SearchRepository(gh<_i423.ApiClient>()),
+    );
+    gh.factory<_i235.SearchCubit>(
+      () => _i235.SearchCubit(gh<_i693.ISearchRepository>()),
     );
     gh.factory<_i614.DocumentDetailCubit>(
       () => _i614.DocumentDetailCubit(

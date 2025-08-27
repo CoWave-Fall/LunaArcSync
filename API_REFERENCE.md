@@ -122,31 +122,32 @@
 - **Path**: `/api/documents`
 - **认证**: 是
 - **Query Params**:
-    - `pageNumber` (可选, 默认: 1)
-    - `pageSize` (可选, 默认: 10)
+- `pageNumber` (可选, 默认: 1)
+- `pageSize` (可选, 默认: 10)
+- `sortBy` (可选, 默认: "date_desc", 排序字段，例如 "date_desc", "title_asc")
+- `tags` (可选, 字符串，多个标签用逗号分隔，例如 "tag1,tag2")
 
 #### 成功响应 (200 OK)
-
 ```json
-{
-  "items": [
-    {
-      "documentId": "doc_guid_1",
-      "title": "项目报告",
-      "createdAt": "2023-10-27T10:00:00Z",
-      "updatedAt": "2023-10-27T12:00:00Z",
-      "pageCount": 5,
-      "tags": ["重要", "项目A"],
-      "ownerEmail": "admin@example.com" // (仅管理员可见)
-    }
-  ],
-  "pageNumber": 1,
-  "pageSize": 10,
-  "totalCount": 1,
-  "totalPages": 1,
-  "hasPreviousPage": false,
-  "hasNextPage": false
-}
+  {
+    "items": [
+      {
+        "documentId": "doc_guid_1",
+        "title": "项目报告",
+        "createdAt": "2023-10-27T10:00:00Z",
+        "updatedAt": "2023-10-27T12:00:00Z",
+        "pageCount": 5,
+        "tags": ["重要", "项目A"],
+        "ownerEmail": "admin@example.com" // (仅管理员可见)
+      }
+    ],
+    "pageNumber": 1,
+    "pageSize": 10,
+    "totalCount": 1,
+    "totalPages": 1,
+    "hasPreviousPage": false,
+    "hasNextPage": false
+  }
 ```
 
 ### 3.2 获取单个文档详情

@@ -58,6 +58,10 @@ class AppView extends StatelessWidget {
               path: '/login',
               builder: (context, state) => const LoginPage(),
             ),
+            GoRoute(
+              path: '/search',
+              builder: (context, state) => const SearchPage(),
+            ),
             ShellRoute(
               builder: (BuildContext context, GoRouterState state, Widget child) {
                 return MainShell(child: child);
