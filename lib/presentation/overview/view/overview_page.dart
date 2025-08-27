@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:luna_arc_sync/l10n/app_localizations.dart';
+import 'package:luna_arc_sync/presentation/auth/cubit/auth_cubit.dart';
 
 class OverviewPage extends StatelessWidget {
   const OverviewPage({super.key});
@@ -12,6 +14,15 @@ class OverviewPage extends StatelessWidget {
         slivers: [
           SliverAppBar.large(
             title: Text(l10n.overviewAppBarTitle),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout),
+                tooltip: l10n.logoutButtonTooltip,
+                onPressed: () {
+                  context.read<AuthCubit>().logout();
+                },
+              ),
+            ],
           ),
           _buildWelcomeHeader(context),
           _buildStatsGrid(context),

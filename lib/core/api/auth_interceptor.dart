@@ -21,6 +21,29 @@ Future<void> onRequest(
     debugPrint('--- AuthInterceptor ---');
     debugPrint('Intercepting request to: ${options.path}');
     final token = await _storageService.getToken();
+    final expiration = await _storageService.getExpiration();
+
+    if (expiration != null && expiration.isBefore(DateTime.now())) {
+      debugPrint('Token has expired. Rejecting request.');
+      // Optionally, perform logout action here
+      await _storageService.deleteToken();
+      await _storageService.deleteExpiration();
+
+      // Reject the request with an error
+      handler.reject(
+        DioException(
+          requestOptions: options,
+          response: Response(
+            requestOptions: options,
+            statusCode: 401,
+            statusMessage: 'Token expired',
+          ),
+          error: 'Token has expired. Please log in again.',
+          type: DioExceptionType.badResponse,
+        ),
+      );
+      return; // Stop further processing
+    }
     
     if (token != null) {
       debugPrint('Token found. Attaching to header.');

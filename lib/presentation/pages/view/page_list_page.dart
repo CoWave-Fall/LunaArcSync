@@ -118,13 +118,11 @@ class _PageListViewState extends State<PageListView> {
                 ),
                 actions: [
                   TextButton(
-                    onPressed: isLoading ? null : () => Navigator.of(stfContext).pop(),
+                    onPressed: () => Navigator.of(stfContext).pop(),
                     child: const Text('Cancel'),
                   ),
                   ElevatedButton(
-                    onPressed: isLoading
-                        ? null
-                        : () async {
+                    onPressed: () async {
                             if (formKey.currentState!.validate() && selectedFile != null) {
                               setState(() => isLoading = true);
                               try {

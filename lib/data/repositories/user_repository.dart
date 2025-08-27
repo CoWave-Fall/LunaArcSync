@@ -8,6 +8,7 @@ abstract class IUserRepository {
 
 @LazySingleton(as: IUserRepository)
 class UserRepository implements IUserRepository {
+  // ignore: unused_field
   final ApiClient _apiClient;
 
   UserRepository(this._apiClient);

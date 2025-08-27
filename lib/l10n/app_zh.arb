@@ -14,5 +14,6 @@
     "appLegalese": "© 2025 你的公司",
     "appInfoPlaceholder": "这是应用程序信息的占位符。",
     "overviewAppBarTitle": "概览",
-    "overviewRecentActivity": "最近活动"
+    "overviewRecentActivity": "最近活动",
+    "logoutButtonTooltip": "登出"
 }

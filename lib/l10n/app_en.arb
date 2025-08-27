@@ -13,5 +13,6 @@
     "appLegalese": "© 2025 Your Company",
     "appInfoPlaceholder": "This is a placeholder for application information.",
     "overviewAppBarTitle": "Overview",
-    "overviewRecentActivity": "Recent Activity"
+    "overviewRecentActivity": "Recent Activity",
+    "logoutButtonTooltip": "Logout"
 }

@@ -49,4 +49,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get overviewRecentActivity => '最近活动';
+
+  @override
+  String get logoutButtonTooltip => '登出';
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:luna_arc_sync/app.dart'; // Import the new App widget
 import 'package:luna_arc_sync/core/di/injection.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Important for some plugins
-  configureDependencies();
+  await configureDependencies();
   runApp(const App()); // Run our new root App widget
 }

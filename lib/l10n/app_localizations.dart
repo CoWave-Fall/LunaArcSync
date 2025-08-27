@@ -181,6 +181,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recent Activity'**
   String get overviewRecentActivity;
+
+  /// No description provided for @logoutButtonTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logoutButtonTooltip;
 }
 
 class _AppLocalizationsDelegate

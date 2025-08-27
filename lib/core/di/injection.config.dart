@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:luna_arc_sync/core/api/api_client.dart' as _i423;
 import 'package:luna_arc_sync/core/api/auth_interceptor.dart' as _i119;
+import 'package:luna_arc_sync/core/di/register_module.dart' as _i742;
 import 'package:luna_arc_sync/core/storage/secure_storage_service.dart'
     as _i972;
 import 'package:luna_arc_sync/data/repositories/auth_repository.dart' as _i125;
@@ -37,14 +38,24 @@ import 'package:luna_arc_sync/presentation/pages/cubit/version_history_cubit.dar
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
-  _i174.GetIt init({
+  Future<_i174.GetIt> init({
     String? environment,
     _i526.EnvironmentFilter? environmentFilter,
-  }) {
+  }) async {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
-    gh.lazySingleton<_i423.ApiClient>(() => _i423.ApiClient());
+    final registerModule = _$RegisterModule();
     gh.lazySingleton<_i972.SecureStorageService>(
       () => _i972.SecureStorageService(),
+    );
+    gh.factory<_i119.AuthInterceptor>(
+      () => _i119.AuthInterceptor(gh<_i972.SecureStorageService>()),
+    );
+    await gh.lazySingletonAsync<_i423.ApiClient>(
+      () => registerModule.apiClient(
+        gh<_i972.SecureStorageService>(),
+        gh<_i119.AuthInterceptor>(),
+      ),
+      preResolve: true,
     );
     gh.lazySingleton<_i125.IAuthRepository>(
       () => _i125.AuthRepository(
@@ -91,9 +102,6 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i393.IDocumentRepository>(),
       ),
     );
-    gh.factory<_i119.AuthInterceptor>(
-      () => _i119.AuthInterceptor(gh<_i972.SecureStorageService>()),
-    );
     gh.factory<_i614.DocumentDetailCubit>(
       () => _i614.DocumentDetailCubit(
         gh<_i393.IDocumentRepository>(),
@@ -104,3 +112,5 @@ extension GetItInjectableX on _i174.GetIt {
     return this;
   }
 }
+
+class _$RegisterModule extends _i742.RegisterModule {}

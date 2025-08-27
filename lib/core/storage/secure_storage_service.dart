@@ -7,6 +7,8 @@ class SecureStorageService {
 
   static const _tokenKey = 'auth_token';
   static const _userIdKey = 'user_id';
+  static const _expirationKey = 'auth_expiration';
+  static const _serverUrlKey = 'server_url';
 
   Future<void> saveToken(String token) async {
     await _storage.write(key: _tokenKey, value: token);
@@ -24,7 +26,35 @@ class SecureStorageService {
     await _storage.write(key: _userIdKey, value: userId);
   }
 
-   Future<String?> getUserId() async {
+  Future<String?> getUserId() async {
     return await _storage.read(key: _userIdKey);
+  }
+
+  Future<void> saveExpiration(DateTime expiration) async {
+    await _storage.write(key: _expirationKey, value: expiration.toIso8601String());
+  }
+
+  Future<DateTime?> getExpiration() async {
+    final expirationString = await _storage.read(key: _expirationKey);
+    if (expirationString == null) {
+      return null;
+    }
+    return DateTime.tryParse(expirationString);
+  }
+
+  Future<void> deleteExpiration() async {
+    await _storage.delete(key: _expirationKey);
+  }
+
+  Future<void> saveServerUrl(String url) async {
+    await _storage.write(key: _serverUrlKey, value: url);
+  }
+
+  Future<String?> getServerUrl() async {
+    return await _storage.read(key: _serverUrlKey);
+  }
+
+  Future<void> deleteServerUrl() async {
+    await _storage.delete(key: _serverUrlKey);
   }
 }

@@ -50,4 +50,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get overviewRecentActivity => 'Recent Activity';
+
+  @override
+  String get logoutButtonTooltip => 'Logout';
 }
