@@ -126,6 +126,7 @@ abstract class PageDetail with _$PageDetail {
     required DateTime updatedAt,
     required PageVersion currentVersion,
     required int totalVersions,
+    String? thumbnailUrl,
   }) = _PageDetail;
 
   factory PageDetail.fromJson(Map<String, dynamic> json) =>

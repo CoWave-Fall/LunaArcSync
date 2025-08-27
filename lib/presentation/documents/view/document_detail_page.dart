@@ -1,6 +1,13 @@
+import 'dart:async';
+import 'dart:ui';
+
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:luna_arc_sync/core/api/api_client.dart';
+import 'package:luna_arc_sync/core/api/authenticated_image_provider.dart';
 import 'package:luna_arc_sync/core/di/injection.dart';
 import 'package:luna_arc_sync/data/models/document_models.dart';
 import 'package:luna_arc_sync/data/models/page_models.dart' as page_models;
@@ -10,9 +17,10 @@ import 'package:luna_arc_sync/presentation/pages/cubit/page_list_cubit.dart';
 import 'package:luna_arc_sync/presentation/pages/cubit/page_list_state.dart';
 import 'package:luna_arc_sync/presentation/pages/view/page_detail_page.dart';
 import 'package:luna_arc_sync/presentation/pages/widgets/page_list_item.dart';
+import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_notifier.dart';
 import 'package:material_tag_editor/tag_editor.dart';
+import 'package:provider/provider.dart';
 
-// NEW: Enum for view types
 enum DocumentViewType { list, grid }
 
 class DocumentDetailPage extends StatefulWidget {
@@ -26,10 +34,53 @@ class DocumentDetailPage extends StatefulWidget {
 
 class _DocumentDetailPageState extends State<DocumentDetailPage> {
   bool _isEditMode = false;
-  DocumentViewType _viewType = DocumentViewType.list; // NEW: View type state
+  DocumentViewType _viewType = DocumentViewType.list;
   List<page_models.Page> _pages = [];
+  bool _thumbnailsEnriched = false;
 
-  // --- DIALOGS and HELPER METHODS (unchanged) ---
+  // Gesture state
+  double _scaleStart = 1.0;
+  late int _gridCountStart;
+
+  // --- DIALOGS and HELPER METHODS ---
+
+  Future<void> _showGridSettingsDialog(BuildContext context) async {
+    final gridSettings = context.read<GridSettingsNotifier>();
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return Consumer<GridSettingsNotifier>(
+          builder: (context, notifier, child) {
+            return AlertDialog(
+              title: const Text('Grid Layout Settings'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Columns: ${notifier.crossAxisCount}'),
+                  Slider(
+                    value: notifier.crossAxisCount.toDouble(),
+                    min: 2,
+                    max: 5,
+                    divisions: 3,
+                    label: notifier.crossAxisCount.toString(),
+                    onChanged: (value) {
+                      notifier.updateCrossAxisCount(value.toInt());
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Done'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
   Future<void> _showEditDocumentDialog(
     BuildContext context,
@@ -400,6 +451,8 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final gridSettings = context.watch<GridSettingsNotifier>();
+
     return BlocProvider(
       create: (context) =>
           getIt<DocumentDetailCubit>()..fetchDocument(widget.documentId),
@@ -411,6 +464,11 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
             setState(() {
               _pages = sortedPages;
             });
+
+            if (!_thumbnailsEnriched && _pages.isNotEmpty) {
+              _thumbnailsEnriched = true;
+              context.read<DocumentDetailCubit>().enrichPagesWithThumbnails();
+            }
           });
         },
         builder: (context, state) {
@@ -419,7 +477,6 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
               title: state.whenOrNull(success: (doc, _) => Text(doc.title)) ??
                   const Text('Loading Document...'),
               actions: [
-                // NEW: View switcher button
                 if (!_isEditMode)
                   IconButton(
                     icon: Icon(_viewType == DocumentViewType.list
@@ -433,6 +490,12 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                       });
                     },
                     tooltip: 'Switch View',
+                  ),
+                if (!_isEditMode && _viewType == DocumentViewType.grid)
+                  IconButton(
+                    icon: const Icon(Icons.grid_view_rounded),
+                    onPressed: () => _showGridSettingsDialog(context),
+                    tooltip: 'Grid Settings',
                   ),
                 IconButton(
                   icon: Icon(_isEditMode ? Icons.done : Icons.edit),
@@ -467,9 +530,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
             body: state.when(
               initial: () => const SizedBox.shrink(),
               loading: () => const Center(child: CircularProgressIndicator()),
-              failure: (message) => Center(
-                child: Text(message),
-              ),
+              failure: (message) => Center(child: Text(message)),
               success: (document, _) {
                 if (_pages.isEmpty) {
                   return const Center(
@@ -481,12 +542,11 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                 if (_isEditMode) {
                   return _buildReorderableList(context);
                 } else {
-                  // NEW: Conditional view based on _viewType
                   switch (_viewType) {
                     case DocumentViewType.list:
                       return _buildListView(context);
                     case DocumentViewType.grid:
-                      return _buildGridView(context);
+                      return _buildGridView(context, gridSettings);
                   }
                 }
               },
@@ -517,8 +577,6 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
     );
   }
 
-  // --- NEW: Extracted layout builders ---
-
   Widget _buildListView(BuildContext context) {
     return ListView.builder(
       itemCount: _pages.length,
@@ -538,29 +596,57 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
     );
   }
 
-  Widget _buildGridView(BuildContext context) {
-    return GridView.builder(
-      padding: const EdgeInsets.all(8.0),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Adjust for desired number of columns
-        crossAxisSpacing: 8.0,
-        mainAxisSpacing: 8.0,
-        childAspectRatio: 0.75, // Adjust for desired item aspect ratio
-      ),
-      itemCount: _pages.length,
-      itemBuilder: (context, index) {
-        final page = _pages[index];
-        return _PageGridItem(
-          page: page,
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => PageDetailPage(pageId: page.pageId),
-              ),
+  Widget _buildGridView(
+      BuildContext context, GridSettingsNotifier gridSettings) {
+    return Listener(
+      onPointerSignal: (signal) {
+        if (signal is PointerScrollEvent &&
+            (signal.kind == PointerDeviceKind.mouse &&
+                (HardwareKeyboard.instance.isControlPressed ||
+                    HardwareKeyboard.instance.isMetaPressed))) {
+          if (signal.scrollDelta.dy < 0) {
+            gridSettings.updateCrossAxisCount(gridSettings.crossAxisCount - 1);
+          } else {
+            gridSettings.updateCrossAxisCount(gridSettings.crossAxisCount + 1);
+          }
+        }
+      },
+      child: GestureDetector(
+        onScaleStart: (details) {
+          _scaleStart = 1.0;
+          _gridCountStart = gridSettings.crossAxisCount;
+        },
+        onScaleUpdate: (details) {
+          final scale = details.scale.clamp(0.5, 2.0);
+          if ((scale - _scaleStart).abs() > 0.2) {
+            final newCount = (_gridCountStart / scale).round();
+            gridSettings.updateCrossAxisCount(newCount);
+          }
+        },
+        child: GridView.builder(
+          padding: const EdgeInsets.all(8.0),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: gridSettings.crossAxisCount,
+            crossAxisSpacing: 8.0,
+            mainAxisSpacing: 8.0,
+            childAspectRatio: 0.75,
+          ),
+          itemCount: _pages.length,
+          itemBuilder: (context, index) {
+            final page = _pages[index];
+            return _PageGridItem(
+              page: page,
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => PageDetailPage(pageId: page.pageId),
+                  ),
+                );
+              },
             );
           },
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -610,7 +696,6 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
   }
 }
 
-// NEW: Grid item widget
 class _PageGridItem extends StatelessWidget {
   final page_models.Page page;
   final VoidCallback onTap;
@@ -628,12 +713,14 @@ class _PageGridItem extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                color: Colors.grey[300], // Placeholder for thumbnail
+                color: Colors.grey[300],
                 child: page.thumbnailUrl != null && page.thumbnailUrl!.isNotEmpty
-                    ? Image.network(
-                        page.thumbnailUrl!,
+                    ? Image(
+                        image: AuthenticatedImageProvider(
+                          page.thumbnailUrl!,
+                          getIt<ApiClient>(),
+                        ),
                         fit: BoxFit.cover,
-                        // Basic error and loading handling for network images
                         loadingBuilder: (context, child, loadingProgress) {
                           if (loadingProgress == null) return child;
                           return const Center(child: CircularProgressIndicator());

@@ -35,6 +35,8 @@ import 'package:luna_arc_sync/presentation/pages/cubit/page_list_cubit.dart'
     as _i576;
 import 'package:luna_arc_sync/presentation/pages/cubit/version_history_cubit.dart'
     as _i47;
+import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_notifier.dart'
+    as _i22;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -44,6 +46,10 @@ extension GetItInjectableX on _i174.GetIt {
   }) async {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule();
+    await gh.singletonAsync<_i22.GridSettingsNotifier>(
+      () => registerModule.gridSettingsNotifier(),
+      preResolve: true,
+    );
     gh.lazySingleton<_i972.SecureStorageService>(
       () => _i972.SecureStorageService(),
     );
@@ -81,6 +87,14 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i655.IUserRepository>(
       () => _i655.UserRepository(gh<_i423.ApiClient>()),
     );
+    gh.factory<_i614.DocumentDetailCubit>(
+      () => _i614.DocumentDetailCubit(
+        gh<_i393.IDocumentRepository>(),
+        gh<_i431.IPageRepository>(),
+        gh<_i757.IJobRepository>(),
+        gh<_i423.ApiClient>(),
+      ),
+    );
     gh.factory<_i921.DocumentListCubit>(
       () => _i921.DocumentListCubit(gh<_i393.IDocumentRepository>()),
     );
@@ -100,13 +114,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => _i287.OverviewCubit(
         gh<_i655.IUserRepository>(),
         gh<_i393.IDocumentRepository>(),
-      ),
-    );
-    gh.factory<_i614.DocumentDetailCubit>(
-      () => _i614.DocumentDetailCubit(
-        gh<_i393.IDocumentRepository>(),
-        gh<_i431.IPageRepository>(),
-        gh<_i757.IJobRepository>(),
       ),
     );
     return this;

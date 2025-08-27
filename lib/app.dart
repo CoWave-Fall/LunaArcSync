@@ -15,7 +15,8 @@ import 'package:luna_arc_sync/presentation/shell/main_shell.dart';
 import 'package:luna_arc_sync/presentation/overview/view/overview_page.dart';
 import 'package:luna_arc_sync/presentation/documents/view/document_list_page.dart'; // 使用 DocumentListPage
 import 'package:luna_arc_sync/presentation/settings/view/settings_page.dart';
-
+ import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_notifier.dart';
+ 
 class App extends StatelessWidget {
   const App({super.key});
 
@@ -31,6 +32,9 @@ class App extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ThemeNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => getIt<GridSettingsNotifier>(),
         ),
       ],
       child: const AppView(),

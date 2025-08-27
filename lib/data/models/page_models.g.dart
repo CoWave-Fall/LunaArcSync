@@ -149,6 +149,7 @@ _PageDetail _$PageDetailFromJson(Map<String, dynamic> json) => _PageDetail(
     json['currentVersion'] as Map<String, dynamic>,
   ),
   totalVersions: (json['totalVersions'] as num).toInt(),
+  thumbnailUrl: json['thumbnailUrl'] as String?,
 );
 
 Map<String, dynamic> _$PageDetailToJson(_PageDetail instance) =>
@@ -163,4 +164,5 @@ Map<String, dynamic> _$PageDetailToJson(_PageDetail instance) =>
       ),
       'currentVersion': instance.currentVersion,
       'totalVersions': instance.totalVersions,
+      'thumbnailUrl': instance.thumbnailUrl,
     };

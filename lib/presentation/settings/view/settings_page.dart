@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:luna_arc_sync/l10n/app_localizations.dart';
 import 'package:luna_arc_sync/core/localization/locale_notifier.dart';
+import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_notifier.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -36,6 +37,32 @@ class _SettingsPageState extends State<SettingsPage> {
             },
           ),
           const Divider(),
+
+          // Grid Layout Setting
+          Consumer<GridSettingsNotifier>(
+            builder: (context, notifier, child) {
+              return ListTile(
+                leading: const Icon(Icons.grid_view),
+                title: const Text('Grid Columns'),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Columns: ${notifier.crossAxisCount}'),
+                    Slider(
+                      value: notifier.crossAxisCount.toDouble(),
+                      min: 2,
+                      max: 5,
+                      divisions: 3,
+                      label: notifier.crossAxisCount.toString(),
+                      onChanged: (value) {
+                        notifier.updateCrossAxisCount(value.toInt());
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
 
           // Database Import/Export
           ListTile(
