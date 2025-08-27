@@ -14,6 +14,7 @@ abstract class Page with _$Page {
     @HighPrecisionDateTimeConverter()
     required DateTime updatedAt,
     @Default(0) int order, // 新增 order 字段
+    String? thumbnailUrl,
   }) = _Page;
 
   factory Page.fromJson(Map<String, dynamic> json) => _$PageFromJson(json);

@@ -1,4 +1,3 @@
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +12,9 @@ import 'package:luna_arc_sync/presentation/pages/view/page_detail_page.dart';
 import 'package:luna_arc_sync/presentation/pages/widgets/page_list_item.dart';
 import 'package:material_tag_editor/tag_editor.dart';
 
+// NEW: Enum for view types
+enum DocumentViewType { list, grid }
+
 class DocumentDetailPage extends StatefulWidget {
   final String documentId;
 
@@ -24,11 +26,10 @@ class DocumentDetailPage extends StatefulWidget {
 
 class _DocumentDetailPageState extends State<DocumentDetailPage> {
   bool _isEditMode = false;
-
-  // *** NEW ***: Controller for local page list to enable reordering UI
+  DocumentViewType _viewType = DocumentViewType.list; // NEW: View type state
   List<page_models.Page> _pages = [];
 
-  // --- DIALOGS and HELPER METHODS ---
+  // --- DIALOGS and HELPER METHODS (unchanged) ---
 
   Future<void> _showEditDocumentDialog(
     BuildContext context,
@@ -176,7 +177,6 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                         page: page,
                         onTap: () async {
                           try {
-                            // *** 修正 ***: 使用 addPageToDocument 方法
                             await docDetailCubit.addPageToDocument(page.pageId);
                             if (dialogContext.mounted) {
                               Navigator.of(dialogContext).pop();
@@ -223,7 +223,6 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
         final title = await _showTitleDialog(context, fileName);
         if (title != null) {
           try {
-            // *** 修正 ***: 调用移除了 newOrder 参数的 cubit 方法
             await cubit.createPageAndAddToDocument(
               title: title,
               fileBytes: fileBytes,
@@ -244,7 +243,6 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
     }
   }
 
-  // *** NEW ***: Method to pick multiple files and start the stitching process.
   Future<void> _pickAndStitchFiles(BuildContext context) async {
     final cubit = context.read<DocumentDetailCubit>();
     final result = await FilePicker.platform.pickFiles(
@@ -345,7 +343,6 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
     );
   }
 
-  // *** NEW ***: Dialog to edit a page's title.
   Future<void> _showEditPageTitleDialog(
       BuildContext context, page_models.Page page) async {
     final cubit = context.read<DocumentDetailCubit>();
@@ -406,12 +403,9 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
     return BlocProvider(
       create: (context) =>
           getIt<DocumentDetailCubit>()..fetchDocument(widget.documentId),
-      // *** MODIFIED ***: Use BlocConsumer to listen for state changes and update local list
       child: BlocConsumer<DocumentDetailCubit, DocumentDetailState>(
         listener: (context, state) {
-          // Update local page list whenever the success state is emitted.
           state.whenOrNull(success: (document, _) {
-            // *** NEW ***: Sort pages by order before updating the state
             final sortedPages = List<page_models.Page>.from(document.pages)
               ..sort((a, b) => a.order.compareTo(b.order));
             setState(() {
@@ -425,19 +419,32 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
               title: state.whenOrNull(success: (doc, _) => Text(doc.title)) ??
                   const Text('Loading Document...'),
               actions: [
+                // NEW: View switcher button
+                if (!_isEditMode)
+                  IconButton(
+                    icon: Icon(_viewType == DocumentViewType.list
+                        ? Icons.view_module
+                        : Icons.view_list),
+                    onPressed: () {
+                      setState(() {
+                        _viewType = _viewType == DocumentViewType.list
+                            ? DocumentViewType.grid
+                            : DocumentViewType.list;
+                      });
+                    },
+                    tooltip: 'Switch View',
+                  ),
                 IconButton(
                   icon: Icon(_isEditMode ? Icons.done : Icons.edit),
                   onPressed: () {
-                    // *** MODIFIED ***: When exiting edit mode, if changes were made, reorder.
                     if (_isEditMode) {
                       final cubit = context.read<DocumentDetailCubit>();
-                      // Create the payload for the reorder API
                       final pageOrders = _pages
                           .asMap()
                           .entries
                           .map((entry) => {
                                 'pageId': entry.value.pageId,
-                                'order': entry.key, // Use index as the new order
+                                'order': entry.key,
                               })
                           .toList();
                       cubit.reorderPages(pageOrders);
@@ -471,79 +478,16 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                   );
                 }
 
-                // *** MODIFIED ***: Use ReorderableListView when in edit mode
                 if (_isEditMode) {
-                  return ReorderableListView.builder(
-                    itemCount: _pages.length,
-                    itemBuilder: (context, index) {
-                      final page = _pages[index];
-                      // Each item in ReorderableListView needs a unique Key.
-                      return Container(
-                        key: ValueKey(page.pageId),
-                        child: Row(
-                          children: [
-                            // Drag handle
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Icon(Icons.drag_handle),
-                            ),
-                            Expanded(
-                              child: PageListItem(
-                                page: page,
-                                onTap: () {
-                                  // No action on tap in edit mode
-                                },
-                              ),
-                            ),
-                            // Edit Title Button
-                            IconButton(
-                              icon: const Icon(Icons.edit,
-                                  color: Colors.blueGrey),
-                              onPressed: () =>
-                                  _showEditPageTitleDialog(context, page),
-                              tooltip: 'Edit Title',
-                            ),
-                            // Delete Button
-                            IconButton(
-                              icon: const Icon(Icons.delete_outline,
-                                  color: Colors.red),
-                              onPressed: () =>
-                                  _showDeleteConfirmationDialog(context, page),
-                              tooltip: 'Delete Page',
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    onReorder: (oldIndex, newIndex) {
-                      setState(() {
-                        if (oldIndex < newIndex) {
-                          newIndex -= 1;
-                        }
-                        final page = _pages.removeAt(oldIndex);
-                        _pages.insert(newIndex, page);
-                      });
-                    },
-                  );
+                  return _buildReorderableList(context);
                 } else {
-                  // Original ListView for normal mode
-                  return ListView.builder(
-                    itemCount: _pages.length,
-                    itemBuilder: (context, index) {
-                      final page = _pages[index];
-                      return PageListItem(
-                        page: page,
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  PageDetailPage(pageId: page.pageId),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  );
+                  // NEW: Conditional view based on _viewType
+                  switch (_viewType) {
+                    case DocumentViewType.list:
+                      return _buildListView(context);
+                    case DocumentViewType.grid:
+                      return _buildGridView(context);
+                  }
                 }
               },
             ),
@@ -569,6 +513,149 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  // --- NEW: Extracted layout builders ---
+
+  Widget _buildListView(BuildContext context) {
+    return ListView.builder(
+      itemCount: _pages.length,
+      itemBuilder: (context, index) {
+        final page = _pages[index];
+        return PageListItem(
+          page: page,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => PageDetailPage(pageId: page.pageId),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildGridView(BuildContext context) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(8.0),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2, // Adjust for desired number of columns
+        crossAxisSpacing: 8.0,
+        mainAxisSpacing: 8.0,
+        childAspectRatio: 0.75, // Adjust for desired item aspect ratio
+      ),
+      itemCount: _pages.length,
+      itemBuilder: (context, index) {
+        final page = _pages[index];
+        return _PageGridItem(
+          page: page,
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => PageDetailPage(pageId: page.pageId),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildReorderableList(BuildContext context) {
+    return ReorderableListView.builder(
+      itemCount: _pages.length,
+      itemBuilder: (context, index) {
+        final page = _pages[index];
+        return Container(
+          key: ValueKey(page.pageId),
+          child: Row(
+            children: [
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Icon(Icons.drag_handle),
+              ),
+              Expanded(
+                child: PageListItem(
+                  page: page,
+                  onTap: () {},
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit, color: Colors.blueGrey),
+                onPressed: () => _showEditPageTitleDialog(context, page),
+                tooltip: 'Edit Title',
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete_outline, color: Colors.red),
+                onPressed: () => _showDeleteConfirmationDialog(context, page),
+                tooltip: 'Delete Page',
+              ),
+            ],
+          ),
+        );
+      },
+      onReorder: (oldIndex, newIndex) {
+        setState(() {
+          if (oldIndex < newIndex) {
+            newIndex -= 1;
+          }
+          final page = _pages.removeAt(oldIndex);
+          _pages.insert(newIndex, page);
+        });
+      },
+    );
+  }
+}
+
+// NEW: Grid item widget
+class _PageGridItem extends StatelessWidget {
+  final page_models.Page page;
+  final VoidCallback onTap;
+
+  const _PageGridItem({required this.page, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: Container(
+                color: Colors.grey[300], // Placeholder for thumbnail
+                child: page.thumbnailUrl != null && page.thumbnailUrl!.isNotEmpty
+                    ? Image.network(
+                        page.thumbnailUrl!,
+                        fit: BoxFit.cover,
+                        // Basic error and loading handling for network images
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return const Center(child: CircularProgressIndicator());
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Icon(Icons.broken_image, size: 48);
+                        },
+                      )
+                    : const Icon(Icons.image, size: 48, color: Colors.grey),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                page.title,
+                style: Theme.of(context).textTheme.titleSmall,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

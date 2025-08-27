@@ -42,6 +42,7 @@ _Page _$PageFromJson(Map<String, dynamic> json) => _Page(
     json['updatedAt'] as String,
   ),
   order: (json['order'] as num?)?.toInt() ?? 0,
+  thumbnailUrl: json['thumbnailUrl'] as String?,
 );
 
 Map<String, dynamic> _$PageToJson(_Page instance) => <String, dynamic>{
@@ -54,6 +55,7 @@ Map<String, dynamic> _$PageToJson(_Page instance) => <String, dynamic>{
     instance.updatedAt,
   ),
   'order': instance.order,
+  'thumbnailUrl': instance.thumbnailUrl,
 };
 
 _Bbox _$BboxFromJson(Map<String, dynamic> json) => _Bbox(

@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Page {
 
- String get pageId; String get title;@HighPrecisionDateTimeConverter() DateTime get createdAt;@HighPrecisionDateTimeConverter() DateTime get updatedAt; int get order;
+ String get pageId; String get title;@HighPrecisionDateTimeConverter() DateTime get createdAt;@HighPrecisionDateTimeConverter() DateTime get updatedAt; int get order;// 新增 order 字段
+ String? get thumbnailUrl;
 /// Create a copy of Page
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +29,16 @@ $PageCopyWith<Page> get copyWith => _$PageCopyWithImpl<Page>(this as Page, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Page&&(identical(other.pageId, pageId) || other.pageId == pageId)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.order, order) || other.order == order));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Page&&(identical(other.pageId, pageId) || other.pageId == pageId)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.order, order) || other.order == order)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,pageId,title,createdAt,updatedAt,order);
+int get hashCode => Object.hash(runtimeType,pageId,title,createdAt,updatedAt,order,thumbnailUrl);
 
 @override
 String toString() {
-  return 'Page(pageId: $pageId, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, order: $order)';
+  return 'Page(pageId: $pageId, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, order: $order, thumbnailUrl: $thumbnailUrl)';
 }
 
 
@@ -48,7 +49,7 @@ abstract mixin class $PageCopyWith<$Res>  {
   factory $PageCopyWith(Page value, $Res Function(Page) _then) = _$PageCopyWithImpl;
 @useResult
 $Res call({
- String pageId, String title,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int order
+ String pageId, String title,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int order, String? thumbnailUrl
 });
 
 
@@ -65,14 +66,15 @@ class _$PageCopyWithImpl<$Res>
 
 /// Create a copy of Page
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? pageId = null,Object? title = null,Object? createdAt = null,Object? updatedAt = null,Object? order = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? pageId = null,Object? title = null,Object? createdAt = null,Object? updatedAt = null,Object? order = null,Object? thumbnailUrl = freezed,}) {
   return _then(_self.copyWith(
 pageId: null == pageId ? _self.pageId : pageId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,order: null == order ? _self.order : order // ignore: cast_nullable_to_non_nullable
-as int,
+as int,thumbnailUrl: freezed == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -157,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int order)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int order,  String? thumbnailUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Page() when $default != null:
-return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.order);case _:
+return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.order,_that.thumbnailUrl);case _:
   return orElse();
 
 }
@@ -178,10 +180,10 @@ return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.o
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int order)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int order,  String? thumbnailUrl)  $default,) {final _that = this;
 switch (_that) {
 case _Page():
-return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.order);case _:
+return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.order,_that.thumbnailUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +200,10 @@ return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.o
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int order)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int order,  String? thumbnailUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _Page() when $default != null:
-return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.order);case _:
+return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.order,_that.thumbnailUrl);case _:
   return null;
 
 }
@@ -213,7 +215,7 @@ return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.o
 @JsonSerializable()
 
 class _Page implements Page {
-  const _Page({required this.pageId, required this.title, @HighPrecisionDateTimeConverter() required this.createdAt, @HighPrecisionDateTimeConverter() required this.updatedAt, this.order = 0});
+  const _Page({required this.pageId, required this.title, @HighPrecisionDateTimeConverter() required this.createdAt, @HighPrecisionDateTimeConverter() required this.updatedAt, this.order = 0, this.thumbnailUrl});
   factory _Page.fromJson(Map<String, dynamic> json) => _$PageFromJson(json);
 
 @override final  String pageId;
@@ -221,6 +223,8 @@ class _Page implements Page {
 @override@HighPrecisionDateTimeConverter() final  DateTime createdAt;
 @override@HighPrecisionDateTimeConverter() final  DateTime updatedAt;
 @override@JsonKey() final  int order;
+// 新增 order 字段
+@override final  String? thumbnailUrl;
 
 /// Create a copy of Page
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Page&&(identical(other.pageId, pageId) || other.pageId == pageId)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.order, order) || other.order == order));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Page&&(identical(other.pageId, pageId) || other.pageId == pageId)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.order, order) || other.order == order)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,pageId,title,createdAt,updatedAt,order);
+int get hashCode => Object.hash(runtimeType,pageId,title,createdAt,updatedAt,order,thumbnailUrl);
 
 @override
 String toString() {
-  return 'Page(pageId: $pageId, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, order: $order)';
+  return 'Page(pageId: $pageId, title: $title, createdAt: $createdAt, updatedAt: $updatedAt, order: $order, thumbnailUrl: $thumbnailUrl)';
 }
 
 
@@ -255,7 +259,7 @@ abstract mixin class _$PageCopyWith<$Res> implements $PageCopyWith<$Res> {
   factory _$PageCopyWith(_Page value, $Res Function(_Page) _then) = __$PageCopyWithImpl;
 @override @useResult
 $Res call({
- String pageId, String title,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int order
+ String pageId, String title,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int order, String? thumbnailUrl
 });
 
 
@@ -272,14 +276,15 @@ class __$PageCopyWithImpl<$Res>
 
 /// Create a copy of Page
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? pageId = null,Object? title = null,Object? createdAt = null,Object? updatedAt = null,Object? order = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? pageId = null,Object? title = null,Object? createdAt = null,Object? updatedAt = null,Object? order = null,Object? thumbnailUrl = freezed,}) {
   return _then(_Page(
 pageId: null == pageId ? _self.pageId : pageId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,order: null == order ? _self.order : order // ignore: cast_nullable_to_non_nullable
-as int,
+as int,thumbnailUrl: freezed == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
