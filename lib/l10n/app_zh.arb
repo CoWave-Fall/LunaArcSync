@@ -1,0 +1,459 @@
+{
+    "@@locale": "zh",
+    "settingsPageTitle": "设置",
+    "languageSettingTitle": "语言",
+    "languageSettingSubtitle": "中文",
+    "importDatabaseTitle": "导入数据库",
+    "exportDatabaseTitle": "导出数据库",
+    "darkModeTitle": "深色模式",
+    "notificationsTitle": "通知",
+    "clearCacheTitle": "清除缓存",
+    "aboutTitle": "关于",
+    "appVersion": "0.0.1",
+    "appLegalese": "泠月案阁 (LunaArcSync) 是一个开源的文档管理和同步应用。",
+    "aiContentNotice": "本程序含有生成式AI生成的内容。感谢Gemini、Claude、DeepSeek在开发过程中的帮助。",
+    "trademarkNotice": "商标声明：",
+    "trademarkGemini": "• \"Gemini\" 是 Google LLC 的商标",
+    "trademarkClaude": "• \"Claude\" 是 Anthropic PBC 的商标", 
+    "trademarkDeepSeek": "• \"DeepSeek\" 是 DeepSeek 的商标",
+    "trademarkDisclaimer": "• 上述商标归各自所有者所有，本程序不声称拥有这些商标",
+    "appInfoPlaceholder": "泠月案阁 (LunaArcSync) 是一个开源的文档管理和同步应用。\n\n程序（排名不分先后）：\n• Gemini\n• Claude\n• DeepSeek\n• CoWave-Fall\n\n项目地址：\nhttps://github.com/CoWave-Fall/LunaArcSync\n\n作者主页：\nhttps://github.com/CoWave-Fall/",
+    "viewLicenses": "查看许可",
+    "licensesTitle": "开源许可",
+    "licensesContent": "基于以下开源项目构建：\n\n• Flutter (BSD-3-Clause)\n• Dio (MIT)\n• flutter_bloc (MIT)\n• go_router (BSD-3-Clause)\n• image_cropper (MIT)\n• pdfx (MIT)\n• flutter_svg (MIT)\n• file_picker (MIT)\n• shared_preferences (BSD-3-Clause)\n• provider (MIT)\n• file_saver (MIT)\n• path_provider (BSD-3-Clause)\n• device_info_plus (MIT)\n• package_info_plus (MIT)\n• cunning_document_scanner (MIT)\n• image (MIT)\n• path (BSD-3-Clause)\n• bloc (MIT)\n• get_it (MIT)\n• injectable (MIT)\n• freezed_annotation (MIT)\n• json_annotation (MIT)\n• flutter_secure_storage (MIT)\n• intl (BSD-3-Clause)\n• material_tag_editor (MIT)\n• image_cropper_platform_interface (MIT)\n\n其他依赖库详见 pubspec.yaml",
+    "overviewAppBarTitle": "概览",
+    "overviewRecentActivity": "最近活动",
+    "logoutButtonTooltip": "登出",
+    "welcomeBack": "欢迎回来！",
+    "welcomeSubtitle": "这是您活动的摘要。",
+    "jobsPageTitle": "任务",
+    "loadHistoryTooltip": "加载历史",
+    "refreshTooltip": "刷新",
+    "deleteJobTitle": "删除任务",
+    "deleteJobMessage": "您确定要删除此任务吗？此操作无法撤销。",
+    "delete": "删除",
+    "cancel": "取消",
+    "jobCompleted": "任务完成",
+    "pdfExportCompleted": "PDF导出完成",
+    "ocrProcessingCompleted": "OCR处理完成",
+    "batchExportCompleted": "批量导出完成",
+    "view": "查看",
+    "jobFailed": "任务失败",
+    "pdfExportFailed": "PDF导出失败",
+    "ocrProcessingFailed": "OCR处理失败",
+    "batchExportFailed": "批量导出失败",
+    "unknownError": "未知错误",
+    "downloadingResult": "正在下载结果文件...",
+    "downloadSuccess": "文件下载成功！已保存为 {fileName} ({fileSize}MB)",
+    "@downloadSuccess": {
+        "placeholders": {
+            "fileName": {
+                "type": "String"
+            },
+            "fileSize": {
+                "type": "String"
+            }
+        }
+    },
+    "downloadFailed": "下载失败：{error}",
+    "@downloadFailed": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "jobId": "任务ID",
+    "submitted": "提交时间",
+    "started": "开始时间",
+    "completed": "完成时间",
+    "pageId": "页面ID",
+    "downloadResult": "下载结果",
+    "loadingJobs": "正在加载任务...",
+    "refreshingJobs": "正在刷新任务...",
+    "failedToLoadJobs": "加载任务失败",
+    "tryAgain": "重试",
+    "noJobsFound": "未找到任务",
+    "noJobsDescription": "您目前没有任何活跃任务。\n所有任务都已完成或没有正在进行的任务。",
+    "refreshJobs": "刷新任务",
+    "viewJobHistory": "查看任务历史",
+    "jobsInfo": "当您开始处理文档或执行批量操作时，任务将在此处显示。",
+    "cannotDeleteQueuedJobs": "无法删除排队中或正在处理的任务。请等待它们完成。",
+    "failedToDeleteJob": "删除任务失败：{error}",
+    "@failedToDeleteJob": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "gridColumns": "网格列数",
+    "columns": "列数",
+    "darkModeImageProcessing": "深色模式图像处理",
+    "darkModeImageProcessingSubtitle": "调整深色模式的图像处理",
+    "english": "English",
+    "chinese": "中文",
+    "editDocumentInfo": "编辑文档信息",
+    "documentTitle": "文档标题",
+    "pleaseEnterTitle": "请输入标题",
+    "loadingDocument": "正在加载文档...",
+    "documentEmpty": "此文档为空。添加页面开始使用！",
+    "switchView": "切换视图",
+    "gridSettings": "网格设置",
+    "exportAsPdf": "导出为PDF",
+    "deletePage": "删除页面",
+    "movePage": "移动页面",
+    "addPage": "添加页面",
+    "edit": "编辑",
+    "done": "完成",
+    "save": "保存",
+    "confirm": "确认",
+    "areYouSure": "您确定吗？",
+    "thisActionCannotBeUndone": "此操作无法撤销。",
+    "page": "页面",
+    "pages": "页面",
+    "ofPages": "共",
+    "noPagesFound": "未找到页面",
+    "addFirstPage": "添加您的第一个页面",
+    "scanDocument": "扫描文档",
+    "importImage": "导入图片",
+    "takePhoto": "拍照",
+    "selectFromGallery": "从相册选择",
+    "documentSaved": "文档保存成功",
+    "documentDeleted": "文档删除成功",
+    "pageDeleted": "页面删除成功",
+    "pageMoved": "页面移动成功",
+    "errorOccurred": "发生错误",
+    "retry": "重试",
+    "close": "关闭",
+    "aboutAppBarTitle": "关于",
+    "errorLoadingAbout": "加载关于信息失败",
+    "retryButton": "重试",
+    "aboutAppInfo": "应用程序信息",
+    "aboutAppName": "泠月案阁",
+    "aboutVersion": "版本",
+    "aboutContact": "联系信息",
+    "aboutGitHub": "GitHub仓库",
+    "aboutServerInfo": "服务器信息",
+    "aboutUserAccount": "用户账号",
+    "aboutClientInfo": "客户端信息",
+    "aboutLoginStatus": "登录状态",
+    "aboutChecking": "检查中...",
+    "aboutLoggedIn": "已登录",
+    "aboutNotLoggedIn": "未登录",
+    "aboutUserId": "用户ID",
+    "aboutPackageName": "包名",
+    "aboutDeviceModel": "设备型号",
+    "aboutDeviceOS": "操作系统",
+    "aboutDeviceInfo": "设备信息",
+    "aboutLoading": "加载中...",
+    "aboutUnknown": "未知",
+    "loginManualLoginRequired": "请先手动登录一次以保存凭据",
+    "loginAutoLoginFailed": "自动登录失败: {error}",
+    "@loginAutoLoginFailed": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "loginDeleteServer": "删除服务器",
+    "loginDeleteServerConfirm": "确定要删除服务器 \"{serverName}\" 吗？",
+    "@loginDeleteServerConfirm": {
+        "placeholders": {
+            "serverName": {
+                "type": "String"
+            }
+        }
+    },
+    "loginServerDeleted": "已删除服务器 \"{serverName}\"",
+    "@loginServerDeleted": {
+        "placeholders": {
+            "serverName": {
+                "type": "String"
+            }
+        }
+    },
+    "loginDeleteServerFailed": "删除服务器失败: {error}",
+    "@loginDeleteServerFailed": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "appTitle": "泠月案阁",
+    "appTitleCharacters": "泠月案阁",
+    "settingsExportDatabase": "导出数据库",
+    "settingsExportDatabaseDescription": "这将导出您的所有数据，包括文档、页面、设置等。\n\n",
+    "settingsExportDatabaseAdditionalInfo": "导出的数据将保存为ZIP文件，您可以在其他设备上导入使用。\n\n确定要继续吗？",
+    "settingsImportDatabase": "导入数据库",
+    "settingsImportDatabaseDescription": "请选择之前导出的ZIP文件进行导入。\n\n",
+    "settingsImportDatabaseAdditionalInfo": "注意：导入数据将覆盖当前设备上的所有数据，请确保已备份重要信息。\n\n导入完成后需要重启应用才能生效。\n\n确定要继续吗？",
+    "settingsFileTooLarge": "文件过大，请选择小于100MB的文件",
+    "settingsFileCorrupted": "无法读取文件，请确保文件未损坏",
+    "settingsNoFileSelected": "未选择文件",
+    "settingsFileSelectionError": "选择文件时出错: {error}",
+    "@settingsFileSelectionError": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsSavingExportFile": "正在保存导出文件...",
+    "settingsSaveExportFile": "保存导出文件",
+    "settingsSaveCancelled": "保存已取消",
+    "settingsExportSuccess": "导出成功！文件已保存为 {fileName} ({fileSize}MB)",
+    "@settingsExportSuccess": {
+        "placeholders": {
+            "fileName": {
+                "type": "String"
+            },
+            "fileSize": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsSaveFileFailed": "保存文件失败: {error}",
+    "@settingsSaveFileFailed": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "saveFile": "保存文件",
+    "saveCancelled": "保存已取消",
+    "settingsImportSuccess": "导入成功",
+    "settingsImportSuccessDescription": "数据导入成功！\n\n",
+    "settingsImportSuccessAdditionalInfo": "为了确保所有数据正确加载，请重启应用程序。\n\n点击确定后应用将关闭，请手动重新打开。",
+    "settingsRefreshPageToCompleteImport": "请刷新页面以完成导入",
+    "settingsExportConfirmMessage": "导出的数据将保存为ZIP文件，您可以在其他设备上导入使用。\n\n确定要继续吗？",
+    "settingsAppearanceSettings": "外观设置",
+    "settingsDisplaySettings": "显示设置", 
+    "settingsJobSettings": "任务设置",
+    "settingsNotificationSettings": "通知设置",
+    "settingsDataManagement": "数据管理",
+    "settingsAbout": "关于",
+    "settingsPollingIntervalLabel": "秒",
+    "settingsOpenSourceThanks": "感谢以下开源项目的支持：",
+    "settingsOtherDependencies": "其他依赖库详见 pubspec.yaml 文件",
+    "settingsLicenseTitle": "许可证",
+    "settingsLicenseUnavailable": "许可证内容暂不可用。\n\n许可证类型: {licenseType}\n\n请访问项目主页查看完整的许可证信息。",
+    "@settingsLicenseUnavailable": {
+        "placeholders": {
+            "licenseType": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsAppName": "泠月案阁",
+    "settingsProgramContributors": "程序",
+    "settingsAiContentNotice": "AI生成内容声明",
+    "settingsTechnicalInfo": "技术信息",
+    "settingsPackageName": "包名",
+    "settingsVersion": "版本",
+    "settingsBuildNumber": "构建号",
+    "settingsProjectUrl": "项目地址",
+    "settingsAuthorUrl": "作者主页",
+    "settingsThemeSettings": "主题设置",
+    "settingsJobHistory": "任务历史",
+    "settingsMaxJobHistoryRecords": "最大记录数: {count}",
+    "@settingsMaxJobHistoryRecords": {
+        "placeholders": {
+            "count": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsPollingInterval": "轮询间隔",
+    "settingsPollingIntervalValue": "间隔: {seconds}秒",
+    "@settingsPollingIntervalValue": {
+        "placeholders": {
+            "seconds": {
+                "type": "String"
+            }
+        }
+    },
+    "settingsFollowSystem": "跟随系统",
+    "settingsFollowSystemDescription": "根据系统设置自动切换",
+    "settingsLightTheme": "浅色主题",
+    "settingsLightThemeDescription": "始终使用浅色主题",
+    "settingsDarkTheme": "深色主题",
+    "settingsDarkThemeDescription": "始终使用深色主题",
+    "simpleAnimationExampleTitle": "简单SVG动画示例",
+    "svgAnimationDemoTitle": "SVG动画演示",
+    "svgAnimationEnableAnimation": "启用动画",
+    "svgAnimationLogoSize": "Logo大小: {size}px",
+    "@svgAnimationLogoSize": {
+        "placeholders": {
+            "size": {
+                "type": "String"
+            }
+        }
+    },
+    "jobsTaskCompletedWithId": "{message}！任务ID: {jobId}...",
+    "@jobsTaskCompletedWithId": {
+        "placeholders": {
+            "message": {
+                "type": "String"
+            },
+            "jobId": {
+                "type": "String"
+            }
+        }
+    },
+    "documentNotLoadedCannotExport": "文档未加载，无法导出",
+    "documentEmptyCannotExportPdf": "文档为空，无法导出PDF",
+    "documentExportAsPdf": "导出为PDF",
+    "documentExportAsPdfDescription": "将导出文档 \"{title}\" 为PDF文件。\n\n",
+    "@documentExportAsPdfDescription": {
+        "placeholders": {
+            "title": {
+                "type": "String"
+            }
+        }
+    },
+    "documentExportAsPdfAdditionalInfo": "文档包含 {pageCount} 页，导出任务将在后台处理。\n\n您可以在\"任务\"页面查看导出进度和结果。\n\n确定要开始导出吗？",
+    "@documentExportAsPdfAdditionalInfo": {
+        "placeholders": {
+            "pageCount": {
+                "type": "String"
+            }
+        }
+    },
+    "documentStartExport": "开始导出",
+    "documentPdfExportTaskStarted": "PDF导出任务已启动！任务ID: {jobId}...",
+    "@documentPdfExportTaskStarted": {
+        "placeholders": {
+            "jobId": {
+                "type": "String"
+            }
+        }
+    },
+    "loginWelcomeMessage": "登录泠月案阁",
+    "loginSelectServer": "选择服务器",
+    "loginAddServer": "添加服务器",
+    "myDocuments": "我的文档",
+    "themeModeSystem": "跟随系统",
+    "themeModeLight": "浅色主题",
+    "themeModeDark": "深色主题",
+    "loginWelcomeBack": "欢迎回来！",
+    "loginServerAddress": "服务器地址 (IP:端口)",
+    "loginServerAddressHint": "192.168.1.100:8080",
+    "loginServerAddressHelper": "输入IP地址和端口 (例如: 192.168.1.100:8080)",
+    "loginEmail": "邮箱",
+    "loginPassword": "密码",
+    "loginButton": "登录",
+    "loginRegisterPrompt": "没有账户？注册",
+    "loginServerAddressRequired": "请输入服务器地址",
+    "loginServerAddressInvalidFormat": "请输入IP:端口格式 (例如: 192.168.1.100:8080)",
+    "loginServerAddressInvalidParts": "格式无效。请使用IP:端口 (例如: 192.168.1.100:8080)",
+    "loginEmailRequired": "请输入有效的邮箱",
+    "loginPasswordRequired": "密码不能为空",
+    "darkModeSettingsTitle": "深色模式图像处理",
+    "darkModeSettingsDarkTextThreshold": "深色文本阈值",
+    "darkModeSettingsDarkTextThresholdDescription": "{value} (0-255) - 较低的值捕获更多文本",
+    "@darkModeSettingsDarkTextThresholdDescription": {
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "darkModeSettingsWhiteThreshold": "白色阈值",
+    "darkModeSettingsWhiteThresholdDescription": "{value} (0-255)",
+    "@darkModeSettingsWhiteThresholdDescription": {
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "darkModeSettingsDarkenFactor": "变暗系数",
+    "darkModeSettingsDarkenFactorDescription": "{value}%",
+    "@darkModeSettingsDarkenFactorDescription": {
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "darkModeSettingsLightenFactor": "变亮系数",
+    "darkModeSettingsLightenFactorDescription": "{value}%",
+    "@darkModeSettingsLightenFactorDescription": {
+        "placeholders": {
+            "value": {
+                "type": "String"
+            }
+        }
+    },
+    "darkModeSettingsNote": "注意：更改将应用于新的图像渲染。现有缓存的图像将使用旧设置。",
+    "darkModeSettingsResetDefaults": "重置为默认值",
+    "darkModeSettingsClose": "关闭",
+    "clearCacheSelectTypes": "选择要清除的缓存类型：",
+    "clearCachePdfImages": "PDF图像",
+    "clearCacheDarkModeSettings": "深色模式设置",
+    "clearCacheJobHistory": "任务历史",
+    "clearCacheTotalSize": "总缓存大小：",
+    "clearCacheClearSelected": "清除选中项",
+    "clearCacheClearAll": "清除全部",
+    "clearCacheSuccess": "选中的缓存清除成功",
+    "clearCacheAllSuccess": "所有缓存清除成功",
+    "fontSettingsTitle": "字体设置",
+    "fontSettingsSubtitle": "选择应用字体",
+    "fontLXGWWenKaiMono": "霞鹜文楷等宽",
+    "fontSystem": "系统默认",
+    "ocrProcessingInProgress": "正在处理OCR...",
+    "ocrTaskCompleted": "OCR处理完成！",
+    "ocrTaskStartFailed": "OCR任务启动失败: {error}",
+    "@ocrTaskStartFailed": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "renderFailed": "渲染失败",
+    "retry": "重试",
+    "copyAllText": "复制全部文本",
+    "textCopied": "文本已复制到剪贴板",
+    "copyText": "复制文本",
+    "selectAll": "全选",
+    "copy": "复制",
+    "createNewDocument": "创建新文档",
+    "documentTitle": "文档标题",
+    "thisDocumentIsEmpty": "此文档为空。添加页面开始使用！",
+    "editDocumentInfo": "编辑文档信息",
+    "tags": "标签",
+    "addTag": "添加标签",
+    "filterByTags": "按标签筛选",
+    "goodMorning": "早上好",
+    "goodAfternoon": "中午好",
+    "goodEvening": "晚上好",
+    "loadingDocuments": "正在加载文档...",
+    "selectFromFiles": "从文件选择",
+    "scanDocument": "扫描文档",
+    "refresh": "刷新",
+    "pagesUploadedSuccessfully": "页面上传成功！",
+    "pdfUploadedSuccessfully": "PDF上传成功！正在处理页面...",
+    "failedToCreateDocument": "创建文档失败",
+    "theConnectErrored": "连接错误",
+    "cancelCreate": "取消创建",
+    "titleCannotBeEmpty": "标题不能为空",
+    "create": "创建",
+    "versionHistory": "版本历史",
+    "viewVersionHistory": "查看版本历史",
+    "noVersionHistoryFound": "未找到版本历史",
+    "current": "当前",
+    "numberOfColumns": "列数",
+    "gridSettings": "网格设置",
+    "searchDocuments": "搜索文档",
+    "searchDocumentsPagesContent": "搜索文档、页面、内容...",
+    "startTypingToSearch": "开始输入以搜索",
+    "searchFailed": "搜索失败",
+    "uploadingAndProcessingPdf": "正在上传和处理PDF...",
+    "pdfUploadFailed": "PDF上传失败",
+    "noResultsFound": "未找到结果"
+}
