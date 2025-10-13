@@ -127,3 +127,6 @@ app.*.symbols
 /linux
 /android
 /Docs
+/ios
+/macos
+/.idea
