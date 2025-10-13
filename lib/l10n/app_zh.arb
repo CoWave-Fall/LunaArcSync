@@ -89,6 +89,10 @@
     },
     "gridColumns": "网格列数",
     "columns": "列数",
+    "defaultViewMode": "默认视图模式",
+    "defaultViewModeDescription": "选择页面默认的显示方式",
+    "listView": "列表视图",
+    "gridView": "网格视图",
     "darkModeImageProcessing": "深色模式图像处理",
     "darkModeImageProcessingSubtitle": "调整深色模式的图像处理",
     "english": "English",
@@ -128,6 +132,9 @@
     "close": "关闭",
     "aboutAppBarTitle": "关于",
     "errorLoadingAbout": "加载关于信息失败",
+    "connectionErrorTitle": "服务器连接失败",
+    "authErrorTitle": "认证失败",
+    "backToLogin": "返回登录",
     "retryButton": "重试",
     "aboutAppInfo": "应用程序信息",
     "aboutAppName": "泠月案阁",
@@ -258,6 +265,25 @@
     "settingsProjectUrl": "项目地址",
     "settingsAuthorUrl": "作者主页",
     "settingsThemeSettings": "主题设置",
+    "settingsThemeColor": "主题颜色",
+    "settingsThemeColorDescription": "选择应用的主题颜色",
+    "settingsBackgroundImage": "背景图片",
+    "settingsBackgroundImageEnabled": "已启用自定义背景",
+    "settingsBackgroundImageDisabled": "使用默认背景",
+    "settingsBackgroundImageDescription": "设置自定义背景图片，启用后侧边栏和卡片将显示毛玻璃效果",
+    "settingsBackgroundImageEnable": "启用自定义背景",
+    "settingsBackgroundImageSelect": "选择图片",
+    "settingsBackgroundImageRemove": "删除背景",
+    "settingsBackgroundImageRemoveConfirm": "确定要删除自定义背景图片吗？",
+    "settingsBackgroundImageSet": "背景图片设置成功",
+    "settingsBackgroundImageError": "设置背景图片时出错：{error}",
+    "@settingsBackgroundImageError": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
     "settingsJobHistory": "任务历史",
     "settingsMaxJobHistoryRecords": "最大记录数: {count}",
     "@settingsMaxJobHistoryRecords": {
@@ -346,6 +372,7 @@
     "loginEmail": "邮箱",
     "loginPassword": "密码",
     "loginButton": "登录",
+    "loginSuccess": "登录成功！",
     "loginRegisterPrompt": "没有账户？注册",
     "loginServerAddressRequired": "请输入服务器地址",
     "loginServerAddressInvalidFormat": "请输入IP:端口格式 (例如: 192.168.1.100:8080)",
@@ -455,5 +482,149 @@
     "searchFailed": "搜索失败",
     "uploadingAndProcessingPdf": "正在上传和处理PDF...",
     "pdfUploadFailed": "PDF上传失败",
-    "noResultsFound": "未找到结果"
+    "noResultsFound": "未找到结果",
+    "accErr001": "该邮箱已存在用户。",
+    "accErr002": "用户创建失败。",
+    "accSuc001": "用户创建成功！",
+    "accErr003": "邮箱或密码无效。",
+    "pagErr001": "文件是必需的。",
+    "pagErr002": "文档未找到或不属于您。",
+    "pagErr003": "请求中发现重复的页面ID：{duplicatePageIds}",
+    "@pagErr003": {
+        "placeholders": {
+            "duplicatePageIds": {
+                "type": "String"
+            }
+        }
+    },
+    "pagErr004": "请求中发现重复的顺序号：{duplicateOrders}",
+    "@pagErr004": {
+        "placeholders": {
+            "duplicateOrders": {
+                "type": "String"
+            }
+        }
+    },
+    "pagErr005": "更新页面顺序失败。请确保所有页面属于指定文档和用户。",
+    "pagErr006": "新顺序必须在1到{maxOrder}之间。",
+    "@pagErr006": {
+        "placeholders": {
+            "maxOrder": {
+                "type": "String"
+            }
+        }
+    },
+    "pagErr007": "插入过程中更新页面顺序失败。",
+    "pagErr008": "未提供文件。",
+    "pagErr009": "未提供图片文件。",
+    "pagErr010": "请上传有效的PDF文件。",
+    "pagErr011": "只允许PDF文件。",
+    "pagErr012": "文档未找到或没有页面。",
+    "pagErr013": "在文档{documentId}中未找到ID为{pageId}的页面。",
+    "@pagErr013": {
+        "placeholders": {
+            "pageId": {
+                "type": "String"
+            },
+            "documentId": {
+                "type": "String"
+            }
+        }
+    },
+    "pagErr014": "文档未找到。",
+    "docErr001": "添加页面到文档失败。页面可能不存在、不属于您或已在其他文档中。",
+    "docErr002": "未提供文档ID。",
+    "jobErr001": "未找到ID为{jobId}的任务",
+    "@jobErr001": {
+        "placeholders": {
+            "jobId": {
+                "type": "String"
+            }
+        }
+    },
+    "jobErr002": "未找到ID为{versionId}的版本",
+    "@jobErr002": {
+        "placeholders": {
+            "versionId": {
+                "type": "String"
+            }
+        }
+    },
+    "jobErr003": "未找到ID为{pageId}的页面",
+    "@jobErr003": {
+        "placeholders": {
+            "pageId": {
+                "type": "String"
+            }
+        }
+    },
+    "jobErr004": "未找到ID为{versionId}的版本",
+    "@jobErr004": {
+        "placeholders": {
+            "versionId": {
+                "type": "String"
+            }
+        }
+    },
+    "jobErr005": "未找到ID为{jobId}的任务",
+    "@jobErr005": {
+        "placeholders": {
+            "jobId": {
+                "type": "String"
+            }
+        }
+    },
+    "jobSuc001": "OCR任务已排队。",
+    "jobSuc002": "拼接任务已排队。",
+    "jobSuc003": "任务已成功取消。",
+    "imgErr001": "页面未找到。",
+    "imgErr002": "缩略图不可用。",
+    "imgErr003": "存储中未找到缩略图文件。",
+    "verErr001": "页面未找到。",
+    "verErr002": "页面未找到。",
+    "srcErr001": "搜索查询不能为空。",
+    "datErr001": "必须提供目标用户ID。",
+    "datErr002": "未上传文件。",
+    "datErr003": "未上传文件。",
+    "datSuc001": "数据导入成功。",
+    "datSuc002": "您的数据导入成功。",
+    "appInfo001": "初始化中",
+    "pdfErr001": "读取PDF文件获取页数失败。文件可能已损坏或无效。",
+    "pdfErr002": "读取或处理PDF文件失败。文件可能已损坏或格式不支持。",
+    "pdfErr003": "从PDF文件提取文本失败。文件可能已损坏或格式不支持。",
+    "pdfErr004": "从PDF文件第{pageNumber}页提取文本失败。文件可能已损坏或格式不支持。",
+    "@pdfErr004": {
+        "placeholders": {
+            "pageNumber": {
+                "type": "String"
+            }
+        }
+    },
+    "ocrErr001": "版本未找到。",
+    "ocrErr002": "版本缺少文件元数据。",
+    "ocrErr003": "文件未找到。",
+    "ocrErr004": "无法从版本文件获取图像数据。",
+    "stiErr001": "拼接至少需要两个源图像。",
+    "stiErr002": "一个或多个源版本未找到。",
+    "stiErr003": "无法拼接图像。状态：{status}",
+    "@stiErr003": {
+        "placeholders": {
+            "status": {
+                "type": "String"
+            }
+        }
+    },
+    "stiErr004": "用户{userId}的页面ID {pageId}未找到。",
+    "@stiErr004": {
+        "placeholders": {
+            "pageId": {
+                "type": "String"
+            },
+            "userId": {
+                "type": "String"
+            }
+        }
+    },
+    "impErr001": "非管理员导出必须提供用户ID。",
+    "impErr002": "导入归档中未找到data.json。"
 }

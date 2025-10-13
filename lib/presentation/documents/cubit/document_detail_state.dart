@@ -13,6 +13,7 @@ sealed class DocumentDetailState with _$DocumentDetailState {
     @Default(false) bool hasReachedMax, // NEW: for pagination
     @Default({}) Map<String, JobStatusEnum> pageStitchingStatus,
     @Default(false) bool isRefreshing, // NEW: for refresh indicator
+    @Default(0) int totalPageCount, // NEW: total page count for the document
   }) = _Success;
   const factory DocumentDetailState.failure({required String message}) = _Failure;
 }

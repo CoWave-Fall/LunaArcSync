@@ -4,14 +4,19 @@ import 'package:pdfrx/pdfrx.dart';
 
 /// pdfrx现代渲染器
 /// 支持缩放、平移和高级交互功能
+/// 注意：pdfrx使用自己的内部缓存机制
 class PdfrxRenderer extends StatefulWidget {
   final Uint8List pdfBytes;
+  final String pageId;
+  final String versionId;
   final GlobalKey imageKey;
   final Function(Size)? onImageRendered;
   
   const PdfrxRenderer({
     super.key,
     required this.pdfBytes,
+    required this.pageId,
+    required this.versionId,
     required this.imageKey,
     this.onImageRendered,
   });
@@ -20,8 +25,11 @@ class PdfrxRenderer extends StatefulWidget {
   State<PdfrxRenderer> createState() => _PdfrxRendererState();
 }
 
-class _PdfrxRendererState extends State<PdfrxRenderer> {
+class _PdfrxRendererState extends State<PdfrxRenderer> with AutomaticKeepAliveClientMixin {
   final _controller = PdfViewerController();
+
+  @override
+  bool get wantKeepAlive => true; // 保持状态，避免重建
 
   @override
   void initState() {
@@ -37,6 +45,10 @@ class _PdfrxRendererState extends State<PdfrxRenderer> {
         if (renderObject is RenderBox && renderObject.hasSize) {
           // pdfrx 的容器尺寸就是PDF的实际渲染尺寸
           widget.onImageRendered!(renderObject.size);
+          
+          if (kDebugMode) {
+            print('pdfrx: 报告渲染尺寸: ${renderObject.size}');
+          }
         }
       }
     });
@@ -50,6 +62,8 @@ class _PdfrxRendererState extends State<PdfrxRenderer> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // 必须调用以保持状态
+    
     if (kDebugMode) {
       print('pdfrx: 开始渲染PDF，大小: ${widget.pdfBytes.length} bytes');
     }

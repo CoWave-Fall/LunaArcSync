@@ -4,6 +4,7 @@ import 'package:luna_arc_sync/core/api/auth_interceptor.dart';
 import 'package:luna_arc_sync/core/storage/secure_storage_service.dart';
 import 'package:luna_arc_sync/core/storage/image_cache_service.dart';
 import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_notifier.dart';
+import 'package:luna_arc_sync/presentation/settings/notifiers/precaching_settings_notifier.dart';
 
 @module
 abstract class RegisterModule {
@@ -26,6 +27,14 @@ abstract class RegisterModule {
   @singleton
   Future<GridSettingsNotifier> gridSettingsNotifier() async {
     final notifier = GridSettingsNotifier();
+    await notifier.loadSettings();
+    return notifier;
+  }
+
+  @preResolve
+  @singleton
+  Future<PrecachingSettingsNotifier> precachingSettingsNotifier() async {
+    final notifier = PrecachingSettingsNotifier();
     await notifier.loadSettings();
     return notifier;
   }

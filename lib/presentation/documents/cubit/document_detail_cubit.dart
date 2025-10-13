@@ -20,6 +20,10 @@ class DocumentDetailCubit extends Cubit<DocumentDetailState> {
 
   String? _currentDocumentId;
   int _currentPage = 1;
+  
+  // 添加请求管理，防止并发请求导致顺序错误
+  final Set<int> _loadingPages = {};
+  int _expectedNextPage = 1;
 
   DocumentDetailCubit(
     this._documentRepository,
@@ -29,6 +33,11 @@ class DocumentDetailCubit extends Cubit<DocumentDetailState> {
   Future<void> fetchDocument(String documentId) async {
     _currentDocumentId = documentId;
     _currentPage = 1;
+    
+    // 重置分页状态
+    _loadingPages.clear();
+    _expectedNextPage = 1;
+    
     emit(const DocumentDetailState.loading());
     try {
       // 1. Fetch document metadata
@@ -45,8 +54,10 @@ class DocumentDetailCubit extends Cubit<DocumentDetailState> {
       emit(DocumentDetailState.success(
         document: document.copyWith(pages: pageResult.items),
         hasReachedMax: !pageResult.hasNextPage,
+        totalPageCount: pageResult.totalCount, // Save total page count
       ));
       _currentPage++; // Increment for the next fetch
+      _expectedNextPage = 2; // 设置期望的下一页
     } catch (e) {
       emit(DocumentDetailState.failure(message: e.toString()));
     }
@@ -58,29 +69,43 @@ class DocumentDetailCubit extends Cubit<DocumentDetailState> {
       success: (currentState) async {
         if (currentState.hasReachedMax) return;
 
+        final nextPage = _expectedNextPage;
+        
+        // 防止重复请求同一页
+        if (_loadingPages.contains(nextPage)) return;
+        
+        _loadingPages.add(nextPage);
+
         try {
           // Fetch the next page of results
           final pageResult = await _documentRepository.getPagesForDocument(
             _currentDocumentId!,
-            page: _currentPage,
+            page: nextPage,
             limit: _pageSize,
           );
 
-          // Append new pages to the existing list
-          final updatedPages = List.of(currentState.document.pages)..addAll(pageResult.items);
+          // 检查请求的页面是否仍然是期望的下一页，防止顺序错误
+          if (nextPage == _expectedNextPage) {
+            // Append new pages to the existing list
+            final updatedPages = List.of(currentState.document.pages)..addAll(pageResult.items);
 
-          emit(currentState.copyWith(
-            document: currentState.document.copyWith(pages: updatedPages),
-            hasReachedMax: !pageResult.hasNextPage,
-          ));
+            emit(currentState.copyWith(
+              document: currentState.document.copyWith(pages: updatedPages),
+              hasReachedMax: !pageResult.hasNextPage,
+            ));
 
-          _currentPage++;
+            _currentPage = nextPage + 1;
+            _expectedNextPage = nextPage + 1; // 更新期望的下一页
+          }
+          // 如果请求的页面不是期望的下一页，则忽略结果，避免顺序错误
         } catch (e) {
           // Optionally, handle fetch more errors differently
           // For now, we just print it
           if (kDebugMode) {
             print('Failed to fetch more pages: $e');
           }
+        } finally {
+          _loadingPages.remove(nextPage);
         }
       },
     );
@@ -100,6 +125,8 @@ class DocumentDetailCubit extends Cubit<DocumentDetailState> {
     try {
       // 重置分页状态
       _currentPage = 1;
+      _loadingPages.clear();
+      _expectedNextPage = 1;
       
       // 重新获取文档和第一页数据
       final document = await _documentRepository.getDocumentById(_currentDocumentId!);
@@ -114,9 +141,11 @@ class DocumentDetailCubit extends Cubit<DocumentDetailState> {
         document: document.copyWith(pages: pageResult.items),
         hasReachedMax: !pageResult.hasNextPage,
         isRefreshing: false,
+        totalPageCount: pageResult.totalCount, // Save total page count
       ));
       
       _currentPage++; // 为下次获取准备
+      _expectedNextPage = 2; // 设置期望的下一页
     } catch (e) {
       // 如果刷新失败，恢复到之前的状态
       state.mapOrNull(

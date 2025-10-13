@@ -4,7 +4,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:luna_arc_sync/l10n/app_localizations.dart';
 import 'package:luna_arc_sync/core/localization/locale_notifier.dart';
 import 'package:luna_arc_sync/core/theme/theme_notifier.dart';
+import 'package:luna_arc_sync/core/theme/theme_color_notifier.dart';
+import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
 import 'package:luna_arc_sync/core/theme/font_notifier.dart';
+import 'package:luna_arc_sync/core/theme/fullscreen_notifier.dart';
+import 'package:luna_arc_sync/core/theme/page_navigation_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -17,11 +21,13 @@ import 'package:luna_arc_sync/presentation/about/view/about_page.dart';
 import 'package:luna_arc_sync/presentation/documents/view/document_list_page.dart'; // 使用 DocumentListPage
 import 'package:luna_arc_sync/presentation/settings/view/settings_page.dart';
 import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_notifier.dart';
+import 'package:luna_arc_sync/presentation/settings/notifiers/precaching_settings_notifier.dart';
 import 'package:luna_arc_sync/presentation/search/view/search_page.dart';
 import 'package:luna_arc_sync/presentation/jobs/view/jobs_page.dart';
 import 'package:luna_arc_sync/presentation/jobs/cubit/jobs_cubit.dart';
 import 'package:luna_arc_sync/presentation/pages/svg_animation_demo_page.dart';
 import 'package:luna_arc_sync/presentation/pages/simple_animation_example_page.dart';
+import 'package:luna_arc_sync/core/animations/page_transitions.dart';
 class App extends StatelessWidget {
   const App({super.key});
 
@@ -42,10 +48,25 @@ class App extends StatelessWidget {
           create: (_) => ThemeNotifier(),
         ),
         ChangeNotifierProvider(
+          create: (_) => getIt<ThemeColorNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => getIt<BackgroundImageNotifier>(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => getIt<FontNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => getIt<GridSettingsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => getIt<PrecachingSettingsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FullscreenNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PageNavigationNotifier(),
         ),
       ],
       child: const AppView(),
@@ -67,11 +88,17 @@ class AppView extends StatelessWidget {
           routes: [
             GoRoute(
               path: '/login',
-              builder: (context, state) => const LoginPage(),
+              pageBuilder: (context, state) => CustomPageTransition.fadeScale(
+                child: const LoginPage(),
+                state: state,
+              ),
             ),
             GoRoute(
               path: '/search',
-              builder: (context, state) => const SearchPage(),
+              pageBuilder: (context, state) => CustomPageTransition.slideFromBottom(
+                child: const SearchPage(),
+                state: state,
+              ),
             ),
             ShellRoute(
               builder: (BuildContext context, GoRouterState state, Widget child) {
@@ -80,27 +107,51 @@ class AppView extends StatelessWidget {
               routes: [
                 GoRoute(
                   path: '/about',
-                  builder: (BuildContext context, GoRouterState state) => const AboutPage(),
+                  pageBuilder: (BuildContext context, GoRouterState state) => 
+                    CustomPageTransition.fade(
+                      child: const AboutPage(),
+                      state: state,
+                    ),
                 ),
                 GoRoute(
                   path: '/documents',
-                  builder: (BuildContext context, GoRouterState state) => const DocumentListPage(),
+                  pageBuilder: (BuildContext context, GoRouterState state) => 
+                    CustomPageTransition.fade(
+                      child: const DocumentListPage(),
+                      state: state,
+                    ),
                 ),
                 GoRoute(
                   path: '/settings',
-                  builder: (BuildContext context, GoRouterState state) => const SettingsPage(),
+                  pageBuilder: (BuildContext context, GoRouterState state) => 
+                    CustomPageTransition.fade(
+                      child: const SettingsPage(),
+                      state: state,
+                    ),
                 ),
                 GoRoute(
                   path: '/jobs',
-                  builder: (BuildContext context, GoRouterState state) => const JobsPage(),
+                  pageBuilder: (BuildContext context, GoRouterState state) => 
+                    CustomPageTransition.fade(
+                      child: const JobsPage(),
+                      state: state,
+                    ),
                 ),
                 GoRoute(
                   path: '/svg-animation-demo',
-                  builder: (BuildContext context, GoRouterState state) => const SvgAnimationDemoPage(),
+                  pageBuilder: (BuildContext context, GoRouterState state) => 
+                    CustomPageTransition.fade(
+                      child: const SvgAnimationDemoPage(),
+                      state: state,
+                    ),
                 ),
                 GoRoute(
                   path: '/simple-animation-example',
-                  builder: (BuildContext context, GoRouterState state) => const SimpleAnimationExamplePage(),
+                  pageBuilder: (BuildContext context, GoRouterState state) => 
+                    CustomPageTransition.fade(
+                      child: const SimpleAnimationExamplePage(),
+                      state: state,
+                    ),
                 ),
               ],
             ),
@@ -137,17 +188,28 @@ class AppView extends StatelessWidget {
         final fontFamily = FontNotifier.availableFonts
             .firstWhere((font) => font.name == selectedFont)
             .fontFamily;
+        
+        final themeColor = context.watch<ThemeColorNotifier>().themeColor;
+        final backgroundImageNotifier = context.watch<BackgroundImageNotifier>();
+        
+        // 根据背景图片自动切换主题
+        final themeNotifier = context.watch<ThemeNotifier>();
+        final effectiveThemeMode = backgroundImageNotifier.autoThemeSwitchEnabled &&
+                backgroundImageNotifier.hasCustomBackground &&
+                backgroundImageNotifier.recommendedThemeMode != null
+            ? backgroundImageNotifier.recommendedThemeMode!
+            : themeNotifier.themeMode;
 
         return MaterialApp.router(
           title: '泠月案阁',
-          themeMode: context.watch<ThemeNotifier>().themeMode,
+          themeMode: effectiveThemeMode,
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan),
+            colorScheme: ColorScheme.fromSeed(seedColor: themeColor),
             useMaterial3: true,
             fontFamily: fontFamily,
           ),
           darkTheme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.cyan, brightness: Brightness.dark),
+            colorScheme: ColorScheme.fromSeed(seedColor: themeColor, brightness: Brightness.dark),
             useMaterial3: true,
             fontFamily: fontFamily,
           ),

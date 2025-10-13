@@ -17,8 +17,8 @@ class CustomAnimatedLogoBanner extends StatefulWidget {
   const CustomAnimatedLogoBanner({
     super.key,
     this.height = 120.0,
-    this.animationDuration = const Duration(milliseconds: 1000),
-    this.delayBetweenSteps = const Duration(milliseconds: 300),
+    this.animationDuration = const Duration(milliseconds: 400),
+    this.delayBetweenSteps = const Duration(milliseconds: 200),
     this.autoStart = true,
   });
 
@@ -70,19 +70,19 @@ class _CustomAnimatedLogoBannerState extends State<CustomAnimatedLogoBanner>
       vsync: this,
     );
 
-    // Logo透明度动画 - 渐入效果
+    // Logo透明度动画 - 渐入效果（使用整个动画时长）
     _logoOpacityAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(
       parent: _logoController,
-      curve: const Interval(0.0, 0.5, curve: Curves.easeIn),
+      curve: Curves.easeIn,
     ));
 
-    // Logo位置动画 - 向左缓动移动
+    // Logo位置动画 - 直接在最终位置（不移动）
     _logoPositionAnimation = Tween<Offset>(
-      begin: const Offset(2, 0.0), // 正中央
-      end: const Offset(-0.25, 0.0), // 向左移动到最终位置
+      begin: const Offset(-0.25, 0.0), // 直接在最终位置
+      end: const Offset(-0.25, 0.0), // 保持不变
     ).animate(CurvedAnimation(
       parent: _logoController,
       curve: const Interval(0.5, 1, curve: Curves.easeInOut),
@@ -106,13 +106,13 @@ class _CustomAnimatedLogoBannerState extends State<CustomAnimatedLogoBanner>
       curve: Curves.easeIn,
     ));
 
-    // 文字滑动动画
+    // 文字滑动动画 - 使用缓动曲线
     _textSlideAnimation = Tween<Offset>(
       begin: const Offset(0.2, 0.0), // 从右侧滑入
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _textController,
-      curve: Curves.easeOut,
+      curve: Curves.easeOutCubic, // 使用缓动曲线
     ));
 
     // 文字间距动画 - 从大间距到小间距
@@ -129,19 +129,14 @@ class _CustomAnimatedLogoBannerState extends State<CustomAnimatedLogoBanner>
     if (_animationStarted) return;
     _animationStarted = true;
 
-    // 启动logo动画
-    _logoController.forward().then((_) {
-      // Logo动画完成后，延迟启动分隔符动画
+    // Logo和分隔符同时淡入（400ms）
+    _logoController.forward();
+    _separatorController.forward().then((_) {
+      // Logo和分隔符淡入完成后，延迟启动文字动画
       Future.delayed(widget.delayBetweenSteps, () {
         if (mounted) {
-          _separatorController.forward().then((_) {
-            // 分隔符动画完成后，延迟启动文字动画
-            Future.delayed(widget.delayBetweenSteps, () {
-              if (mounted) {
-                _textController.forward();
-              }
-            });
-          });
+          // 文字淡入+滑入（600ms，缓动效果）
+          _textController.forward();
         }
       });
     });

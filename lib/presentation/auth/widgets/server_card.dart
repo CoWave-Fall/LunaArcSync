@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:luna_arc_sync/core/storage/server_cache_service.dart';
 import 'package:luna_arc_sync/core/storage/image_cache_service.dart';
+import 'package:luna_arc_sync/core/services/server_status_service.dart';
 import 'package:luna_arc_sync/core/di/injection.dart';
+import 'package:luna_arc_sync/core/animations/animated_page_content.dart';
 import 'dart:io';
 
 class ServerCard extends StatefulWidget {
   final CachedServerInfo serverInfo;
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
+  final ServerStatus? status; // 服务器状态
 
   const ServerCard({
     super.key,
     required this.serverInfo,
     required this.onTap,
     this.onLongPress,
+    this.status,
   });
 
   @override
@@ -80,28 +84,50 @@ class _ServerCardState extends State<ServerCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: InkWell(
-        onTap: widget.onTap,
-        onLongPress: widget.onLongPress,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              // 服务器图标
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                ),
-                child: _buildServerIcon(),
+    final isOffline = widget.status == ServerStatus.offline;
+    final isChecking = widget.status == ServerStatus.checking;
+    
+    return AnimatedInteractiveCard(
+      onTap: widget.onTap,
+      onLongPress: widget.onLongPress,
+      hoverScale: 1.01,
+      pressScale: 0.98,
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: InkWell(
+          onTap: widget.onTap,
+          onLongPress: widget.onLongPress,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+              // 服务器图标（离线时变灰）
+              Stack(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                    ),
+                    child: _buildServerIcon(),
+                  ),
+                  // 离线时的灰色遮罩
+                  if (isOffline)
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.grey.withValues(alpha: 0.6),
+                      ),
+                    ),
+                ],
               ),
               const SizedBox(width: 16),
               
@@ -114,6 +140,9 @@ class _ServerCardState extends State<ServerCard> {
                       widget.serverInfo.about.serverName,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
+                        color: isOffline 
+                            ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)
+                            : null,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -122,7 +151,9 @@ class _ServerCardState extends State<ServerCard> {
                     Text(
                       widget.serverInfo.about.appName,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(
+                          alpha: isOffline ? 0.5 : 1.0,
+                        ),
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -132,7 +163,9 @@ class _ServerCardState extends State<ServerCard> {
                       Text(
                         _extractHostFromUrl(widget.serverInfo.serverUrl!),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(
+                            alpha: isOffline ? 0.5 : 1.0,
+                          ),
                           fontSize: 11,
                         ),
                         maxLines: 1,
@@ -143,13 +176,38 @@ class _ServerCardState extends State<ServerCard> {
                 ),
               ),
               
+              // 状态指示器（离线/检查中）
+              if (isChecking)
+                const Padding(
+                  padding: EdgeInsets.only(right: 8),
+                  child: SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                )
+              else if (isOffline)
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: Text(
+                    '离线',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.grey,
+                      fontSize: 11,
+                    ),
+                  ),
+                ),
+              
               // 箭头图标
               Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(
+                  alpha: isOffline ? 0.5 : 1.0,
+                ),
               ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

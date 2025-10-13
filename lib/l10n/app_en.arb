@@ -89,6 +89,10 @@
     },
     "gridColumns": "Grid Columns",
     "columns": "Columns",
+    "defaultViewMode": "Default View Mode",
+    "defaultViewModeDescription": "Choose how pages are displayed by default",
+    "listView": "List View",
+    "gridView": "Grid View",
     "darkModeImageProcessing": "Dark Mode Image Processing",
     "darkModeImageProcessingSubtitle": "Adjust image processing for dark mode",
     "english": "English",
@@ -128,6 +132,9 @@
     "close": "Close",
     "aboutAppBarTitle": "About",
     "errorLoadingAbout": "Failed to load about information",
+    "connectionErrorTitle": "Server Connection Failed",
+    "authErrorTitle": "Authentication Failed",
+    "backToLogin": "Back to Login",
     "retryButton": "Retry",
     "aboutAppInfo": "Application Information",
     "aboutAppName": "Luna Arc Sync",
@@ -258,6 +265,25 @@
     "settingsProjectUrl": "Project URL",
     "settingsAuthorUrl": "Author URL",
     "settingsThemeSettings": "Theme Settings",
+    "settingsThemeColor": "Theme Color",
+    "settingsThemeColorDescription": "Choose app theme color",
+    "settingsBackgroundImage": "Background Image",
+    "settingsBackgroundImageEnabled": "Custom background enabled",
+    "settingsBackgroundImageDisabled": "Using default background",
+    "settingsBackgroundImageDescription": "Set a custom background image. When enabled, sidebar and cards will show glassmorphic effects",
+    "settingsBackgroundImageEnable": "Enable custom background",
+    "settingsBackgroundImageSelect": "Select Image",
+    "settingsBackgroundImageRemove": "Remove Background",
+    "settingsBackgroundImageRemoveConfirm": "Are you sure you want to remove the custom background image?",
+    "settingsBackgroundImageSet": "Background image set successfully",
+    "settingsBackgroundImageError": "Error setting background image: {error}",
+    "@settingsBackgroundImageError": {
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
     "settingsJobHistory": "Job History",
     "settingsMaxJobHistoryRecords": "Max records: {count}",
     "@settingsMaxJobHistoryRecords": {
@@ -346,6 +372,7 @@
     "loginEmail": "Email",
     "loginPassword": "Password",
     "loginButton": "Login",
+    "loginSuccess": "Login Successful!",
     "loginRegisterPrompt": "Don't have an account? Register",
     "loginServerAddressRequired": "Please enter the server address",
     "loginServerAddressInvalidFormat": "Please enter IP:Port format (e.g., 192.168.1.100:8080)",
@@ -455,5 +482,149 @@
     "searchFailed": "Search failed",
     "uploadingAndProcessingPdf": "Uploading and processing PDF...",
     "pdfUploadFailed": "PDF upload failed",
-    "noResultsFound": "No results found."
+    "noResultsFound": "No results found.",
+    "accErr001": "User with this email already exists.",
+    "accErr002": "User creation failed.",
+    "accSuc001": "User created successfully!",
+    "accErr003": "Invalid email or password.",
+    "pagErr001": "File is required.",
+    "pagErr002": "Document not found or does not belong to you.",
+    "pagErr003": "Duplicate PageIds found in the request: {duplicatePageIds}",
+    "@pagErr003": {
+        "placeholders": {
+            "duplicatePageIds": {
+                "type": "String"
+            }
+        }
+    },
+    "pagErr004": "Duplicate Order numbers found in the request: {duplicateOrders}",
+    "@pagErr004": {
+        "placeholders": {
+            "duplicateOrders": {
+                "type": "String"
+            }
+        }
+    },
+    "pagErr005": "Failed to update page orders. Ensure all pages belong to the specified document and user.",
+    "pagErr006": "NewOrder must be between 1 and {maxOrder}.",
+    "@pagErr006": {
+        "placeholders": {
+            "maxOrder": {
+                "type": "String"
+            }
+        }
+    },
+    "pagErr007": "Failed to update page orders during insertion.",
+    "pagErr008": "No files provided.",
+    "pagErr009": "No image files provided.",
+    "pagErr010": "Upload a valid PDF file.",
+    "pagErr011": "Only PDF files are allowed.",
+    "pagErr012": "Document not found or has no pages.",
+    "pagErr013": "Page with ID {pageId} not found in document {documentId}.",
+    "@pagErr013": {
+        "placeholders": {
+            "pageId": {
+                "type": "String"
+            },
+            "documentId": {
+                "type": "String"
+            }
+        }
+    },
+    "pagErr014": "Document not found.",
+    "docErr001": "Failed to add page to document. It may not exist, may not belong to you, or may already be in another document.",
+    "docErr002": "No document IDs provided.",
+    "jobErr001": "No job found with ID: {jobId}",
+    "@jobErr001": {
+        "placeholders": {
+            "jobId": {
+                "type": "String"
+            }
+        }
+    },
+    "jobErr002": "No version found with ID: {versionId}",
+    "@jobErr002": {
+        "placeholders": {
+            "versionId": {
+                "type": "String"
+            }
+        }
+    },
+    "jobErr003": "No page found with ID: {pageId}",
+    "@jobErr003": {
+        "placeholders": {
+            "pageId": {
+                "type": "String"
+            }
+        }
+    },
+    "jobErr004": "No version found with ID: {versionId}",
+    "@jobErr004": {
+        "placeholders": {
+            "versionId": {
+                "type": "String"
+            }
+        }
+    },
+    "jobErr005": "No job found with ID: {jobId}",
+    "@jobErr005": {
+        "placeholders": {
+            "jobId": {
+                "type": "String"
+            }
+        }
+    },
+    "jobSuc001": "OCR job has been queued.",
+    "jobSuc002": "Stitch job has been queued.",
+    "jobSuc003": "Job has been cancelled successfully.",
+    "imgErr001": "Page not found.",
+    "imgErr002": "Thumbnail not available.",
+    "imgErr003": "Thumbnail file not found in storage.",
+    "verErr001": "Page not found.",
+    "verErr002": "Page not found.",
+    "srcErr001": "Search query cannot be empty.",
+    "datErr001": "Target user ID must be provided.",
+    "datErr002": "No file uploaded.",
+    "datErr003": "No file uploaded.",
+    "datSuc001": "Data imported successfully.",
+    "datSuc002": "Your data imported successfully.",
+    "appInfo001": "Initializing",
+    "pdfErr001": "Failed to read the PDF file to get page count. It may be corrupted or invalid.",
+    "pdfErr002": "Failed to read or process the PDF file. It may be corrupted or in an unsupported format.",
+    "pdfErr003": "Failed to extract text from PDF file. It may be corrupted or in an unsupported format.",
+    "pdfErr004": "Failed to extract text from page {pageNumber} of PDF file. It may be corrupted or in an unsupported format.",
+    "@pdfErr004": {
+        "placeholders": {
+            "pageNumber": {
+                "type": "String"
+            }
+        }
+    },
+    "ocrErr001": "Version not found.",
+    "ocrErr002": "Version is missing file metadata.",
+    "ocrErr003": "File not found.",
+    "ocrErr004": "Could not get image data from version file.",
+    "stiErr001": "At least two source images are required for stitching.",
+    "stiErr002": "One or more source versions could not be found.",
+    "stiErr003": "Could not stitch images. Status: {status}",
+    "@stiErr003": {
+        "placeholders": {
+            "status": {
+                "type": "String"
+            }
+        }
+    },
+    "stiErr004": "Page with ID {pageId} not found for user {userId}.",
+    "@stiErr004": {
+        "placeholders": {
+            "pageId": {
+                "type": "String"
+            },
+            "userId": {
+                "type": "String"
+            }
+        }
+    },
+    "impErr001": "User ID must be provided for non-admin export.",
+    "impErr002": "data.json not found in the import archive."
 }

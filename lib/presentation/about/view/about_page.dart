@@ -12,6 +12,11 @@ import 'package:luna_arc_sync/presentation/about/cubit/about_cubit.dart';
 import 'package:luna_arc_sync/presentation/auth/cubit/auth_cubit.dart';
 import 'package:luna_arc_sync/presentation/auth/cubit/auth_state.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:luna_arc_sync/core/animations/animated_page_content.dart';
+import 'package:provider/provider.dart';
+import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
+import 'package:luna_arc_sync/presentation/widgets/glassmorphic_container.dart';
+import 'package:luna_arc_sync/core/theme/no_overscroll_behavior.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
@@ -96,13 +101,21 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
+    
     return BlocProvider(
       create: (context) => getIt<AboutCubit>()..loadAbout(),
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar.large(
-              title: AnimatedBuilder(
+        backgroundColor: hasCustomBackground ? Colors.transparent : null,
+        body: ScrollConfiguration(
+          behavior: hasCustomBackground 
+              ? const GlassmorphicScrollBehavior() 
+              : ScrollConfiguration.of(context).copyWith(),
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar.large(
+                backgroundColor: hasCustomBackground ? Colors.transparent : null,
+                title: AnimatedBuilder(
                 animation: _fadeAnimation,
                 builder: (context, child) {
                   return FadeTransition(
@@ -122,33 +135,64 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                     child: Center(child: CircularProgressIndicator()),
                   ),
                   loaded: (about) => _buildAboutContent(context, about),
-                  error: (message) => SliverToBoxAdapter(
+                  error: (message, isConnectionError, isAuthError) => SliverToBoxAdapter(
                     child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.error_outline,
-                            size: 64,
-                            color: Theme.of(context).colorScheme.error,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            l10n.errorLoadingAbout,
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            message,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: () => context.read<AboutCubit>().loadAbout(),
-                            child: Text(l10n.retryButton),
-                          ),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              isConnectionError 
+                                  ? Icons.cloud_off 
+                                  : isAuthError 
+                                      ? Icons.lock_outline 
+                                      : Icons.error_outline,
+                              size: 64,
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              isConnectionError 
+                                  ? l10n.connectionErrorTitle
+                                  : isAuthError 
+                                      ? l10n.authErrorTitle
+                                      : l10n.errorLoadingAbout,
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              message,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 24),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // 重试按钮
+                                ElevatedButton.icon(
+                                  onPressed: () => context.read<AboutCubit>().loadAbout(),
+                                  icon: const Icon(Icons.refresh),
+                                  label: Text(l10n.retryButton),
+                                ),
+                                const SizedBox(width: 16),
+                                // 返回登录页按钮（连接错误或认证错误时显示）
+                                if (isConnectionError || isAuthError)
+                                  OutlinedButton.icon(
+                                    onPressed: () {
+                                      // 清除会话并登出
+                                      context.read<AuthCubit>().logout(clearCredentials: false);
+                                    },
+                                    icon: const Icon(Icons.login),
+                                    label: Text(l10n.backToLogin),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -156,6 +200,7 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
               },
             ),
           ],
+        ),
         ),
       ),
     );
@@ -166,11 +211,23 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
       padding: const EdgeInsets.all(16.0),
       sliver: SliverList(
         delegate: SliverChildListDelegate([
-          _buildServerInfoCard(context, about),
+          AnimatedPageContent(
+            delay: const Duration(milliseconds: 100),
+            duration: const Duration(milliseconds: 500),
+            child: _buildServerInfoCard(context, about),
+          ),
           const SizedBox(height: 16),
-          _buildUserAccountCard(context),
+          AnimatedPageContent(
+            delay: const Duration(milliseconds: 250),
+            duration: const Duration(milliseconds: 500),
+            child: _buildUserAccountCard(context),
+          ),
           const SizedBox(height: 16),
-          _buildClientInfoCard(context, about),
+          AnimatedPageContent(
+            delay: const Duration(milliseconds: 400),
+            duration: const Duration(milliseconds: 500),
+            child: _buildClientInfoCard(context, about),
+          ),
         ]),
       ),
     );
@@ -180,10 +237,11 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
+    return GlassmorphicCard(
+      blur: 15.0,
+      opacity: 0.2,
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -264,18 +322,18 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
             ),
           ],
         ),
-      ),
-    );
+      );
   }
 
   Widget _buildUserAccountCard(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
+    return GlassmorphicCard(
+      blur: 15.0,
+      opacity: 0.2,
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -342,18 +400,19 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
             ),
           ],
         ),
-      ),
-    );
+      );
+    
   }
 
   Widget _buildClientInfoCard(BuildContext context, AboutResponse about) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
     
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
+    return GlassmorphicCard(
+      blur: 15.0,
+      opacity: 0.2,
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -435,8 +494,8 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
             ),
           ],
         ),
-      ),
-    );
+      );
+    
   }
 
   Future<Map<String, String>> _getDeviceInfo() async {

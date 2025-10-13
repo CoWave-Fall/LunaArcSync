@@ -8,6 +8,8 @@ import 'package:luna_arc_sync/presentation/documents/view/document_detail_page.d
 import 'package:luna_arc_sync/presentation/pages/view/page_detail_page.dart';
 import 'package:luna_arc_sync/presentation/search/cubit/search_cubit.dart';
 import 'package:luna_arc_sync/presentation/search/cubit/search_state.dart';
+import 'package:provider/provider.dart';
+import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -39,8 +41,11 @@ class _SearchViewState extends State<SearchView> {
 
   @override
   Widget build(BuildContext context) {
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
     return Scaffold(
+      backgroundColor: hasCustomBackground ? Colors.transparent : null,
       appBar: AppBar(
+        backgroundColor: hasCustomBackground ? Colors.transparent : null,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),

@@ -83,4 +83,37 @@ class SecureStorageService {
   Future<void> deletePassword() async {
     await _storage.delete(key: _passwordKey);
   }
+
+  Future<void> deleteUserId() async {
+    await _storage.delete(key: _userIdKey);
+  }
+
+  /// 清除所有认证相关的数据
+  Future<void> clearAllAuthData() async {
+    await Future.wait([
+      deleteToken(),
+      deleteUserId(),
+      deleteExpiration(),
+      deleteEmail(),
+      deletePassword(),
+    ]);
+  }
+
+  /// 检查是否有有效的认证会话
+  Future<bool> hasValidSession() async {
+    final token = await getToken();
+    final userId = await getUserId();
+    
+    if (token == null || token.isEmpty || userId == null || userId.isEmpty) {
+      return false;
+    }
+
+    // 检查token是否过期
+    final expiration = await getExpiration();
+    if (expiration != null && expiration.isBefore(DateTime.now())) {
+      return false;
+    }
+
+    return true;
+  }
 }

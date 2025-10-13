@@ -125,12 +125,12 @@ return failure(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( DocumentDetail document,  bool hasReachedMax,  Map<String, JobStatusEnum> pageStitchingStatus,  bool isRefreshing)?  success,TResult Function( String message)?  failure,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( DocumentDetail document,  bool hasReachedMax,  Map<String, JobStatusEnum> pageStitchingStatus,  bool isRefreshing,  int totalPageCount)?  success,TResult Function( String message)?  failure,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _Success() when success != null:
-return success(_that.document,_that.hasReachedMax,_that.pageStitchingStatus,_that.isRefreshing);case _Failure() when failure != null:
+return success(_that.document,_that.hasReachedMax,_that.pageStitchingStatus,_that.isRefreshing,_that.totalPageCount);case _Failure() when failure != null:
 return failure(_that.message);case _:
   return orElse();
 
@@ -149,12 +149,12 @@ return failure(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( DocumentDetail document,  bool hasReachedMax,  Map<String, JobStatusEnum> pageStitchingStatus,  bool isRefreshing)  success,required TResult Function( String message)  failure,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( DocumentDetail document,  bool hasReachedMax,  Map<String, JobStatusEnum> pageStitchingStatus,  bool isRefreshing,  int totalPageCount)  success,required TResult Function( String message)  failure,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
 return loading();case _Success():
-return success(_that.document,_that.hasReachedMax,_that.pageStitchingStatus,_that.isRefreshing);case _Failure():
+return success(_that.document,_that.hasReachedMax,_that.pageStitchingStatus,_that.isRefreshing,_that.totalPageCount);case _Failure():
 return failure(_that.message);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -169,12 +169,12 @@ return failure(_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( DocumentDetail document,  bool hasReachedMax,  Map<String, JobStatusEnum> pageStitchingStatus,  bool isRefreshing)?  success,TResult? Function( String message)?  failure,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( DocumentDetail document,  bool hasReachedMax,  Map<String, JobStatusEnum> pageStitchingStatus,  bool isRefreshing,  int totalPageCount)?  success,TResult? Function( String message)?  failure,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _Success() when success != null:
-return success(_that.document,_that.hasReachedMax,_that.pageStitchingStatus,_that.isRefreshing);case _Failure() when failure != null:
+return success(_that.document,_that.hasReachedMax,_that.pageStitchingStatus,_that.isRefreshing,_that.totalPageCount);case _Failure() when failure != null:
 return failure(_that.message);case _:
   return null;
 
@@ -251,7 +251,7 @@ String toString() {
 
 
 class _Success implements DocumentDetailState {
-  const _Success({required this.document, this.hasReachedMax = false, final  Map<String, JobStatusEnum> pageStitchingStatus = const {}, this.isRefreshing = false}): _pageStitchingStatus = pageStitchingStatus;
+  const _Success({required this.document, this.hasReachedMax = false, final  Map<String, JobStatusEnum> pageStitchingStatus = const {}, this.isRefreshing = false, this.totalPageCount = 0}): _pageStitchingStatus = pageStitchingStatus;
   
 
  final  DocumentDetail document;
@@ -266,6 +266,8 @@ class _Success implements DocumentDetailState {
 }
 
 @JsonKey() final  bool isRefreshing;
+// NEW: for refresh indicator
+@JsonKey() final  int totalPageCount;
 
 /// Create a copy of DocumentDetailState
 /// with the given fields replaced by the non-null parameter values.
@@ -277,16 +279,16 @@ _$SuccessCopyWith<_Success> get copyWith => __$SuccessCopyWithImpl<_Success>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.document, document) || other.document == document)&&(identical(other.hasReachedMax, hasReachedMax) || other.hasReachedMax == hasReachedMax)&&const DeepCollectionEquality().equals(other._pageStitchingStatus, _pageStitchingStatus)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Success&&(identical(other.document, document) || other.document == document)&&(identical(other.hasReachedMax, hasReachedMax) || other.hasReachedMax == hasReachedMax)&&const DeepCollectionEquality().equals(other._pageStitchingStatus, _pageStitchingStatus)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing)&&(identical(other.totalPageCount, totalPageCount) || other.totalPageCount == totalPageCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,document,hasReachedMax,const DeepCollectionEquality().hash(_pageStitchingStatus),isRefreshing);
+int get hashCode => Object.hash(runtimeType,document,hasReachedMax,const DeepCollectionEquality().hash(_pageStitchingStatus),isRefreshing,totalPageCount);
 
 @override
 String toString() {
-  return 'DocumentDetailState.success(document: $document, hasReachedMax: $hasReachedMax, pageStitchingStatus: $pageStitchingStatus, isRefreshing: $isRefreshing)';
+  return 'DocumentDetailState.success(document: $document, hasReachedMax: $hasReachedMax, pageStitchingStatus: $pageStitchingStatus, isRefreshing: $isRefreshing, totalPageCount: $totalPageCount)';
 }
 
 
@@ -297,7 +299,7 @@ abstract mixin class _$SuccessCopyWith<$Res> implements $DocumentDetailStateCopy
   factory _$SuccessCopyWith(_Success value, $Res Function(_Success) _then) = __$SuccessCopyWithImpl;
 @useResult
 $Res call({
- DocumentDetail document, bool hasReachedMax, Map<String, JobStatusEnum> pageStitchingStatus, bool isRefreshing
+ DocumentDetail document, bool hasReachedMax, Map<String, JobStatusEnum> pageStitchingStatus, bool isRefreshing, int totalPageCount
 });
 
 
@@ -314,13 +316,14 @@ class __$SuccessCopyWithImpl<$Res>
 
 /// Create a copy of DocumentDetailState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? document = null,Object? hasReachedMax = null,Object? pageStitchingStatus = null,Object? isRefreshing = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? document = null,Object? hasReachedMax = null,Object? pageStitchingStatus = null,Object? isRefreshing = null,Object? totalPageCount = null,}) {
   return _then(_Success(
 document: null == document ? _self.document : document // ignore: cast_nullable_to_non_nullable
 as DocumentDetail,hasReachedMax: null == hasReachedMax ? _self.hasReachedMax : hasReachedMax // ignore: cast_nullable_to_non_nullable
 as bool,pageStitchingStatus: null == pageStitchingStatus ? _self._pageStitchingStatus : pageStitchingStatus // ignore: cast_nullable_to_non_nullable
 as Map<String, JobStatusEnum>,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,totalPageCount: null == totalPageCount ? _self.totalPageCount : totalPageCount // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:luna_arc_sync/core/api/api_client.dart';
 import 'package:luna_arc_sync/core/di/injection.dart';
@@ -16,282 +18,585 @@ import 'package:luna_arc_sync/presentation/pages/view/version_history_Page.dart'
 import 'package:luna_arc_sync/presentation/pages/widgets/highlight_overlay_with_fitted_box.dart';
 import 'package:luna_arc_sync/presentation/pages/widgets/ocr_text_overlay_with_fitted_box.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import 'package:luna_arc_sync/core/config/pdf_render_backend.dart';
 import 'package:luna_arc_sync/presentation/pages/widgets/pdfx_renderer.dart';
 import 'package:luna_arc_sync/presentation/pages/widgets/pdfrx_renderer.dart';
+import 'package:luna_arc_sync/core/cache/image_cache_service_enhanced.dart';
+import 'package:provider/provider.dart';
+import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
+import 'package:luna_arc_sync/core/theme/fullscreen_notifier.dart';
+// TODO: 暂时注释掉滑块功能，留到以后解决
+// import 'package:luna_arc_sync/core/theme/page_navigation_notifier.dart';
 
-// PDF Cache Service
-class PdfCacheService {
-  static const String _cachePrefix = 'pdf_cache_';
-  static const String _timestampPrefix = 'pdf_timestamp_';
-  static const int _maxCacheSize = 50; // Maximum number of cached PDFs
-  static const Duration _cacheExpiry = Duration(hours: 24); // 缓存过期时间
-  
-  static Future<Uint8List?> getCachedPdf(String pageId, String versionId) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final cacheKey = '$_cachePrefix${pageId}_$versionId';
-      final timestampKey = '$_timestampPrefix${pageId}_$versionId';
-      
-      final cachedData = prefs.getString(cacheKey);
-      final timestampStr = prefs.getString(timestampKey);
-      
-      if (cachedData != null && timestampStr != null) {
-        final timestamp = DateTime.parse(timestampStr);
-        final now = DateTime.now();
-        
-        // 检查是否过期
-        if (now.difference(timestamp) > _cacheExpiry) {
-          // 过期，删除缓存
-          await prefs.remove(cacheKey);
-          await prefs.remove(timestampKey);
-          if (kDebugMode) {
-            print('PDF缓存已过期，已删除: $cacheKey');
-          }
-          return null;
-        }
-        
-        return base64Decode(cachedData);
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error getting cached PDF: $e');
-      }
-    }
-    return null;
-  }
-  
-  static Future<void> cachePdf(String pageId, String versionId, Uint8List imageBytes) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final cacheKey = '$_cachePrefix${pageId}_$versionId';
-      final timestampKey = '$_timestampPrefix${pageId}_$versionId';
-      final base64Data = base64Encode(imageBytes);
-      final timestamp = DateTime.now().toIso8601String();
-      
-      // Clean old cache if needed
-      await _cleanOldCache(prefs);
-      
-      await prefs.setString(cacheKey, base64Data);
-      await prefs.setString(timestampKey, timestamp);
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error caching PDF: $e');
-      }
-    }
-  }
-  
-  static Future<void> _cleanOldCache(SharedPreferences prefs) async {
-    final cacheKeys = prefs.getKeys().where((key) => key.startsWith(_cachePrefix)).toList();
-    if (cacheKeys.length >= _maxCacheSize) {
-      // Remove oldest entries (simple implementation)
-      final keysToRemove = cacheKeys.take(cacheKeys.length - _maxCacheSize + 1);
-      for (final key in keysToRemove) {
-        await prefs.remove(key);
-        // 同时删除对应的时间戳
-        final timestampKey = key.replaceFirst(_cachePrefix, _timestampPrefix);
-        await prefs.remove(timestampKey);
-      }
-    }
-  }
-}
+/// 文件加载结果
+class _FileLoadResult {
+  final Uint8List bytes;
+  final String contentType;
+  final bool fromCache;
 
-// Dark Mode Image Processor
-class DarkModeImageProcessor {
-  static int _blackThreshold = 180; // Adjustable threshold for dark text detection (lowered for better text capture)
-  static int _whiteThreshold = 15; // Adjustable threshold for white detection
-  static double _darkenFactor = 0.7; // Adjustable factor for darkening other colors
-  static double _lightenFactor = 0.3; // Adjustable factor for lightening other colors
-  static bool _initialized = false;
-  
-  // Getters for settings
-  static int get blackThreshold => _blackThreshold;
-  static int get whiteThreshold => _whiteThreshold;
-  static double get darkenFactor => _darkenFactor;
-  static double get lightenFactor => _lightenFactor;
-  
-  // Setters for settings
-  static void setBlackThreshold(int value) {
-    _blackThreshold = value.clamp(0, 255);
-    _saveSettings();
-  }
-  
-  static void setWhiteThreshold(int value) {
-    _whiteThreshold = value.clamp(0, 255);
-    _saveSettings();
-  }
-  
-  static void setDarkenFactor(double value) {
-    _darkenFactor = value.clamp(0.0, 1.0);
-    _saveSettings();
-  }
-  
-  static void setLightenFactor(double value) {
-    _lightenFactor = value.clamp(0.0, 1.0);
-    _saveSettings();
-  }
-  
-  // Initialize settings from storage
-  static Future<void> initialize() async {
-    if (_initialized) return;
-    
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      _blackThreshold = prefs.getInt('dark_mode_black_threshold') ?? 180;
-      _whiteThreshold = prefs.getInt('dark_mode_white_threshold') ?? 15;
-      _darkenFactor = prefs.getDouble('dark_mode_darken_factor') ?? 0.7;
-      _lightenFactor = prefs.getDouble('dark_mode_lighten_factor') ?? 0.3;
-      _initialized = true;
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error loading dark mode settings: $e');
-      }
-    }
-  }
-  
-  // Save settings to storage
-  static Future<void> _saveSettings() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt('dark_mode_black_threshold', _blackThreshold);
-      await prefs.setInt('dark_mode_white_threshold', _whiteThreshold);
-      await prefs.setDouble('dark_mode_darken_factor', _darkenFactor);
-      await prefs.setDouble('dark_mode_lighten_factor', _lightenFactor);
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error saving dark mode settings: $e');
-      }
-    }
-  }
-  
-  static Future<Uint8List> processImageForDarkMode(Uint8List imageBytes) async {
-    // Initialize settings if not already done
-    await initialize();
-    
-    if (kDebugMode) {
-      print('DarkModeImageProcessor: Processing image for dark mode');
-      print('Black threshold: $_blackThreshold, White threshold: $_whiteThreshold');
-      print('Darken factor: $_darkenFactor, Lighten factor: $_lightenFactor');
-    }
-    
-    try {
-      final codec = await ui.instantiateImageCodec(imageBytes);
-      final frame = await codec.getNextFrame();
-      final image = frame.image;
-      
-      final width = image.width;
-      final height = image.height;
-      final pixelData = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
-      
-      if (pixelData == null) return imageBytes;
-      
-      final bytes = pixelData.buffer.asUint8List();
-      
-      // Process each pixel
-      for (int i = 0; i < bytes.length; i += 4) {
-        final r = bytes[i];
-        final g = bytes[i + 1];
-        final b = bytes[i + 2];
-        // final a = bytes[i + 3]; // Alpha channel, not used in processing
-        
-        // Calculate brightness for better text detection
-        final brightness = (r + g + b) / 3;
-        
-        // Check if pixel is dark (text or dark elements) - use lower threshold for better text detection
-        if (brightness <= _blackThreshold) {
-          // Convert dark colors (including text) to white
-          bytes[i] = 255;     // R
-          bytes[i + 1] = 255; // G
-          bytes[i + 2] = 255; // B
-          // Keep alpha unchanged
-        } else if (brightness >= (255 - _whiteThreshold)) {
-          // Convert very light colors to black
-          bytes[i] = 0;       // R
-          bytes[i + 1] = 0;   // G
-          bytes[i + 2] = 0;   // B
-          // Keep alpha unchanged
-        } else {
-          // Process medium brightness colors based on their brightness
-          if (brightness > 128) {
-            // Light colors - darken them
-            bytes[i] = (r * _darkenFactor).round().clamp(0, 255);     // R
-            bytes[i + 1] = (g * _darkenFactor).round().clamp(0, 255); // G
-            bytes[i + 2] = (b * _darkenFactor).round().clamp(0, 255); // B
-          } else {
-            // Medium-dark colors - lighten them
-            bytes[i] = (255 - (255 - r) * _lightenFactor).round().clamp(0, 255);     // R
-            bytes[i + 1] = (255 - (255 - g) * _lightenFactor).round().clamp(0, 255); // G
-            bytes[i + 2] = (255 - (255 - b) * _lightenFactor).round().clamp(0, 255); // B
-          }
-          // Keep alpha unchanged
-        }
-      }
-      
-      // Create a completer to capture the processed image
-      final completer = Completer<ui.Image>();
-      ui.decodeImageFromPixels(
-        bytes,
-        width,
-        height,
-        ui.PixelFormat.rgba8888,
-        (ui.Image img) {
-          completer.complete(img);
-        },
-      );
-      
-      final processedImage = await completer.future;
-      final processedBytes = await processedImage.toByteData(format: ui.ImageByteFormat.png);
-      // Dispose images properly
-      image.dispose();
-      processedImage.dispose();
-      
-      return processedBytes?.buffer.asUint8List() ?? imageBytes;
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error processing image for dark mode: $e');
-      }
-      return imageBytes;
-    }
-  }
+  _FileLoadResult({
+    required this.bytes,
+    required this.contentType,
+    required this.fromCache,
+  });
 }
 
 class PageDetailPage extends StatefulWidget {
   final String pageId;
-  const PageDetailPage({super.key, required this.pageId});
+  final List<String>? pageIds; // 页面ID列表，用于前后导航
+  final int? currentIndex; // 当前页面在列表中的索引
+  final int? totalPageCount; // 文档的总页面数
+  
+  const PageDetailPage({
+    super.key, 
+    required this.pageId,
+    this.pageIds,
+    this.currentIndex,
+    this.totalPageCount,
+  });
 
   @override
   State<PageDetailPage> createState() => _PageDetailPageState();
 }
 
 class _PageDetailPageState extends State<PageDetailPage> {
+  late final PageController _pageController;
+  late int _currentPageIndex;
+  final FocusNode _focusNode = FocusNode(); // 用于键盘事件监听
+  final Map<String, GlobalKey<_PageContentWidgetState>> _pageKeys = {};
   bool _isSearchVisible = false;
   final _searchController = TextEditingController();
-  late final GlobalKey _imageKey; // NEW: Key to get rendered size - made unique per page
-  Size? _renderedImageSize; // NEW: Stores the actual rendered size of the image
-  JobStatusEnum? _previousOcrStatus; // Track previous OCR status to detect transitions
-  bool _showDebugBorders = false; // 调试模式开关
+  bool _isFullscreen = false; // 全屏模式标志
 
   @override
   void initState() {
     super.initState();
-    // Create unique GlobalKey for this page instance
-    _imageKey = GlobalKey(debugLabel: 'page_image_${widget.pageId}');
+    _currentPageIndex = widget.currentIndex ?? 0;
+    _pageController = PageController(initialPage: _currentPageIndex);
+    
+    // 为每个页面创建GlobalKey
+    if (widget.pageIds != null) {
+      for (final pageId in widget.pageIds!) {
+        _pageKeys[pageId] = GlobalKey<_PageContentWidgetState>();
+      }
+    } else {
+      _pageKeys[widget.pageId] = GlobalKey<_PageContentWidgetState>();
+    }
+    
+    // 确保页面加载时获取焦点以接收键盘事件
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // TODO: 暂时注释掉滑块功能，留到以后解决
+      // print('PageDetailPage: initState postFrameCallback for pageId: ${widget.pageId}');
+      _focusNode.requestFocus();
+      
+      // 设置页面详情可见，并更新页面导航信息
+      // TODO: 暂时注释掉滑块功能，留到以后解决
+      /*
+      context.read<PageNavigationNotifier>().setPageDetailVisible(true);
+      _updatePageNavigationInfo();
+      */
+    });
+  }
+  
+  // 更新页面导航信息
+  // TODO: 暂时注释掉滑块功能，留到以后解决
+  /*
+  void _updatePageNavigationInfo() {
+    // 如果有pageIds，使用totalPageCount或pageIds的长度
+    if (widget.pageIds != null && widget.pageIds!.isNotEmpty) {
+      // 优先使用totalPageCount，如果没有则使用pageIds的长度
+      final totalPages = widget.totalPageCount ?? widget.pageIds!.length;
+      
+      context.read<PageNavigationNotifier>().updatePageInfo(
+        currentPage: _currentPageIndex + 1,
+        totalPages: totalPages,
+        onPageChanged: (page) {
+          final targetIndex = page - 1;
+          if (targetIndex >= 0 && targetIndex < widget.pageIds!.length) {
+            _pageController.animateToPage(
+              targetIndex,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          }
+        },
+      );
+    } else {
+      // 如果没有pageIds，尝试从当前页面状态获取总页面数
+      final currentPageState = _currentPageState;
+      if (currentPageState != null) {
+        // 这里需要从页面状态获取总页面数
+        // 暂时设置为1，表示单页面模式
+        context.read<PageNavigationNotifier>().updatePageInfo(
+          currentPage: 1,
+          totalPages: 1,
+          onPageChanged: (page) {
+            // 单页面模式，不需要页面切换
+          },
+        );
+      }
+    }
+  }
+  */
+
+  // 获取当前页面ID
+  String get _currentPageId {
+    if (widget.pageIds != null && widget.pageIds!.isNotEmpty) {
+      return widget.pageIds![_currentPageIndex];
+    }
+    return widget.pageId;
+  }
+  
+  // 获取当前页面的State
+  _PageContentWidgetState? get _currentPageState {
+    final key = _pageKeys[_currentPageId];
+    return key?.currentState;
+  }
+  
+  // 导航到上一页
+  void _navigateToPreviousPage() {
+    if (widget.pageIds == null) return;
+    if (_currentPageIndex > 0) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+  
+  // 导航到下一页
+  void _navigateToNextPage() {
+    if (widget.pageIds == null) return;
+    if (_currentPageIndex < widget.pageIds!.length - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+  
+  // 处理键盘事件
+  KeyEventResult _handleKeyEvent(FocusNode node, KeyEvent event) {
+    if (event is KeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+        _navigateToPreviousPage();
+        return KeyEventResult.handled;
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+        _navigateToNextPage();
+        return KeyEventResult.handled;
+      }
+    }
+    return KeyEventResult.ignored;
   }
 
+  // 切换全屏模式
+  void _toggleFullscreen() {
+    setState(() {
+      _isFullscreen = !_isFullscreen;
+    });
+    
+    // 通知全局全屏状态变化（用于隐藏主侧栏）
+    context.read<FullscreenNotifier>().setFullscreen(_isFullscreen);
+    
+    // 切换系统UI显示
+    if (_isFullscreen) {
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.immersiveSticky,
+      );
+    } else {
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.edgeToEdge,
+      );
+    }
+  }
+  
   @override
   void dispose() {
+    // TODO: 暂时注释掉滑块功能，留到以后解决
+    // print('PageDetailPage: dispose() called for pageId: ${widget.pageId}');
+    _pageController.dispose();
+    _focusNode.dispose();
     _searchController.dispose();
+    // 清除页面导航信息
+    // TODO: 暂时注释掉滑块功能，留到以后解决
+    /*
+    context.read<PageNavigationNotifier>().clear();
+    */
+    // 恢复全屏状态
+    context.read<FullscreenNotifier>().setFullscreen(false);
+    // 恢复系统UI
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
+    final currentPageState = _currentPageState;
+    
+    return Focus(
+      focusNode: _focusNode,
+      onKeyEvent: _handleKeyEvent,
+      child: Scaffold(
+        backgroundColor: hasCustomBackground ? Colors.transparent : null,
+        // 全屏时隐藏侧栏
+        drawer: _isFullscreen ? null : null, // 如果有Drawer可以在这里配置
+        endDrawer: _isFullscreen ? null : null,
+        appBar: _isFullscreen ? null : PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: ClipRect(
+            child: BackdropFilter(
+              filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: AppBar(
+                backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.7),
+                elevation: 0,
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    // 如果处于全屏状态，先退出全屏
+                    if (_isFullscreen) {
+                      context.read<FullscreenNotifier>().setFullscreen(false);
+                      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+                    }
+                    Navigator.of(context).pop();
+                  },
+                ),
+                title: ValueListenableBuilder(
+                  valueListenable: currentPageState?._stateNotifier ?? ValueNotifier<int>(0),
+                  builder: (context, value, child) {
+                    return AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      transitionBuilder: (child, animation) {
+                        // 上移动画：旧的上移渐出，新的上移渐入
+                        final offsetAnimation = Tween<Offset>(
+                          begin: const Offset(0.0, 0.3),
+                          end: Offset.zero,
+                        ).animate(CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeOutCubic,
+                        ));
+                        
+                        return SlideTransition(
+                          position: offsetAnimation,
+                          child: FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          ),
+                        );
+                      },
+                      layoutBuilder: (currentChild, previousChildren) {
+                        return Stack(
+                          alignment: Alignment.centerLeft,
+                          children: <Widget>[
+                            ...previousChildren,
+                            if (currentChild != null) currentChild,
+                          ],
+                        );
+                      },
+                      child: _isSearchVisible
+                          ? TextField(
+                              key: const ValueKey('SearchField'),
+                              controller: _searchController,
+                              autofocus: true,
+                              decoration: InputDecoration(
+                                hintText: 'Search in page...',
+                                hintStyle:
+                                    TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+                                border: InputBorder.none,
+                              ),
+                              style: const TextStyle(color: Colors.white, fontSize: 18),
+                              onChanged: (query) {
+                                currentPageState?.search(query);
+                              },
+                            )
+                          : Text(
+                              currentPageState?.pageTitle ?? 'Loading...',
+                              key: ValueKey('TitleText_$_currentPageId'),
+                            ),
+                    );
+                  },
+                ),
+                actions: [
+                  // 搜索按钮
+                  ValueListenableBuilder(
+                    valueListenable: currentPageState?._stateNotifier ?? ValueNotifier<int>(0),
+                    builder: (context, value, child) {
+                      final hasOcrResult = currentPageState?.hasOcrResult ?? false;
+                      if (hasOcrResult) {
+                        return IconButton(
+                          icon: Icon(_isSearchVisible ? Icons.close : Icons.search),
+                          tooltip: 'Search in page',
+                          onPressed: () {
+                            setState(() {
+                              _isSearchVisible = !_isSearchVisible;
+                              if (!_isSearchVisible) {
+                                currentPageState?.search('');
+                                _searchController.clear();
+                              }
+                            });
+                          },
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                  // 调试按钮 - 只在开发模式下显示
+                  if (kDebugMode)
+                    ValueListenableBuilder(
+                      valueListenable: currentPageState?._stateNotifier ?? ValueNotifier<int>(0),
+                      builder: (context, value, child) {
+                        final showDebugBorders = currentPageState?.showDebugBorders ?? false;
+                        return IconButton(
+                          icon: Icon(showDebugBorders ? Icons.bug_report : Icons.bug_report_outlined),
+                          tooltip: showDebugBorders ? 'Hide debug borders' : 'Show debug borders',
+                          onPressed: () {
+                            currentPageState?.toggleDebugBorders();
+                          },
+                        );
+                      },
+                    ),
+                  // 历史版本按钮
+                  IconButton(
+                    icon: const Icon(Icons.history),
+                    tooltip: AppLocalizations.of(context)?.viewVersionHistory ?? 'View version history',
+                    onPressed: () async {
+                      await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => VersionHistoryPage(
+                            pageId: _currentPageId,
+                            currentVersionId: currentPageState?.currentVersionId,
+                          ),
+                        ),
+                      );
+                      if (mounted) {
+                        currentPageState?.refreshPage();
+                      }
+                    },
+                  ),
+                  // OCR按钮
+                  ValueListenableBuilder(
+                    valueListenable: currentPageState?._stateNotifier ?? ValueNotifier<int>(0),
+                    builder: (context, value, child) {
+                      final ocrStatus = currentPageState?.ocrStatus;
+                      if (ocrStatus == JobStatusEnum.Processing) {
+                        return Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).colorScheme.onPrimary,
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return IconButton(
+                          icon: const Icon(Icons.document_scanner_outlined),
+                          tooltip: 'Start OCR',
+                          onPressed: () async {
+                            currentPageState?.startOcr();
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        body: Stack(
+          children: [
+            // 主内容区域
+            GestureDetector(
+              onTapUp: (details) {
+                // 检测点击是否在中心区域（中间40%区域）
+                final size = MediaQuery.of(context).size;
+                final centerLeft = size.width * 0.3;
+                final centerRight = size.width * 0.7;
+                final centerTop = size.height * 0.3;
+                final centerBottom = size.height * 0.7;
+                
+                final tapX = details.globalPosition.dx;
+                final tapY = details.globalPosition.dy;
+                
+                if (tapX > centerLeft && tapX < centerRight &&
+                    tapY > centerTop && tapY < centerBottom) {
+                  _toggleFullscreen();
+                }
+              },
+              child: widget.pageIds != null && widget.pageIds!.isNotEmpty
+                  ? PageView.builder(
+                      controller: _pageController,
+                      itemCount: widget.pageIds!.length,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentPageIndex = index;
+                          // 清除搜索状态
+                          if (_isSearchVisible) {
+                            _isSearchVisible = false;
+                            _searchController.clear();
+                          }
+                        });
+                        // 更新页面导航信息
+                        // TODO: 暂时注释掉滑块功能，留到以后解决
+                        // _updatePageNavigationInfo();
+                      },
+                      itemBuilder: (context, index) {
+                        final pageId = widget.pageIds![index];
+                        return _PageContentWidget(
+                          key: _pageKeys[pageId]!,
+                          pageId: pageId,
+                        );
+                      },
+                    )
+                  : _PageContentWidget(
+                      key: _pageKeys[widget.pageId]!,
+                      pageId: widget.pageId,
+                    ),
+            ),
+            // 全屏模式下的进度条（带动画）
+            if (widget.pageIds != null && widget.pageIds!.isNotEmpty)
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                left: 0,
+                right: 0,
+                bottom: _isFullscreen ? 0 : -100,
+                child: _FullscreenProgressBar(
+                  currentPage: _currentPageIndex + 1,
+                  totalPages: widget.pageIds!.length,
+                  onTap: _toggleFullscreen,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 单个页面的内容widget
+/// 使用AutomaticKeepAliveClientMixin保持状态，避免在滑动时重建
+class _PageContentWidget extends StatefulWidget {
+  final String pageId;
+  
+  const _PageContentWidget({
+    super.key,
+    required this.pageId,
+  });
+
+  @override
+  State<_PageContentWidget> createState() => _PageContentWidgetState();
+}
+
+class _PageContentWidgetState extends State<_PageContentWidget> with AutomaticKeepAliveClientMixin {
+  late final GlobalKey _imageKey;
+  Size? _renderedImageSize;
+  JobStatusEnum? _previousOcrStatus;
+  bool _showDebugBorders = false;
+  PageDetailCubit? _cubit;
+  final _stateNotifier = ValueNotifier<int>(0); // 用于通知父组件状态已更新
+
+  @override
+  bool get wantKeepAlive => true; // 保持状态，避免重建
+
+  @override
+  void initState() {
+    super.initState();
+    _imageKey = GlobalKey(debugLabel: 'page_image_${widget.pageId}');
+  }
+
+  @override
+  void dispose() {
+    _stateNotifier.dispose();
+    super.dispose();
+  }
+  
+  // 通知状态已更新
+  void _notifyStateChanged() {
+    _stateNotifier.value++;
+  }
+  
+  // 公共接口供父组件调用
+  String get pageTitle {
+    return _cubit?.state.maybeWhen(
+      success: (page, _, _, _, _) => page.title,
+      orElse: () => 'Loading...',
+    ) ?? 'Loading...';
+  }
+  
+  bool get hasOcrResult {
+    return _cubit?.state.maybeWhen(
+      success: (page, _, _, _, _) => page.currentVersion?.ocrResult != null,
+      orElse: () => false,
+    ) ?? false;
+  }
+  
+  JobStatusEnum? get ocrStatus {
+    return _cubit?.state.maybeWhen(
+      success: (_, ocrStatus, _, _, _) => ocrStatus,
+      orElse: () => null,
+    );
+  }
+  
+  String? get currentVersionId {
+    return _cubit?.state.maybeWhen(
+      success: (page, _, _, _, _) => page.currentVersion?.versionId,
+      orElse: () => null,
+    );
+  }
+  
+  bool get showDebugBorders => _showDebugBorders;
+  
+  void search(String query) {
+    _cubit?.search(query);
+  }
+  
+  void toggleDebugBorders() {
+    setState(() {
+      _showDebugBorders = !_showDebugBorders;
+    });
+  }
+  
+  void refreshPage() {
+    _cubit?.fetchPage(widget.pageId);
+  }
+  
+  Future<void> startOcr() async {
+    try {
+      await _cubit?.startOcrJob();
+    } catch (e) {
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.ocrTaskStartFailed(e.toString())),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context); // 必须调用以保持状态
+    
     return BlocProvider(
-      create: (context) => getIt<PageDetailCubit>()..fetchPage(widget.pageId),
+      create: (context) {
+        _cubit = getIt<PageDetailCubit>()..fetchPage(widget.pageId);
+        return _cubit!;
+      },
       child: BlocConsumer<PageDetailCubit, PageDetailState>(
         listener: (context, state) {
+          // 通知父组件状态已更新
+          _notifyStateChanged();
+          
           state.whenOrNull(
             success: (_, ocrStatus, ocrErrorMessage, _, _) {
               final l10n = AppLocalizations.of(context)!;
@@ -323,235 +628,104 @@ class _PageDetailPageState extends State<PageDetailPage> {
           );
         },
         builder: (context, state) {
-          final docTitle =
-              state.whenOrNull(success: (doc, _, _, _, _) => doc.title) ??
-                  'Loading...';
-
-          return Scaffold(
-            appBar: AppBar(
-              title: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 350),
-                transitionBuilder: (child, animation) =>
-                    FadeTransition(opacity: animation, child: child),
-                child: _isSearchVisible
-                    ? TextField(
-                        key: const ValueKey('SearchField'),
-                        controller: _searchController,
-                        autofocus: true,
-                        decoration: InputDecoration(
-                          hintText: 'Search in page...',
-                          hintStyle:
-                              TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-                          border: InputBorder.none,
-                        ),
-                        style: const TextStyle(color: Colors.white, fontSize: 18),
-                        onChanged: (query) =>
-                            context.read<PageDetailCubit>().search(query),
-                      )
-                    : Text(docTitle, key: const ValueKey('TitleText')),
-              ),
-              actions: [
-                state.whenOrNull(success: (doc, _, _, _, _) {
-                      if (doc.currentVersion?.ocrResult != null) {
-                        return IconButton(
-                          icon: Icon(_isSearchVisible ? Icons.close : Icons.search),
-                          tooltip: 'Search in page',
-                          onPressed: () {
-                            setState(() {
-                              _isSearchVisible = !_isSearchVisible;
-                              if (!_isSearchVisible) {
-                                context.read<PageDetailCubit>().search('');
-                                _searchController.clear();
-                              }
-                            });
-                          },
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    }) ??
-                    const SizedBox.shrink(),
-                // 调试按钮 - 只在开发模式下显示
-                if (kDebugMode)
-                  IconButton(
-                    icon: Icon(_showDebugBorders ? Icons.bug_report : Icons.bug_report_outlined),
-                    tooltip: _showDebugBorders ? 'Hide debug borders' : 'Show debug borders',
-                    onPressed: () {
-                      setState(() {
-                        _showDebugBorders = !_showDebugBorders;
-                      });
-                    },
+          return state.when(
+            initial: () => const SizedBox.shrink(),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            failure: (message) => Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(message),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () => _cubit?.fetchPage(widget.pageId),
+                    child: const Text('Retry'),
                   ),
-                state.whenOrNull(success: (doc, _, _, _, _) {
-                      return IconButton(
-                        icon: const Icon(Icons.history),
+                ],
+              ),
+            ),
+            success: (page, ocrStatus, _, searchQuery, highlightedBboxes) {
+              if (page.currentVersion == null) {
+                return const Center(child: Text('This page has no content yet.'));
+              }
+              final versionId = page.currentVersion!.versionId;
+              final fileUrl = '/api/images/$versionId';
 
-
-                        tooltip: AppLocalizations.of(context)?.viewVersionHistory ?? 'View version history',
-                        onPressed: () async {
-                          await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => VersionHistoryPage(
-                                pageId: doc.pageId,
-                                currentVersionId: doc.currentVersion?.versionId,
-                              ),
-                            ),
-                          );
-                          if (mounted) {
-                            // ignore: use_build_context_synchronously
-                            context
-                                .read<PageDetailCubit>()
-                                .fetchPage(widget.pageId);
-                          }
-                        },
-                      );
-                    }) ??
-                    const SizedBox.shrink(),
-                state.whenOrNull(success: (doc, ocrStatus, _, _, _) {
-                      // 显示OCR按钮或处理状态
-                      if (ocrStatus == JobStatusEnum.Processing) {
-                        // 处理中：显示小转圈
-                        return Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
+              final ocrResult = page.currentVersion!.ocrResult;
+              final l10n = AppLocalizations.of(context)!;
+              
+              return Column(
+                children: [
+                  // 顶部进度横幅（非阻塞式）
+                  if (ocrStatus == JobStatusEnum.Processing)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                            width: 1,
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 20,
+                            height: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                Theme.of(context).colorScheme.onPrimary,
+                                Theme.of(context).primaryColor,
                               ),
                             ),
                           ),
-                        );
-                      } else {
-                        // 未处理：显示OCR按钮
-                        return IconButton(
-                          icon: const Icon(Icons.document_scanner_outlined),
-                          tooltip: 'Start OCR',
-                          onPressed: () async {
-                            try {
-                              await context.read<PageDetailCubit>().startOcrJob();
-                            } catch (e) {
-                              if (mounted) {
-                                // ignore: use_build_context_synchronously
-                                final l10n = AppLocalizations.of(context)!;
-                                // ignore: use_build_context_synchronously
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(l10n.ocrTaskStartFailed(e.toString())),
-                                    backgroundColor: Colors.red,
-                                    duration: const Duration(seconds: 3),
-                                  ),
-                                );
-                              }
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              l10n.ocrProcessingInProgress,
+                              style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  // 页面内容区域
+                  Expanded(
+                    child: InteractiveViewer(
+                      maxScale: 5.0,
+                      child: SizedBox.expand(
+                        child: FileViewer(
+                          fileUrl: fileUrl,
+                          pageId: page.pageId,
+                          versionId: versionId,
+                          imageKey: _imageKey,
+                          onImageRendered: (size) {
+                            if (_renderedImageSize != size) {
+                              setState(() {
+                                _renderedImageSize = size;
+                                if (kDebugMode) {
+                                  print('Rendered image size: $size');
+                                }
+                              });
                             }
                           },
-                        );
-                      }
-                    }) ??
-                    const SizedBox.shrink(),
-              ],
-            ),
-            body: state.when(
-              initial: () => const SizedBox.shrink(),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              failure: (message) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(message),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: () =>
-                          context.read<PageDetailCubit>().fetchPage(widget.pageId),
-                      child: const Text('Retry'),
-                    ),
-                  ],
-                ),
-              ),
-              success: (page, ocrStatus, _, searchQuery, highlightedBboxes) {
-                if (page.currentVersion == null) {
-                  return const Center(child: Text('This page has no content yet.'));
-                }
-                final versionId = page.currentVersion!.versionId;
-                final fileUrl = '/api/images/$versionId';
-
-                final ocrResult = page.currentVersion!.ocrResult;
-                final l10n = AppLocalizations.of(context)!;
-                
-                return Column(
-                  children: [
-                    // 顶部进度横幅（非阻塞式）
-                    if (ocrStatus == JobStatusEnum.Processing)
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  Theme.of(context).primaryColor,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                l10n.ocrProcessingInProgress,
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    // 页面内容区域
-                    Expanded(
-                      child: InteractiveViewer(
-                        maxScale: 5.0,
-                        child: SizedBox.expand(
-                          child: FileViewer(
-                            fileUrl: fileUrl,
-                            pageId: page.pageId,
-                            versionId: versionId,
-                            imageKey: _imageKey,
-                            onImageRendered: (size) {
-                              if (_renderedImageSize != size) {
-                                setState(() {
-                                  _renderedImageSize = size;
-                                  if (kDebugMode) {
-                                    print('Rendered image size: $size');
-                                  }
-                                });
-                              }
-                            },
-                            ocrResult: ocrResult,
-                            searchQuery: searchQuery,
-                            highlightedBboxes: highlightedBboxes,
-                            showDebugBorders: _showDebugBorders,
-                          ),
+                          ocrResult: ocrResult,
+                          searchQuery: searchQuery,
+                          highlightedBboxes: highlightedBboxes,
+                          showDebugBorders: _showDebugBorders,
                         ),
                       ),
                     ),
-                  ],
-                );
-              },
-            ),
+                  ),
+                ],
+              );
+            },
           );
         },
       ),
@@ -587,15 +761,18 @@ class FileViewer extends StatefulWidget {
   State<FileViewer> createState() => _FileViewerState();
 }
 
-class _FileViewerState extends State<FileViewer> {
-  Future<Response<dynamic>>? _fileFuture;
+class _FileViewerState extends State<FileViewer> with AutomaticKeepAliveClientMixin {
+  late Future<_FileLoadResult> _loadFuture;
   Size? _imageIntrinsicSize; // 存储图片的固有尺寸
   Size? _calculatedRenderSize; // 存储计算出的实际渲染尺寸
 
   @override
+  bool get wantKeepAlive => true; // 保持状态，避免重建
+
+  @override
   void initState() {
     super.initState();
-    _loadFile();
+    _loadFuture = _loadFile();
   }
 
   Future<Size?> _loadImageIntrinsicSize(Uint8List bytes) async {
@@ -616,19 +793,69 @@ class _FileViewerState extends State<FileViewer> {
     }
   }
 
+  Future<_FileLoadResult> _loadFile() async {
+    try {
+      // 首先尝试从缓存加载图片
+      final cachedBytes = await ImageCacheServiceEnhanced.getCachedImage(widget.fileUrl);
+      if (cachedBytes != null) {
+        if (kDebugMode) {
+          print('✅ 图片从缓存加载: ${widget.fileUrl}');
+        }
+        // 缓存命中，返回缓存的数据
+        return _FileLoadResult(
+          bytes: cachedBytes,
+          contentType: 'image/jpeg', // 假设缓存的是图片
+          fromCache: true,
+        );
+      }
 
-  void _loadFile() {
-    final apiClient = getIt<ApiClient>();
-    _fileFuture = apiClient.dio.get(
-      widget.fileUrl,
-      options: Options(responseType: ResponseType.bytes),
-    );
+      // 缓存未命中，从网络加载
+      if (kDebugMode) {
+        print('🔄 图片从网络加载: ${widget.fileUrl}');
+      }
+      
+      final apiClient = getIt<ApiClient>();
+      final response = await apiClient.dio.get(
+        widget.fileUrl,
+        options: Options(responseType: ResponseType.bytes),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('HTTP ${response.statusCode}');
+      }
+
+      final bytes = response.data as Uint8List;
+      final contentType = response.headers.value('content-type') ?? '';
+
+      // 如果是图片，缓存它
+      if (contentType.startsWith('image/')) {
+        ImageCacheServiceEnhanced.cacheImage(
+          url: widget.fileUrl,
+          imageBytes: bytes,
+        );
+      }
+
+      return _FileLoadResult(
+        bytes: bytes,
+        contentType: contentType,
+        fromCache: false,
+      );
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        print('❌ 加载文件失败: ${widget.fileUrl}');
+        print('错误: $e');
+        print('堆栈: $stackTrace');
+      }
+      rethrow;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Response>(
-      future: _fileFuture,
+    super.build(context); // 必须调用以保持状态
+    
+    return FutureBuilder<_FileLoadResult>(
+      future: _loadFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -656,61 +883,65 @@ class _FileViewerState extends State<FileViewer> {
                 const SizedBox(height: 8),
                 const Text("Failed to load file."),
                 if (snapshot.hasError)
-                  Text(
-                    snapshot.error.toString(),
-                    style: const TextStyle(color: Colors.grey, fontSize: 10),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      snapshot.error.toString(),
+                      style: const TextStyle(color: Colors.grey, fontSize: 10),
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
               ],
             ),
           );
         }
 
-        final response = snapshot.data!;
-        final contentType = response.headers.value('content-type') ?? '';
-        final bytes = response.data as Uint8List;
+        final result = snapshot.data!;
+        return _buildImageWidget(result.bytes, result.contentType);
+      },
+    );
+  }
 
-        if (kDebugMode) {
-          print('FileViewer: contentType=$contentType, bytes.length=${bytes.length}');
-        }
+  Widget _buildImageWidget(Uint8List bytes, String contentType) {
 
-        Widget imageWidget;
-        if (contentType.startsWith('image/')) {
-          // 对于普通图片，异步加载固有尺寸（addPostFrameCallback 会等待它完成）
-          if (_imageIntrinsicSize == null) {
-            _loadImageIntrinsicSize(bytes);
-          }
-          
-          imageWidget = FittedBox(
-            key: widget.imageKey, // Move key to FittedBox to get actual rendered size
-            fit: BoxFit.contain,
-            alignment: Alignment.center, // 明确设置图片居中
-            child: Image.memory(bytes),
-          );
-        } else if (contentType == 'application/pdf') {
-          imageWidget = _PdfVectorRenderer(
-            bytes: bytes, 
-            pageId: widget.pageId,
-            versionId: widget.versionId,
-            imageKey: widget.imageKey,
-            onImageRendered: widget.onImageRendered,
-          );
-        } else {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.help_outline, size: 50),
-                const SizedBox(height: 8),
-                Text('Unsupported file type: $contentType'),
-              ],
-            ),
-          );
-        }
+    Widget imageWidget;
+    if (contentType.startsWith('image/')) {
+      // 对于普通图片，异步加载固有尺寸（addPostFrameCallback 会等待它完成）
+      if (_imageIntrinsicSize == null) {
+        _loadImageIntrinsicSize(bytes);
+      }
+      
+      imageWidget = FittedBox(
+        key: widget.imageKey, // Move key to FittedBox to get actual rendered size
+        fit: BoxFit.contain,
+        alignment: Alignment.center, // 明确设置图片居中
+        child: Image.memory(bytes),
+      );
+    } else if (contentType == 'application/pdf') {
+      imageWidget = _PdfVectorRenderer(
+        bytes: bytes, 
+        pageId: widget.pageId,
+        versionId: widget.versionId,
+        imageKey: widget.imageKey,
+        onImageRendered: widget.onImageRendered,
+      );
+    } else {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.help_outline, size: 50),
+            const SizedBox(height: 8),
+            Text('Unsupported file type: $contentType'),
+          ],
+        ),
+      );
+    }
 
-        // After the image is built, report its actual rendered size
-        WidgetsBinding.instance.addPostFrameCallback((_) async {
+    // After the image is built, report its actual rendered size
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
           // 等待固有尺寸加载完成（仅针对普通图片）
           if (contentType.startsWith('image/')) {
             int retries = 0;
@@ -807,8 +1038,6 @@ class _FileViewerState extends State<FileViewer> {
         }
 
         return imageWidget; // Return just the image widget
-      },
-    );
   }
 }
 
@@ -880,6 +1109,8 @@ class _PdfVectorRendererState extends State<_PdfVectorRenderer> {
         Expanded(
           child: PdfxRenderer(
             pdfBytes: widget.bytes,
+            pageId: widget.pageId,
+            versionId: widget.versionId,
             imageKey: widget.imageKey,
             onImageRendered: widget.onImageRendered,
           ),
@@ -895,6 +1126,8 @@ class _PdfVectorRendererState extends State<_PdfVectorRenderer> {
         Expanded(
           child: PdfrxRenderer(
             pdfBytes: widget.bytes,
+            pageId: widget.pageId,
+            versionId: widget.versionId,
             imageKey: widget.imageKey,
             onImageRendered: widget.onImageRendered,
           ),
@@ -1313,5 +1546,168 @@ class _PdfVectorRendererState extends State<_PdfVectorRenderer> {
 </body>
 </html>
     ''';
+  }
+}
+
+/// 全屏模式下的进度条
+/// 显示图形化进度条和页码信息
+class _FullscreenProgressBar extends StatefulWidget {
+  final int currentPage;
+  final int totalPages;
+  final VoidCallback onTap;
+
+  const _FullscreenProgressBar({
+    required this.currentPage,
+    required this.totalPages,
+    required this.onTap,
+  });
+
+  @override
+  State<_FullscreenProgressBar> createState() => _FullscreenProgressBarState();
+}
+
+class _FullscreenProgressBarState extends State<_FullscreenProgressBar> {
+  bool _isPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = widget.currentPage / widget.totalPages;
+    final percentage = (progress * 100).toInt();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) {
+        setState(() => _isPressed = false);
+        widget.onTap();
+      },
+      onTapCancel: () => setState(() => _isPressed = false),
+      child: ClipRect(
+        child: BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 150),
+            padding: EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: _isPressed ? 14 : 16,
+            ),
+            decoration: BoxDecoration(
+              color: isDark 
+                  ? Colors.black.withValues(alpha: 0.6)
+                  : Colors.white.withValues(alpha: 0.7),
+              border: Border(
+                top: BorderSide(
+                  color: isDark
+                      ? Colors.white.withValues(alpha: 0.1)
+                      : Colors.black.withValues(alpha: 0.1),
+                  width: 0.5,
+                ),
+              ),
+            ),
+            child: SafeArea(
+              top: false,
+              child: Row(
+                children: [
+                  // 图形化进度条
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // 进度条容器
+                        Container(
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? Colors.white.withValues(alpha: 0.15)
+                                : Colors.black.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                          child: Stack(
+                            children: [
+                              // 已完成进度
+                              FractionallySizedBox(
+                                widthFactor: progress,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: isDark
+                                          ? [
+                                              Colors.blue.shade400,
+                                              Colors.blue.shade300,
+                                            ]
+                                          : [
+                                              Colors.blue.shade600,
+                                              Colors.blue.shade500,
+                                            ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(2),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.blue.withValues(alpha: 0.3),
+                                        blurRadius: 4,
+                                        spreadRadius: 0.5,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  // 页码
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? Colors.white.withValues(alpha: 0.12)
+                          : Colors.black.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.2)
+                            : Colors.black.withValues(alpha: 0.15),
+                        width: 0.5,
+                      ),
+                    ),
+                    child: Text(
+                      '${widget.currentPage}/${widget.totalPages}',
+                      style: TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 13,
+                        color: isDark ? Colors.white : Colors.black87,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  // 百分比
+                  SizedBox(
+                    width: 42,
+                    child: Text(
+                      '$percentage%',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 12,
+                        color: isDark 
+                            ? Colors.white.withValues(alpha: 0.7)
+                            : Colors.black.withValues(alpha: 0.6),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

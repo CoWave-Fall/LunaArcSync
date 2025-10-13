@@ -7,39 +7,34 @@ import 'document_list_state.dart';
 @injectable
 class DocumentListCubit extends Cubit<DocumentListState> {
   final IDocumentRepository _documentRepository;
+  
+  // 添加请求管理，防止并发请求导致顺序错误
+  final Set<int> _loadingPages = {};
 
   DocumentListCubit(this._documentRepository) : super(const DocumentListState());
 
   Future<void> fetchDocuments({bool isRefresh = false}) async {
-    if (state.isLoading || (state.hasReachedMax && !isRefresh)) return;
+    if (state.isLoading) return;
 
-    // When refreshing, reset the documents list and page number
-    final initialState = isRefresh
-        ? state.copyWith(documents: [], pageNumber: 1, hasReachedMax: false)
-        : state;
+    // 重置分页状态
+    _loadingPages.clear();
 
     if (!isClosed) {
-      emit(initialState.copyWith(isLoading: true, error: null));
+      emit(state.copyWith(isLoading: true, error: null));
     }
 
-    // Use the page number from the (potentially reset) state
-    final pageNumber = initialState.pageNumber;
-
     try {
-      final result = await _documentRepository.getDocuments(
-        pageNumber: pageNumber,
+      // 直接获取所有文档，不再使用分页
+      final allDocuments = await _documentRepository.getAllDocuments(
         sortBy: state.sortOption.apiValue,
         tags: state.selectedTags.isNotEmpty ? state.selectedTags : null,
       );
 
-      final newDocuments = result.items;
-      final hasReachedMax = result.hasNextPage == false;
-
       if (!isClosed) {
         emit(state.copyWith(
-          documents: isRefresh ? newDocuments : [...state.documents, ...newDocuments],
-          pageNumber: pageNumber + 1,
-          hasReachedMax: hasReachedMax,
+          documents: allDocuments,
+          pageNumber: 1,
+          hasReachedMax: true, // 已经获取了所有数据
           isLoading: false,
         ));
       }
@@ -131,6 +126,7 @@ class DocumentListCubit extends Cubit<DocumentListState> {
   void refresh() {
     fetchDocuments(isRefresh: true);
   }
+
 
   Future<String> startBatchExportJob(List<String> documentIds) async {
     if (documentIds.isEmpty) {

@@ -2,54 +2,83 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:luna_arc_sync/data/repositories/auth_repository.dart';
-import 'package:luna_arc_sync/core/storage/secure_storage_service.dart';
+import 'package:luna_arc_sync/core/services/auto_login_service.dart';
 import 'auth_state.dart';
 
 @lazySingleton
 class AuthCubit extends Cubit<AuthState> {
   final IAuthRepository _authRepository;
-  final SecureStorageService _storageService;
+  final AutoLoginService _autoLoginService;
 
-  AuthCubit(this._authRepository, this._storageService) : super(const AuthState.initial());
+  AuthCubit(
+    this._authRepository,
+    this._autoLoginService,
+  ) : super(const AuthState.initial());
 
+  /// 检查认证状态
+  /// 在应用启动时调用，检查是否有有效的会话
   Future<void> checkAuthStatus() async {
-  try {
-    final token = await _storageService.getToken();
-
-    // --- START: 关键逻辑加固 ---
-    // 检查 token 是否为 null 并且不是一个空字符串
-    if (token != null && token.isNotEmpty) {
-      final userId = await _storageService.getUserId();
-      if (userId != null && userId.isNotEmpty) {
-         debugPrint('AuthCubit: Token and UserId found in storage. User is authenticated.');
-         emit(AuthState.authenticated(userId: userId));
+    try {
+      debugPrint('🔐 AuthCubit: Checking auth status...');
+      
+      // 使用 AutoLoginService 检查会话有效性
+      final userId = await _autoLoginService.checkValidSession();
+      
+      if (userId != null) {
+        debugPrint('🔐 AuthCubit: Valid session found for user $userId');
+        emit(AuthState.authenticated(userId: userId));
       } else {
-         // 虽然有 token，但没有 user id，视为无效状态
-         debugPrint('AuthCubit: Token found but UserId is missing. User is unauthenticated.');
-         emit(const AuthState.unauthenticated());
+        debugPrint('🔐 AuthCubit: No valid session found');
+        emit(const AuthState.unauthenticated());
       }
-    } else {
-      // 如果 token 是 null 或空字符串，则用户未登录
-      debugPrint('AuthCubit: Token is null or empty. User is unauthenticated.');
+    } catch (e) {
+      debugPrint('🔐 AuthCubit: Error during checkAuthStatus - $e');
       emit(const AuthState.unauthenticated());
     }
-    // --- END: 关键逻辑加固 ---
-
-  } catch (e) {
-    debugPrint('AuthCubit: Error during checkAuthStatus. User is unauthenticated. Error: $e');
-    emit(const AuthState.unauthenticated());
   }
-}
 
-  Future<void> login(String email, String password) async {
+  /// 尝试使用存储的凭据自动登录
+  Future<void> attemptAutoLogin() async {
     try {
-      // 1. 发出加载状态
+      debugPrint('🔐 AuthCubit: Attempting auto-login...');
       emit(const AuthState.unauthenticated(isLoading: true));
-      final response = await _authRepository.login(email, password);
-      // 2. 成功后，发出认证成功状态
+      
+      final response = await _autoLoginService.attemptAutoLogin();
+      
+      debugPrint('🔐 AuthCubit: Auto-login successful for user ${response.userId}');
       emit(AuthState.authenticated(userId: response.userId));
     } catch (e) {
-      // 3. 失败后，发出带有错误信息的状态
+      debugPrint('🔐 AuthCubit: Auto-login failed - $e');
+      emit(AuthState.unauthenticated(error: e.toString()));
+    }
+  }
+
+  /// 登录
+  /// saveCredentials 参数控制是否保存凭据用于自动登录
+  Future<void> login(
+    String email,
+    String password, {
+    bool saveCredentials = true,
+  }) async {
+    try {
+      debugPrint('🔐 AuthCubit: Starting login for $email...');
+      emit(const AuthState.unauthenticated(isLoading: true));
+      
+      final response = await _authRepository.login(email, password);
+      
+      // 保存凭据以支持自动登录（如果需要）
+      if (saveCredentials) {
+        await _autoLoginService.saveCredentials(
+          email: email,
+          password: password,
+        );
+        debugPrint('🔐 AuthCubit: Credentials saved for auto-login');
+      }
+      
+      debugPrint('🔐 AuthCubit: Login successful for user ${response.userId}');
+      emit(AuthState.authenticated(userId: response.userId));
+    } catch (e) {
+      debugPrint('🔐 AuthCubit: Login failed - $e');
       emit(AuthState.unauthenticated(error: e.toString()));
     }
   }
@@ -68,8 +97,29 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> logout() async {
-    await _authRepository.logout();
-    emit(const AuthState.unauthenticated());
+  /// 登出
+  /// clearCredentials 参数控制是否清除存储的凭据（默认不清除，允许重新登录）
+  Future<void> logout({bool clearCredentials = false}) async {
+    try {
+      debugPrint('🔐 AuthCubit: Logging out...');
+      
+      await _authRepository.logout();
+      
+      if (clearCredentials) {
+        await _autoLoginService.clearCredentials();
+        debugPrint('🔐 AuthCubit: Credentials cleared');
+      }
+      
+      debugPrint('🔐 AuthCubit: Logout successful');
+      emit(const AuthState.unauthenticated());
+    } catch (e) {
+      debugPrint('🔐 AuthCubit: Logout error - $e');
+      emit(const AuthState.unauthenticated());
+    }
+  }
+
+  /// 检查是否有存储的凭据
+  Future<bool> hasStoredCredentials() async {
+    return await _autoLoginService.hasStoredCredentials();
   }
 }

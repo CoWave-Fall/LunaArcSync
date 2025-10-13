@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:luna_arc_sync/core/di/injection.dart';
 import 'package:luna_arc_sync/presentation/pages/cubit/page_list_cubit.dart';
 import 'package:luna_arc_sync/presentation/pages/cubit/page_list_state.dart';
-import 'package:luna_arc_sync/presentation/pages/view/page_detail_page.dart';
+import 'package:luna_arc_sync/presentation/pages/view/page_detail_page_with_pageview.dart';
 import 'package:luna_arc_sync/presentation/pages/widgets/page_list_item.dart';
 
 // PageListPage 现在是一个更简单的容器，只负责提供 Bloc
@@ -35,28 +35,13 @@ class _PageListViewState extends State<PageListView> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    // 不再需要滚动监听，因为我们直接获取所有数据
   }
 
   @override
   void dispose() {
-    _scrollController
-      ..removeListener(_onScroll)
-      ..dispose();
+    _scrollController.dispose();
     super.dispose();
-  }
-
-  void _onScroll() {
-    if (_isBottom) {
-      context.read<PageListCubit>().fetchNextPage();
-    }
-  }
-
-  bool get _isBottom {
-    if (!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    return currentScroll >= (maxScroll * 0.9);
   }
 
   // 创建页面的对话框逻辑
@@ -204,18 +189,21 @@ class _PageListViewState extends State<PageListView> {
                 onRefresh: () => context.read<PageListCubit>().fetchPages(),
                 child: ListView.builder(
                   controller: _scrollController,
-                  itemCount: state.hasReachedMax ? state.pages.length : state.pages.length + 1,
+                  itemCount: state.pages.length,
                   itemBuilder: (context, index) {
-                    if (index >= state.pages.length) {
-                      return const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator()));
-                    }
                     final page = state.pages[index];
                     return PageListItem(
                       page: page,
                       onTap: () {
+                        // 提取所有页面ID
+                        final pageIds = state.pages.map((p) => p.pageId).toList();
                         Navigator.of(context).push<bool>( // 接收返回值
                           MaterialPageRoute(
-                            builder: (_) => PageDetailPage(pageId: page.pageId),
+                            builder: (_) => PageDetailPageWithPageView(
+                              pageId: page.pageId,
+                              pageIds: pageIds,
+                              currentIndex: index,
+                            ),
                           ),
                         ).then((result) {
                            // 从详情页返回后，无论是否有变动，都刷新一下列表

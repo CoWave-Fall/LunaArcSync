@@ -66,13 +66,24 @@ class AuthInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    // Globally handle 401 Unauthorized errors
-    if (err.response?.statusCode == 401) {
-      debugPrint('AuthInterceptor: Received 401 Unauthorized error. Forcing logout.');
-      // Use getIt to access the AuthCubit singleton and trigger logout
-      // This will clear user session and navigate to the login screen
-      getIt<AuthCubit>().logout();
+    debugPrint('🔐 AuthInterceptor: Error intercepted - Type: ${err.type}, Status: ${err.response?.statusCode}');
+    
+    // 处理认证错误（401 未授权，403 禁止访问）
+    if (err.response?.statusCode == 401 || err.response?.statusCode == 403) {
+      debugPrint('🔐 AuthInterceptor: Authentication error. Forcing logout.');
+      // 清除会话并触发登出
+      getIt<AuthCubit>().logout(clearCredentials: false); // 保留凭据，允许重新登录
     }
+    
+    // 处理连接失败（网络错误、超时等）
+    else if (err.type == DioExceptionType.connectionTimeout ||
+        err.type == DioExceptionType.sendTimeout ||
+        err.type == DioExceptionType.receiveTimeout ||
+        err.type == DioExceptionType.connectionError) {
+      debugPrint('🔐 AuthInterceptor: Connection error detected - ${err.message}');
+      // 连接错误不自动登出，但会在页面层面处理
+    }
+    
     super.onError(err, handler);
   }
 }

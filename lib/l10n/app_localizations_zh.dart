@@ -213,6 +213,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get columns => '列数';
 
   @override
+  String get defaultViewMode => '默认视图模式';
+
+  @override
+  String get defaultViewModeDescription => '选择页面默认的显示方式';
+
+  @override
+  String get listView => '列表视图';
+
+  @override
+  String get gridView => '网格视图';
+
+  @override
   String get darkModeImageProcessing => '深色模式图像处理';
 
   @override
@@ -328,6 +340,15 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get errorLoadingAbout => '加载关于信息失败';
+
+  @override
+  String get connectionErrorTitle => '服务器连接失败';
+
+  @override
+  String get authErrorTitle => '认证失败';
+
+  @override
+  String get backToLogin => '返回登录';
 
   @override
   String get retryButton => '重试';
@@ -563,6 +584,45 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsThemeSettings => '主题设置';
 
   @override
+  String get settingsThemeColor => '主题颜色';
+
+  @override
+  String get settingsThemeColorDescription => '选择应用的主题颜色';
+
+  @override
+  String get settingsBackgroundImage => '背景图片';
+
+  @override
+  String get settingsBackgroundImageEnabled => '已启用自定义背景';
+
+  @override
+  String get settingsBackgroundImageDisabled => '使用默认背景';
+
+  @override
+  String get settingsBackgroundImageDescription =>
+      '设置自定义背景图片，启用后侧边栏和卡片将显示毛玻璃效果';
+
+  @override
+  String get settingsBackgroundImageEnable => '启用自定义背景';
+
+  @override
+  String get settingsBackgroundImageSelect => '选择图片';
+
+  @override
+  String get settingsBackgroundImageRemove => '删除背景';
+
+  @override
+  String get settingsBackgroundImageRemoveConfirm => '确定要删除自定义背景图片吗？';
+
+  @override
+  String get settingsBackgroundImageSet => '背景图片设置成功';
+
+  @override
+  String settingsBackgroundImageError(String error) {
+    return '设置背景图片时出错：$error';
+  }
+
+  @override
   String get settingsJobHistory => '任务历史';
 
   @override
@@ -683,6 +743,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get loginButton => '登录';
+
+  @override
+  String get loginSuccess => '登录成功！';
 
   @override
   String get loginRegisterPrompt => '没有账户？注册';
@@ -905,4 +968,190 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get noResultsFound => '未找到结果';
+
+  @override
+  String get accErr001 => '该邮箱已存在用户。';
+
+  @override
+  String get accErr002 => '用户创建失败。';
+
+  @override
+  String get accSuc001 => '用户创建成功！';
+
+  @override
+  String get accErr003 => '邮箱或密码无效。';
+
+  @override
+  String get pagErr001 => '文件是必需的。';
+
+  @override
+  String get pagErr002 => '文档未找到或不属于您。';
+
+  @override
+  String pagErr003(String duplicatePageIds) {
+    return '请求中发现重复的页面ID：$duplicatePageIds';
+  }
+
+  @override
+  String pagErr004(String duplicateOrders) {
+    return '请求中发现重复的顺序号：$duplicateOrders';
+  }
+
+  @override
+  String get pagErr005 => '更新页面顺序失败。请确保所有页面属于指定文档和用户。';
+
+  @override
+  String pagErr006(String maxOrder) {
+    return '新顺序必须在1到$maxOrder之间。';
+  }
+
+  @override
+  String get pagErr007 => '插入过程中更新页面顺序失败。';
+
+  @override
+  String get pagErr008 => '未提供文件。';
+
+  @override
+  String get pagErr009 => '未提供图片文件。';
+
+  @override
+  String get pagErr010 => '请上传有效的PDF文件。';
+
+  @override
+  String get pagErr011 => '只允许PDF文件。';
+
+  @override
+  String get pagErr012 => '文档未找到或没有页面。';
+
+  @override
+  String pagErr013(String pageId, String documentId) {
+    return '在文档$documentId中未找到ID为$pageId的页面。';
+  }
+
+  @override
+  String get pagErr014 => '文档未找到。';
+
+  @override
+  String get docErr001 => '添加页面到文档失败。页面可能不存在、不属于您或已在其他文档中。';
+
+  @override
+  String get docErr002 => '未提供文档ID。';
+
+  @override
+  String jobErr001(String jobId) {
+    return '未找到ID为$jobId的任务';
+  }
+
+  @override
+  String jobErr002(String versionId) {
+    return '未找到ID为$versionId的版本';
+  }
+
+  @override
+  String jobErr003(String pageId) {
+    return '未找到ID为$pageId的页面';
+  }
+
+  @override
+  String jobErr004(String versionId) {
+    return '未找到ID为$versionId的版本';
+  }
+
+  @override
+  String jobErr005(String jobId) {
+    return '未找到ID为$jobId的任务';
+  }
+
+  @override
+  String get jobSuc001 => 'OCR任务已排队。';
+
+  @override
+  String get jobSuc002 => '拼接任务已排队。';
+
+  @override
+  String get jobSuc003 => '任务已成功取消。';
+
+  @override
+  String get imgErr001 => '页面未找到。';
+
+  @override
+  String get imgErr002 => '缩略图不可用。';
+
+  @override
+  String get imgErr003 => '存储中未找到缩略图文件。';
+
+  @override
+  String get verErr001 => '页面未找到。';
+
+  @override
+  String get verErr002 => '页面未找到。';
+
+  @override
+  String get srcErr001 => '搜索查询不能为空。';
+
+  @override
+  String get datErr001 => '必须提供目标用户ID。';
+
+  @override
+  String get datErr002 => '未上传文件。';
+
+  @override
+  String get datErr003 => '未上传文件。';
+
+  @override
+  String get datSuc001 => '数据导入成功。';
+
+  @override
+  String get datSuc002 => '您的数据导入成功。';
+
+  @override
+  String get appInfo001 => '初始化中';
+
+  @override
+  String get pdfErr001 => '读取PDF文件获取页数失败。文件可能已损坏或无效。';
+
+  @override
+  String get pdfErr002 => '读取或处理PDF文件失败。文件可能已损坏或格式不支持。';
+
+  @override
+  String get pdfErr003 => '从PDF文件提取文本失败。文件可能已损坏或格式不支持。';
+
+  @override
+  String pdfErr004(String pageNumber) {
+    return '从PDF文件第$pageNumber页提取文本失败。文件可能已损坏或格式不支持。';
+  }
+
+  @override
+  String get ocrErr001 => '版本未找到。';
+
+  @override
+  String get ocrErr002 => '版本缺少文件元数据。';
+
+  @override
+  String get ocrErr003 => '文件未找到。';
+
+  @override
+  String get ocrErr004 => '无法从版本文件获取图像数据。';
+
+  @override
+  String get stiErr001 => '拼接至少需要两个源图像。';
+
+  @override
+  String get stiErr002 => '一个或多个源版本未找到。';
+
+  @override
+  String stiErr003(String status) {
+    return '无法拼接图像。状态：$status';
+  }
+
+  @override
+  String stiErr004(String pageId, String userId) {
+    return '用户$userId的页面ID $pageId未找到。';
+  }
+
+  @override
+  String get impErr001 => '非管理员导出必须提供用户ID。';
+
+  @override
+  String get impErr002 => '导入归档中未找到data.json。';
 }

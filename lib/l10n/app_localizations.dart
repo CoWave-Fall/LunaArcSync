@@ -488,6 +488,30 @@ abstract class AppLocalizations {
   /// **'Columns'**
   String get columns;
 
+  /// No description provided for @defaultViewMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Default View Mode'**
+  String get defaultViewMode;
+
+  /// No description provided for @defaultViewModeDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose how pages are displayed by default'**
+  String get defaultViewModeDescription;
+
+  /// No description provided for @listView.
+  ///
+  /// In en, this message translates to:
+  /// **'List View'**
+  String get listView;
+
+  /// No description provided for @gridView.
+  ///
+  /// In en, this message translates to:
+  /// **'Grid View'**
+  String get gridView;
+
   /// No description provided for @darkModeImageProcessing.
   ///
   /// In en, this message translates to:
@@ -721,6 +745,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to load about information'**
   String get errorLoadingAbout;
+
+  /// No description provided for @connectionErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Server Connection Failed'**
+  String get connectionErrorTitle;
+
+  /// No description provided for @authErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication Failed'**
+  String get authErrorTitle;
+
+  /// No description provided for @backToLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Login'**
+  String get backToLogin;
 
   /// No description provided for @retryButton.
   ///
@@ -1148,6 +1190,78 @@ abstract class AppLocalizations {
   /// **'Theme Settings'**
   String get settingsThemeSettings;
 
+  /// No description provided for @settingsThemeColor.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Color'**
+  String get settingsThemeColor;
+
+  /// No description provided for @settingsThemeColorDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose app theme color'**
+  String get settingsThemeColorDescription;
+
+  /// No description provided for @settingsBackgroundImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Background Image'**
+  String get settingsBackgroundImage;
+
+  /// No description provided for @settingsBackgroundImageEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom background enabled'**
+  String get settingsBackgroundImageEnabled;
+
+  /// No description provided for @settingsBackgroundImageDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Using default background'**
+  String get settingsBackgroundImageDisabled;
+
+  /// No description provided for @settingsBackgroundImageDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a custom background image. When enabled, sidebar and cards will show glassmorphic effects'**
+  String get settingsBackgroundImageDescription;
+
+  /// No description provided for @settingsBackgroundImageEnable.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable custom background'**
+  String get settingsBackgroundImageEnable;
+
+  /// No description provided for @settingsBackgroundImageSelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Image'**
+  String get settingsBackgroundImageSelect;
+
+  /// No description provided for @settingsBackgroundImageRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Background'**
+  String get settingsBackgroundImageRemove;
+
+  /// No description provided for @settingsBackgroundImageRemoveConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove the custom background image?'**
+  String get settingsBackgroundImageRemoveConfirm;
+
+  /// No description provided for @settingsBackgroundImageSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Background image set successfully'**
+  String get settingsBackgroundImageSet;
+
+  /// No description provided for @settingsBackgroundImageError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error setting background image: {error}'**
+  String settingsBackgroundImageError(String error);
+
   /// No description provided for @settingsJobHistory.
   ///
   /// In en, this message translates to:
@@ -1363,6 +1477,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Login'**
   String get loginButton;
+
+  /// No description provided for @loginSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Login Successful!'**
+  String get loginSuccess;
 
   /// No description provided for @loginRegisterPrompt.
   ///
@@ -1783,6 +1903,330 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No results found.'**
   String get noResultsFound;
+
+  /// No description provided for @accErr001.
+  ///
+  /// In en, this message translates to:
+  /// **'User with this email already exists.'**
+  String get accErr001;
+
+  /// No description provided for @accErr002.
+  ///
+  /// In en, this message translates to:
+  /// **'User creation failed.'**
+  String get accErr002;
+
+  /// No description provided for @accSuc001.
+  ///
+  /// In en, this message translates to:
+  /// **'User created successfully!'**
+  String get accSuc001;
+
+  /// No description provided for @accErr003.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password.'**
+  String get accErr003;
+
+  /// No description provided for @pagErr001.
+  ///
+  /// In en, this message translates to:
+  /// **'File is required.'**
+  String get pagErr001;
+
+  /// No description provided for @pagErr002.
+  ///
+  /// In en, this message translates to:
+  /// **'Document not found or does not belong to you.'**
+  String get pagErr002;
+
+  /// No description provided for @pagErr003.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate PageIds found in the request: {duplicatePageIds}'**
+  String pagErr003(String duplicatePageIds);
+
+  /// No description provided for @pagErr004.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicate Order numbers found in the request: {duplicateOrders}'**
+  String pagErr004(String duplicateOrders);
+
+  /// No description provided for @pagErr005.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update page orders. Ensure all pages belong to the specified document and user.'**
+  String get pagErr005;
+
+  /// No description provided for @pagErr006.
+  ///
+  /// In en, this message translates to:
+  /// **'NewOrder must be between 1 and {maxOrder}.'**
+  String pagErr006(String maxOrder);
+
+  /// No description provided for @pagErr007.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update page orders during insertion.'**
+  String get pagErr007;
+
+  /// No description provided for @pagErr008.
+  ///
+  /// In en, this message translates to:
+  /// **'No files provided.'**
+  String get pagErr008;
+
+  /// No description provided for @pagErr009.
+  ///
+  /// In en, this message translates to:
+  /// **'No image files provided.'**
+  String get pagErr009;
+
+  /// No description provided for @pagErr010.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload a valid PDF file.'**
+  String get pagErr010;
+
+  /// No description provided for @pagErr011.
+  ///
+  /// In en, this message translates to:
+  /// **'Only PDF files are allowed.'**
+  String get pagErr011;
+
+  /// No description provided for @pagErr012.
+  ///
+  /// In en, this message translates to:
+  /// **'Document not found or has no pages.'**
+  String get pagErr012;
+
+  /// No description provided for @pagErr013.
+  ///
+  /// In en, this message translates to:
+  /// **'Page with ID {pageId} not found in document {documentId}.'**
+  String pagErr013(String pageId, String documentId);
+
+  /// No description provided for @pagErr014.
+  ///
+  /// In en, this message translates to:
+  /// **'Document not found.'**
+  String get pagErr014;
+
+  /// No description provided for @docErr001.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to add page to document. It may not exist, may not belong to you, or may already be in another document.'**
+  String get docErr001;
+
+  /// No description provided for @docErr002.
+  ///
+  /// In en, this message translates to:
+  /// **'No document IDs provided.'**
+  String get docErr002;
+
+  /// No description provided for @jobErr001.
+  ///
+  /// In en, this message translates to:
+  /// **'No job found with ID: {jobId}'**
+  String jobErr001(String jobId);
+
+  /// No description provided for @jobErr002.
+  ///
+  /// In en, this message translates to:
+  /// **'No version found with ID: {versionId}'**
+  String jobErr002(String versionId);
+
+  /// No description provided for @jobErr003.
+  ///
+  /// In en, this message translates to:
+  /// **'No page found with ID: {pageId}'**
+  String jobErr003(String pageId);
+
+  /// No description provided for @jobErr004.
+  ///
+  /// In en, this message translates to:
+  /// **'No version found with ID: {versionId}'**
+  String jobErr004(String versionId);
+
+  /// No description provided for @jobErr005.
+  ///
+  /// In en, this message translates to:
+  /// **'No job found with ID: {jobId}'**
+  String jobErr005(String jobId);
+
+  /// No description provided for @jobSuc001.
+  ///
+  /// In en, this message translates to:
+  /// **'OCR job has been queued.'**
+  String get jobSuc001;
+
+  /// No description provided for @jobSuc002.
+  ///
+  /// In en, this message translates to:
+  /// **'Stitch job has been queued.'**
+  String get jobSuc002;
+
+  /// No description provided for @jobSuc003.
+  ///
+  /// In en, this message translates to:
+  /// **'Job has been cancelled successfully.'**
+  String get jobSuc003;
+
+  /// No description provided for @imgErr001.
+  ///
+  /// In en, this message translates to:
+  /// **'Page not found.'**
+  String get imgErr001;
+
+  /// No description provided for @imgErr002.
+  ///
+  /// In en, this message translates to:
+  /// **'Thumbnail not available.'**
+  String get imgErr002;
+
+  /// No description provided for @imgErr003.
+  ///
+  /// In en, this message translates to:
+  /// **'Thumbnail file not found in storage.'**
+  String get imgErr003;
+
+  /// No description provided for @verErr001.
+  ///
+  /// In en, this message translates to:
+  /// **'Page not found.'**
+  String get verErr001;
+
+  /// No description provided for @verErr002.
+  ///
+  /// In en, this message translates to:
+  /// **'Page not found.'**
+  String get verErr002;
+
+  /// No description provided for @srcErr001.
+  ///
+  /// In en, this message translates to:
+  /// **'Search query cannot be empty.'**
+  String get srcErr001;
+
+  /// No description provided for @datErr001.
+  ///
+  /// In en, this message translates to:
+  /// **'Target user ID must be provided.'**
+  String get datErr001;
+
+  /// No description provided for @datErr002.
+  ///
+  /// In en, this message translates to:
+  /// **'No file uploaded.'**
+  String get datErr002;
+
+  /// No description provided for @datErr003.
+  ///
+  /// In en, this message translates to:
+  /// **'No file uploaded.'**
+  String get datErr003;
+
+  /// No description provided for @datSuc001.
+  ///
+  /// In en, this message translates to:
+  /// **'Data imported successfully.'**
+  String get datSuc001;
+
+  /// No description provided for @datSuc002.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data imported successfully.'**
+  String get datSuc002;
+
+  /// No description provided for @appInfo001.
+  ///
+  /// In en, this message translates to:
+  /// **'Initializing'**
+  String get appInfo001;
+
+  /// No description provided for @pdfErr001.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to read the PDF file to get page count. It may be corrupted or invalid.'**
+  String get pdfErr001;
+
+  /// No description provided for @pdfErr002.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to read or process the PDF file. It may be corrupted or in an unsupported format.'**
+  String get pdfErr002;
+
+  /// No description provided for @pdfErr003.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to extract text from PDF file. It may be corrupted or in an unsupported format.'**
+  String get pdfErr003;
+
+  /// No description provided for @pdfErr004.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to extract text from page {pageNumber} of PDF file. It may be corrupted or in an unsupported format.'**
+  String pdfErr004(String pageNumber);
+
+  /// No description provided for @ocrErr001.
+  ///
+  /// In en, this message translates to:
+  /// **'Version not found.'**
+  String get ocrErr001;
+
+  /// No description provided for @ocrErr002.
+  ///
+  /// In en, this message translates to:
+  /// **'Version is missing file metadata.'**
+  String get ocrErr002;
+
+  /// No description provided for @ocrErr003.
+  ///
+  /// In en, this message translates to:
+  /// **'File not found.'**
+  String get ocrErr003;
+
+  /// No description provided for @ocrErr004.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not get image data from version file.'**
+  String get ocrErr004;
+
+  /// No description provided for @stiErr001.
+  ///
+  /// In en, this message translates to:
+  /// **'At least two source images are required for stitching.'**
+  String get stiErr001;
+
+  /// No description provided for @stiErr002.
+  ///
+  /// In en, this message translates to:
+  /// **'One or more source versions could not be found.'**
+  String get stiErr002;
+
+  /// No description provided for @stiErr003.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not stitch images. Status: {status}'**
+  String stiErr003(String status);
+
+  /// No description provided for @stiErr004.
+  ///
+  /// In en, this message translates to:
+  /// **'Page with ID {pageId} not found for user {userId}.'**
+  String stiErr004(String pageId, String userId);
+
+  /// No description provided for @impErr001.
+  ///
+  /// In en, this message translates to:
+  /// **'User ID must be provided for non-admin export.'**
+  String get impErr001;
+
+  /// No description provided for @impErr002.
+  ///
+  /// In en, this message translates to:
+  /// **'data.json not found in the import archive.'**
+  String get impErr002;
 }
 
 class _AppLocalizationsDelegate

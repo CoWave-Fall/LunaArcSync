@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +13,18 @@ import 'package:luna_arc_sync/l10n/app_localizations.dart';
 import 'package:luna_arc_sync/core/localization/locale_notifier.dart';
 import 'package:luna_arc_sync/core/storage/job_history_service.dart';
 import 'package:luna_arc_sync/core/theme/theme_notifier.dart';
+import 'package:luna_arc_sync/core/theme/theme_color_notifier.dart';
+import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
 import 'package:luna_arc_sync/core/theme/font_notifier.dart';
 import 'package:luna_arc_sync/presentation/settings/cubit/data_transfer_cubit.dart';
 import 'package:luna_arc_sync/presentation/settings/cubit/data_transfer_state.dart';
 import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_notifier.dart';
-import 'package:luna_arc_sync/presentation/pages/view/page_detail_page.dart';
 import 'package:luna_arc_sync/core/config/pdf_render_backend.dart';
+import 'package:luna_arc_sync/core/services/dark_mode_image_processor.dart';
 import 'package:provider/provider.dart';
+import 'package:luna_arc_sync/core/animations/animated_list_item.dart';
+import 'package:luna_arc_sync/presentation/widgets/glassmorphic_container.dart';
+import 'package:luna_arc_sync/core/theme/no_overscroll_behavior.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -207,6 +214,8 @@ class _SettingsViewState extends State<SettingsView> {
     final l10n = AppLocalizations.of(context)!;
     final localeNotifier = context.watch<LocaleNotifier>();
     final themeNotifier = context.watch<ThemeNotifier>();
+    final themeColorNotifier = context.watch<ThemeColorNotifier>();
+    final backgroundImageNotifier = context.watch<BackgroundImageNotifier>();
     final fontNotifier = context.watch<FontNotifier>();
 
     return BlocListener<DataTransferCubit, DataTransferState>(
@@ -326,109 +335,230 @@ class _SettingsViewState extends State<SettingsView> {
       child: Stack(
         children: [
           Scaffold(
+            backgroundColor: backgroundImageNotifier.hasCustomBackground ? Colors.transparent : null,
             appBar: AppBar(
+              backgroundColor: backgroundImageNotifier.hasCustomBackground ? Colors.transparent : null,
               title: Text(l10n.settingsPageTitle),
             ),
-            body: ListView(
-              children: [
+            body: ScrollConfiguration(
+              behavior: backgroundImageNotifier.hasCustomBackground 
+                  ? const GlassmorphicScrollBehavior() 
+                  : ScrollConfiguration.of(context).copyWith(),
+              child: ListView(
+                children: [
                 // 外观设置
-                _buildSectionHeader(AppLocalizations.of(context)!.settingsAppearanceSettings),
-                ListTile(
-                  leading: const Icon(Icons.language),
-                  title: Text(l10n.languageSettingTitle),
-                  subtitle: Text((localeNotifier.locale?.languageCode ?? 'en') == 'en' ? l10n.english : l10n.chinese),
-                  onTap: () => _showLanguagePickerDialog(context, localeNotifier),
+                AnimatedListItem(
+                  index: 0,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: _buildSectionHeader(AppLocalizations.of(context)!.settingsAppearanceSettings),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.palette),
-                  title: Text(AppLocalizations.of(context)!.settingsThemeSettings),
-                  subtitle: Text(_getThemeModeText(themeNotifier.themeMode)),
-                  onTap: () => _showThemePickerDialog(context, themeNotifier),
+                AnimatedListItem(
+                  index: 1,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: ListTile(
+                    leading: const Icon(Icons.language),
+                    title: Text(l10n.languageSettingTitle),
+                    subtitle: Text((localeNotifier.locale?.languageCode ?? 'en') == 'en' ? l10n.english : l10n.chinese),
+                    onTap: () => _showLanguagePickerDialog(context, localeNotifier),
+                  ),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.font_download),
-                  title: Text(AppLocalizations.of(context)!.fontSettingsTitle),
-                  subtitle: Text(fontNotifier.getFontDisplayName()),
-                  onTap: () => _showFontPickerDialog(context, fontNotifier),
+                AnimatedListItem(
+                  index: 2,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: ListTile(
+                    leading: const Icon(Icons.palette),
+                    title: Text(AppLocalizations.of(context)!.settingsThemeSettings),
+                    subtitle: Text(_getThemeModeText(themeNotifier.themeMode)),
+                    onTap: () => _showThemePickerDialog(context, themeNotifier),
+                  ),
+                ),
+                AnimatedListItem(
+                  index: 3,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: SwitchListTile(
+                    secondary: const Icon(Icons.auto_awesome),
+                    title: const Text('自动主题切换'),
+                    subtitle: Text(backgroundImageNotifier.hasCustomBackground
+                        ? '根据背景图片亮度自动切换深色/浅色模式'
+                        : '需要先设置自定义背景图片'),
+                    value: backgroundImageNotifier.autoThemeSwitchEnabled,
+                    onChanged: backgroundImageNotifier.hasCustomBackground
+                        ? (value) => backgroundImageNotifier.toggleAutoThemeSwitch(value)
+                        : null,
+                  ),
+                ),
+                AnimatedListItem(
+                  index: 4,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: ListTile(
+                    leading: Icon(Icons.color_lens, color: themeColorNotifier.themeColor),
+                    title: Text(AppLocalizations.of(context)!.settingsThemeColor),
+                    subtitle: Text(themeColorNotifier.getColorName()),
+                    onTap: () => _showThemeColorPickerDialog(context, themeColorNotifier),
+                  ),
+                ),
+                AnimatedListItem(
+                  index: 5,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: ListTile(
+                    leading: const Icon(Icons.image_outlined),
+                    title: Text(AppLocalizations.of(context)!.settingsBackgroundImage),
+                    subtitle: Text(
+                      backgroundImageNotifier.hasCustomBackground 
+                        ? AppLocalizations.of(context)!.settingsBackgroundImageEnabled
+                        : AppLocalizations.of(context)!.settingsBackgroundImageDisabled
+                    ),
+                    onTap: () => _showBackgroundImageDialog(context, backgroundImageNotifier),
+                  ),
+                ),
+                AnimatedListItem(
+                  index: 5,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: ListTile(
+                    leading: const Icon(Icons.font_download),
+                    title: Text(AppLocalizations.of(context)!.fontSettingsTitle),
+                    subtitle: Text(fontNotifier.getFontDisplayName()),
+                    onTap: () => _showFontPickerDialog(context, fontNotifier),
+                  ),
                 ),
                 const Divider(),
                 
                 // 显示设置
-                _buildSectionHeader(AppLocalizations.of(context)!.settingsDisplaySettings),
-                Consumer<GridSettingsNotifier>(
-                  builder: (context, notifier, child) {
-                    return ListTile(
-                      leading: const Icon(Icons.grid_view),
-                      title: Text(l10n.gridColumns),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('${l10n.columns}: ${notifier.crossAxisCount}'),
-                          Slider(
-                            value: notifier.crossAxisCount.toDouble(),
-                            min: 2,
-                            max: 5,
-                            divisions: 3,
-                            label: notifier.crossAxisCount.toString(),
-                            onChanged: (value) => notifier.updateCrossAxisCount(value.toInt()),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                AnimatedListItem(
+                  index: 7,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: _buildSectionHeader(AppLocalizations.of(context)!.settingsDisplaySettings),
+                ),
+                AnimatedListItem(
+                  index: 7,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: Consumer<GridSettingsNotifier>(
+                    builder: (context, notifier, child) {
+                      return ListTile(
+                        leading: const Icon(Icons.grid_view),
+                        title: Text(l10n.gridColumns),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('${l10n.columns}: ${notifier.crossAxisCount}'),
+                            Slider(
+                              value: notifier.crossAxisCount.toDouble(),
+                              min: 2,
+                              max: 5,
+                              divisions: 3,
+                              label: notifier.crossAxisCount.toString(),
+                              onChanged: (value) => notifier.updateCrossAxisCount(value.toInt()),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                // Default View Mode Setting
+                AnimatedListItem(
+                  index: 8,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: Consumer<GridSettingsNotifier>(
+                    builder: (context, notifier, child) {
+                      return ListTile(
+                        leading: const Icon(Icons.view_module),
+                        title: Text(l10n.defaultViewMode),
+                        subtitle: Text(notifier.defaultViewMode == 'list' 
+                            ? l10n.listView 
+                            : l10n.gridView),
+                        onTap: () => _showViewModeDialog(context, notifier),
+                      );
+                    },
+                  ),
                 ),
                 // Dark Mode Image Processing Settings
-                ListTile(
-                  leading: const Icon(Icons.dark_mode),
-                  title: Text(l10n.darkModeImageProcessing),
-                  subtitle: Text(l10n.darkModeImageProcessingSubtitle),
-                  onTap: () => _showDarkModeSettingsDialog(context),
+                AnimatedListItem(
+                  index: 9,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: ListTile(
+                    leading: const Icon(Icons.dark_mode),
+                    title: Text(l10n.darkModeImageProcessing),
+                    subtitle: Text(l10n.darkModeImageProcessingSubtitle),
+                    onTap: () => _showDarkModeSettingsDialog(context),
+                  ),
                 ),
                 // PDF渲染后端设置
-                ListTile(
-                  leading: const Icon(Icons.picture_as_pdf),
-                  title: const Text('PDF渲染引擎'),
-                  subtitle: Text(PdfRenderBackendService.getBackendDisplayName(_pdfRenderBackend)),
-                  onTap: () => _showPdfBackendPickerDialog(context),
+                AnimatedListItem(
+                  index: 10,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: ListTile(
+                    leading: const Icon(Icons.picture_as_pdf),
+                    title: const Text('PDF渲染引擎'),
+                    subtitle: Text(PdfRenderBackendService.getBackendDisplayName(_pdfRenderBackend)),
+                    onTap: () => _showPdfBackendPickerDialog(context),
+                  ),
                 ),
                 const Divider(),
                 
                 // 任务设置
-                _buildSectionHeader(AppLocalizations.of(context)!.settingsJobSettings),
-                ListTile(
-                  leading: const Icon(Icons.work_history),
-                  title: Text(AppLocalizations.of(context)!.settingsJobHistory),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(AppLocalizations.of(context)!.settingsMaxJobHistoryRecords(_maxJobHistoryRecords.toString())),
-                      Slider(
-                        value: _maxJobHistoryRecords.toDouble(),
-                        min: 10,
-                        max: 500,
-                        divisions: 49,
-                        label: _maxJobHistoryRecords.toString(),
-                        onChanged: (value) => _updateMaxRecords(value.toInt()),
-                      ),
-                    ],
+                AnimatedListItem(
+                  index: 11,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: _buildSectionHeader(AppLocalizations.of(context)!.settingsJobSettings),
+                ),
+                AnimatedListItem(
+                  index: 12,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: ListTile(
+                    leading: const Icon(Icons.work_history),
+                    title: Text(AppLocalizations.of(context)!.settingsJobHistory),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(AppLocalizations.of(context)!.settingsMaxJobHistoryRecords(_maxJobHistoryRecords.toString())),
+                        Slider(
+                          value: _maxJobHistoryRecords.toDouble(),
+                          min: 10,
+                          max: 500,
+                          divisions: 49,
+                          label: _maxJobHistoryRecords.toString(),
+                          onChanged: (value) => _updateMaxRecords(value.toInt()),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.timer),
-                  title: Text(AppLocalizations.of(context)!.settingsPollingInterval),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(AppLocalizations.of(context)!.settingsPollingIntervalValue(_jobPollingInterval.toString())),
-                      Slider(
-                        value: _jobPollingInterval.toDouble(),
-                        min: 1,
-                        max: 60,
-                        divisions: 59,
-                        label: '$_jobPollingInterval${AppLocalizations.of(context)!.settingsPollingIntervalLabel}',
-                        onChanged: (value) => _updatePollingInterval(value.toInt()),
-                      ),
-                    ],
+                AnimatedListItem(
+                  index: 13,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: ListTile(
+                    leading: const Icon(Icons.timer),
+                    title: Text(AppLocalizations.of(context)!.settingsPollingInterval),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(AppLocalizations.of(context)!.settingsPollingIntervalValue(_jobPollingInterval.toString())),
+                        Slider(
+                          value: _jobPollingInterval.toDouble(),
+                          min: 1,
+                          max: 60,
+                          divisions: 59,
+                          label: '$_jobPollingInterval${AppLocalizations.of(context)!.settingsPollingIntervalLabel}',
+                          onChanged: (value) => _updatePollingInterval(value.toInt()),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const Divider(),
@@ -470,6 +600,7 @@ class _SettingsViewState extends State<SettingsView> {
                 _buildSectionHeader(AppLocalizations.of(context)!.settingsAbout),
                 _buildAboutSection(context),
               ],
+              ),
             ),
           ),
           // Loading overlay
@@ -529,6 +660,42 @@ class _SettingsViewState extends State<SettingsView> {
     );
   }
 
+  void _showViewModeDialog(BuildContext context, GridSettingsNotifier notifier) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.defaultViewMode),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text(AppLocalizations.of(context)!.listView),
+                subtitle: Text(AppLocalizations.of(context)!.defaultViewModeDescription),
+                leading: const Icon(Icons.view_list),
+                selected: notifier.defaultViewMode == 'list',
+                onTap: () {
+                  notifier.updateDefaultViewMode('list');
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: Text(AppLocalizations.of(context)!.gridView),
+                subtitle: Text(AppLocalizations.of(context)!.defaultViewModeDescription),
+                leading: const Icon(Icons.view_module),
+                selected: notifier.defaultViewMode == 'grid',
+                onTap: () {
+                  notifier.updateDefaultViewMode('grid');
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   void _showThemePickerDialog(BuildContext context, ThemeNotifier themeNotifier) {
     showDialog(
       context: context,
@@ -567,6 +734,278 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  void _showBackgroundImageDialog(BuildContext context, BackgroundImageNotifier backgroundImageNotifier) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.settingsBackgroundImage),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 预览当前背景
+                if (backgroundImageNotifier.backgroundImageBytes != null)
+                  Container(
+                    height: 200,
+                    width: double.maxFinite,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.memory(
+                        backgroundImageNotifier.backgroundImageBytes!,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                
+                Text(
+                  AppLocalizations.of(context)!.settingsBackgroundImageDescription,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 16),
+                
+                // 启用/禁用背景
+                if (backgroundImageNotifier.backgroundImageBytes != null)
+                  SwitchListTile(
+                    title: Text(AppLocalizations.of(context)!.settingsBackgroundImageEnable),
+                    value: backgroundImageNotifier.isCustomBackgroundEnabled,
+                    onChanged: (bool value) async {
+                      await backgroundImageNotifier.toggleBackgroundEnabled(value);
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
+                    },
+                  ),
+              ],
+            ),
+          ),
+          actions: [
+            if (backgroundImageNotifier.backgroundImageBytes != null)
+              TextButton.icon(
+                onPressed: () async {
+                  final confirmed = await showDialog<bool>(
+                    context: context,
+                    builder: (dialogContext) => AlertDialog(
+                      title: Text(AppLocalizations.of(context)!.settingsBackgroundImageRemove),
+                      content: Text(AppLocalizations.of(context)!.settingsBackgroundImageRemoveConfirm),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(dialogContext, false),
+                          child: Text(AppLocalizations.of(context)!.cancel),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(dialogContext, true),
+                          child: Text(AppLocalizations.of(context)!.delete),
+                        ),
+                      ],
+                    ),
+                  );
+                  
+                  if (confirmed == true) {
+                    await backgroundImageNotifier.removeBackgroundImage();
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
+                  }
+                },
+                icon: const Icon(Icons.delete_outline),
+                label: Text(AppLocalizations.of(context)!.settingsBackgroundImageRemove),
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+              ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(AppLocalizations.of(context)!.close),
+            ),
+            ElevatedButton.icon(
+              onPressed: () async {
+                Navigator.pop(context);
+                await _pickBackgroundImage(context, backgroundImageNotifier);
+              },
+              icon: const Icon(Icons.add_photo_alternate),
+              label: Text(AppLocalizations.of(context)!.settingsBackgroundImageSelect),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _pickBackgroundImage(BuildContext context, BackgroundImageNotifier backgroundImageNotifier) async {
+    try {
+      debugPrint('Starting image picker...');
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.image,
+        allowMultiple: false,
+        withData: true, // 确保在Android上加载数据
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        final file = result.files.first;
+        debugPrint('File picked: ${file.name}, size: ${file.size}');
+        
+        Uint8List? imageBytes;
+        
+        // Android上优先使用bytes，如果为null则从path读取
+        if (file.bytes != null) {
+          debugPrint('Using bytes from picker');
+          imageBytes = file.bytes;
+        } else if (file.path != null) {
+          debugPrint('Bytes is null, reading from path: ${file.path}');
+          final imageFile = File(file.path!);
+          if (await imageFile.exists()) {
+            imageBytes = await imageFile.readAsBytes();
+            debugPrint('Read ${imageBytes.length} bytes from path');
+          }
+        }
+        
+        if (imageBytes != null) {
+          debugPrint('Setting background image with ${imageBytes.length} bytes');
+          
+          // 显示加载提示
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    SizedBox(width: 16),
+                    Text('正在设置背景图片...'),
+                  ],
+                ),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
+          
+          final success = await backgroundImageNotifier.setBackgroundImage(imageBytes);
+          
+          if (context.mounted) {
+            if (success) {
+              debugPrint('Background image set successfully');
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.settingsBackgroundImageSet),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            } else {
+              debugPrint('Failed to set background image');
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('背景图片设置失败，请重试'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          }
+        } else {
+          debugPrint('Error: imageBytes is null');
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('无法读取图片数据，请重试'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      } else {
+        debugPrint('No file selected');
+      }
+    } catch (e, stackTrace) {
+      debugPrint('Error picking background image: $e');
+      debugPrint('Stack trace: $stackTrace');
+      
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.settingsBackgroundImageError(e.toString())),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  void _showThemeColorPickerDialog(BuildContext context, ThemeColorNotifier themeColorNotifier) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.settingsThemeColor),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+              ),
+              itemCount: ThemeColorNotifier.availableColors.length,
+              itemBuilder: (context, index) {
+                final colorOption = ThemeColorNotifier.availableColors[index];
+                final isSelected = themeColorNotifier.themeColor.value == colorOption.color.value;
+                
+                return InkWell(
+                  onTap: () {
+                    themeColorNotifier.setThemeColor(colorOption.color);
+                    Navigator.pop(context);
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: colorOption.color,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isSelected 
+                            ? Theme.of(context).colorScheme.outline 
+                            : Colors.transparent,
+                        width: 3,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.2),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: isSelected
+                        ? const Icon(
+                            Icons.check,
+                            color: Colors.white,
+                            size: 32,
+                          )
+                        : null,
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(AppLocalizations.of(context)!.close),
+            ),
+          ],
         );
       },
     );
@@ -1524,19 +1963,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''';
   Widget _buildAboutSection(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
     
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
-          width: 1,
-        ),
-      ),
-      child: Column(
+    final aboutContent = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // App Info
@@ -1635,7 +2064,32 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''';
             ],
           ),
         ],
+      );
+
+    // 如果有自定义背景，使用毛玻璃卡片
+    if (hasCustomBackground) {
+      return GlassmorphicCard(
+        blur: 12.0,
+        opacity: 0.18,
+        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        child: aboutContent,
+      );
+    }
+
+    // 没有自定义背景时，使用普通样式
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+          width: 1,
+        ),
       ),
+      child: aboutContent,
     );
   }
 

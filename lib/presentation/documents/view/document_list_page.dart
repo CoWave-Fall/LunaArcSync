@@ -9,6 +9,10 @@ import 'package:luna_arc_sync/presentation/documents/cubit/document_list_state.d
 import 'package:luna_arc_sync/presentation/documents/view/document_detail_page.dart';
 import 'package:luna_arc_sync/presentation/documents/widgets/document_list_item.dart';
 import 'package:luna_arc_sync/data/models/document_models.dart';
+import 'package:luna_arc_sync/core/animations/animated_list_item.dart';
+import 'package:luna_arc_sync/core/animations/animated_button.dart';
+import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
+import 'package:luna_arc_sync/core/theme/no_overscroll_behavior.dart';
 
 class DocumentListPage extends StatelessWidget {
   const DocumentListPage({super.key});
@@ -40,28 +44,13 @@ class _DocumentListViewState extends State<_DocumentListView> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    // 不再需要滚动监听，因为我们直接获取所有数据
   }
 
   @override
   void dispose() {
-    _scrollController
-      ..removeListener(_onScroll)
-      ..dispose();
+    _scrollController.dispose();
     super.dispose();
-  }
-
-  void _onScroll() {
-    if (_isBottom) {
-      context.read<DocumentListCubit>().fetchDocuments();
-    }
-  }
-
-  bool get _isBottom {
-    if (!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    return currentScroll >= (maxScroll * 0.9);
   }
 
   // --- START: Selection Mode Methods ---
@@ -268,7 +257,9 @@ class _DocumentListViewState extends State<_DocumentListView> {
 
   // --- START: AppBar Build Methods ---
   AppBar _buildNormalAppBar() {
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
     return AppBar(
+      backgroundColor: hasCustomBackground ? Colors.transparent : null,
       title: Text(AppLocalizations.of(context)!.myDocuments),
       actions: [
         IconButton(
@@ -304,7 +295,9 @@ class _DocumentListViewState extends State<_DocumentListView> {
   }
 
   AppBar _buildContextualAppBar() {
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
     return AppBar(
+      backgroundColor: hasCustomBackground ? Colors.transparent : null,
       leading: IconButton(
         icon: const Icon(Icons.close),
         onPressed: _disableSelectionMode,
@@ -323,6 +316,7 @@ class _DocumentListViewState extends State<_DocumentListView> {
 
   @override
   Widget build(BuildContext context) {
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
     return PopScope(
       canPop: !_isSelectionMode,
       onPopInvokedWithResult: (didPop, result) {
@@ -331,6 +325,7 @@ class _DocumentListViewState extends State<_DocumentListView> {
         }
       },
       child: Scaffold(
+        backgroundColor: hasCustomBackground ? Colors.transparent : null,
         appBar: _isSelectionMode ? _buildContextualAppBar() : _buildNormalAppBar(),
         body: BlocBuilder<DocumentListCubit, DocumentListState>(
           builder: (context, state) {
@@ -356,45 +351,49 @@ class _DocumentListViewState extends State<_DocumentListView> {
               return const Center(child: Text('No documents found.'));
             }
 
-            return RefreshIndicator(
-              onRefresh: () => context.read<DocumentListCubit>().fetchDocuments(isRefresh: true),
-              child: Selector<DocumentListCubit, ({List<Document> documents, bool isLoading, bool hasReachedMax})>(
-                selector: (context, cubit) => (
-                  documents: cubit.state.documents,
-                  isLoading: cubit.state.isLoading,
-                  hasReachedMax: cubit.state.hasReachedMax,
-                ),
-                builder: (context, data, child) {
+            return ScrollConfiguration(
+              behavior: hasCustomBackground 
+                  ? const GlassmorphicScrollBehavior() 
+                  : ScrollConfiguration.of(context).copyWith(),
+              child: RefreshIndicator(
+                onRefresh: () => context.read<DocumentListCubit>().fetchDocuments(isRefresh: true),
+                child: Selector<DocumentListCubit, List<Document>>(
+                selector: (context, cubit) => cubit.state.documents,
+                builder: (context, documents, child) {
                   return ListView.builder(
                     controller: _scrollController,
-                    itemCount: data.hasReachedMax ? data.documents.length : data.documents.length + 1,
+                    itemCount: documents.length,
                     itemBuilder: (context, index) {
-                      if (index >= data.documents.length) {
-                        return data.isLoading
-                            ? const Center(child: CircularProgressIndicator())
-                            : const SizedBox.shrink();
-                      }
-                      final document = data.documents[index];
+                      final document = documents[index];
                       final isSelected = _selectedDocumentIds.contains(document.documentId);
 
-                      return DocumentListItem(
-                        key: ValueKey(document.documentId), // 添加key以优化列表性能
-                        document: document,
-                        isSelected: isSelected,
-                        onTap: () => _handleItemTap(document.documentId),
-                        onLongPress: () => _enableSelectionMode(document.documentId),
+                      return AnimatedListItem(
+                        key: ValueKey(document.documentId),
+                        index: index,
+                        delay: const Duration(milliseconds: 30),
+                        duration: const Duration(milliseconds: 400),
+                        animationType: AnimationType.fadeSlideUp,
+                        child: DocumentListItem(
+                          key: ValueKey('item_${document.documentId}'), // 添加key以优化列表性能
+                          document: document,
+                          isSelected: isSelected,
+                          onTap: () => _handleItemTap(document.documentId),
+                          onLongPress: () => _enableSelectionMode(document.documentId),
+                        ),
                       );
                     },
                   );
                 },
+              ),
               ),
             );
           },
         ),
         floatingActionButton: _isSelectionMode
             ? null
-            : FloatingActionButton(
+            : AnimatedFAB(
                 onPressed: () => _showCreateDocumentDialog(context),
+                tooltip: AppLocalizations.of(context)?.createNewDocument ?? 'Create New Document',
                 child: const Icon(Icons.add),
               ),
       ),

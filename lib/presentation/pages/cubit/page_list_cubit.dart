@@ -8,21 +8,28 @@ import 'package:luna_arc_sync/presentation/pages/cubit/page_list_state.dart';
 @injectable
 class PageListCubit extends Cubit<PageListState> {
   final IPageRepository _pageRepository;
+  
+  // 添加请求管理，防止并发请求导致顺序错误
+  final Set<int> _loadingPages = {};
 
   PageListCubit(this._pageRepository) : super(const PageListState());
 
   Future<void> fetchPages() async {
     if (state.status == PageListStatus.loading) return;
 
+    // 重置分页状态
+    _loadingPages.clear();
+
     emit(state.copyWith(status: PageListStatus.loading));
 
     try {
-      final result = await _pageRepository.getPages(pageNumber: 1);
+      // 直接获取所有页面，不再使用分页
+      final allPages = await _pageRepository.getAllPages();
       emit(state.copyWith(
         status: PageListStatus.success,
-        pages: result.items,
+        pages: allPages,
         pageNumber: 1,
-        hasReachedMax: !result.hasNextPage,
+        hasReachedMax: true, // 已经获取了所有数据
         errorMessage: null,
       ));
     } catch (e) {
@@ -33,27 +40,6 @@ class PageListCubit extends Cubit<PageListState> {
     }
   }
 
-  Future<void> fetchNextPage() async {
-    if (state.hasReachedMax || state.status == PageListStatus.loadingMore) return;
-
-    emit(state.copyWith(status: PageListStatus.loadingMore));
-
-    try {
-      final nextPage = state.pageNumber + 1;
-      final result = await _pageRepository.getPages(pageNumber: nextPage);
-
-      emit(state.copyWith(
-        status: PageListStatus.success,
-        pages: List.of(state.pages)..addAll(result.items),
-        pageNumber: nextPage,
-        hasReachedMax: !result.hasNextPage,
-        errorMessage: null,
-      ));
-    } catch (e) {
-      emit(state.copyWith(
-          status: PageListStatus.success, errorMessage: e.toString()));
-    }
-  }
 
   Future<void> createPage({
     required String title,
@@ -76,6 +62,9 @@ class PageListCubit extends Cubit<PageListState> {
 
   Future<void> fetchUnassignedPages() async {
     if (state.status == PageListStatus.loading) return;
+
+    // 重置分页状态
+    _loadingPages.clear();
 
     emit(state.copyWith(status: PageListStatus.loading));
 

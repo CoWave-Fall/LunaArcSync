@@ -219,6 +219,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get columns => 'Columns';
 
   @override
+  String get defaultViewMode => 'Default View Mode';
+
+  @override
+  String get defaultViewModeDescription =>
+      'Choose how pages are displayed by default';
+
+  @override
+  String get listView => 'List View';
+
+  @override
+  String get gridView => 'Grid View';
+
+  @override
   String get darkModeImageProcessing => 'Dark Mode Image Processing';
 
   @override
@@ -336,6 +349,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorLoadingAbout => 'Failed to load about information';
+
+  @override
+  String get connectionErrorTitle => 'Server Connection Failed';
+
+  @override
+  String get authErrorTitle => 'Authentication Failed';
+
+  @override
+  String get backToLogin => 'Back to Login';
 
   @override
   String get retryButton => 'Retry';
@@ -579,6 +601,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsThemeSettings => 'Theme Settings';
 
   @override
+  String get settingsThemeColor => 'Theme Color';
+
+  @override
+  String get settingsThemeColorDescription => 'Choose app theme color';
+
+  @override
+  String get settingsBackgroundImage => 'Background Image';
+
+  @override
+  String get settingsBackgroundImageEnabled => 'Custom background enabled';
+
+  @override
+  String get settingsBackgroundImageDisabled => 'Using default background';
+
+  @override
+  String get settingsBackgroundImageDescription =>
+      'Set a custom background image. When enabled, sidebar and cards will show glassmorphic effects';
+
+  @override
+  String get settingsBackgroundImageEnable => 'Enable custom background';
+
+  @override
+  String get settingsBackgroundImageSelect => 'Select Image';
+
+  @override
+  String get settingsBackgroundImageRemove => 'Remove Background';
+
+  @override
+  String get settingsBackgroundImageRemoveConfirm =>
+      'Are you sure you want to remove the custom background image?';
+
+  @override
+  String get settingsBackgroundImageSet => 'Background image set successfully';
+
+  @override
+  String settingsBackgroundImageError(String error) {
+    return 'Error setting background image: $error';
+  }
+
+  @override
   String get settingsJobHistory => 'Job History';
 
   @override
@@ -703,6 +765,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loginButton => 'Login';
+
+  @override
+  String get loginSuccess => 'Login Successful!';
 
   @override
   String get loginRegisterPrompt => 'Don\'t have an account? Register';
@@ -929,4 +994,196 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noResultsFound => 'No results found.';
+
+  @override
+  String get accErr001 => 'User with this email already exists.';
+
+  @override
+  String get accErr002 => 'User creation failed.';
+
+  @override
+  String get accSuc001 => 'User created successfully!';
+
+  @override
+  String get accErr003 => 'Invalid email or password.';
+
+  @override
+  String get pagErr001 => 'File is required.';
+
+  @override
+  String get pagErr002 => 'Document not found or does not belong to you.';
+
+  @override
+  String pagErr003(String duplicatePageIds) {
+    return 'Duplicate PageIds found in the request: $duplicatePageIds';
+  }
+
+  @override
+  String pagErr004(String duplicateOrders) {
+    return 'Duplicate Order numbers found in the request: $duplicateOrders';
+  }
+
+  @override
+  String get pagErr005 =>
+      'Failed to update page orders. Ensure all pages belong to the specified document and user.';
+
+  @override
+  String pagErr006(String maxOrder) {
+    return 'NewOrder must be between 1 and $maxOrder.';
+  }
+
+  @override
+  String get pagErr007 => 'Failed to update page orders during insertion.';
+
+  @override
+  String get pagErr008 => 'No files provided.';
+
+  @override
+  String get pagErr009 => 'No image files provided.';
+
+  @override
+  String get pagErr010 => 'Upload a valid PDF file.';
+
+  @override
+  String get pagErr011 => 'Only PDF files are allowed.';
+
+  @override
+  String get pagErr012 => 'Document not found or has no pages.';
+
+  @override
+  String pagErr013(String pageId, String documentId) {
+    return 'Page with ID $pageId not found in document $documentId.';
+  }
+
+  @override
+  String get pagErr014 => 'Document not found.';
+
+  @override
+  String get docErr001 =>
+      'Failed to add page to document. It may not exist, may not belong to you, or may already be in another document.';
+
+  @override
+  String get docErr002 => 'No document IDs provided.';
+
+  @override
+  String jobErr001(String jobId) {
+    return 'No job found with ID: $jobId';
+  }
+
+  @override
+  String jobErr002(String versionId) {
+    return 'No version found with ID: $versionId';
+  }
+
+  @override
+  String jobErr003(String pageId) {
+    return 'No page found with ID: $pageId';
+  }
+
+  @override
+  String jobErr004(String versionId) {
+    return 'No version found with ID: $versionId';
+  }
+
+  @override
+  String jobErr005(String jobId) {
+    return 'No job found with ID: $jobId';
+  }
+
+  @override
+  String get jobSuc001 => 'OCR job has been queued.';
+
+  @override
+  String get jobSuc002 => 'Stitch job has been queued.';
+
+  @override
+  String get jobSuc003 => 'Job has been cancelled successfully.';
+
+  @override
+  String get imgErr001 => 'Page not found.';
+
+  @override
+  String get imgErr002 => 'Thumbnail not available.';
+
+  @override
+  String get imgErr003 => 'Thumbnail file not found in storage.';
+
+  @override
+  String get verErr001 => 'Page not found.';
+
+  @override
+  String get verErr002 => 'Page not found.';
+
+  @override
+  String get srcErr001 => 'Search query cannot be empty.';
+
+  @override
+  String get datErr001 => 'Target user ID must be provided.';
+
+  @override
+  String get datErr002 => 'No file uploaded.';
+
+  @override
+  String get datErr003 => 'No file uploaded.';
+
+  @override
+  String get datSuc001 => 'Data imported successfully.';
+
+  @override
+  String get datSuc002 => 'Your data imported successfully.';
+
+  @override
+  String get appInfo001 => 'Initializing';
+
+  @override
+  String get pdfErr001 =>
+      'Failed to read the PDF file to get page count. It may be corrupted or invalid.';
+
+  @override
+  String get pdfErr002 =>
+      'Failed to read or process the PDF file. It may be corrupted or in an unsupported format.';
+
+  @override
+  String get pdfErr003 =>
+      'Failed to extract text from PDF file. It may be corrupted or in an unsupported format.';
+
+  @override
+  String pdfErr004(String pageNumber) {
+    return 'Failed to extract text from page $pageNumber of PDF file. It may be corrupted or in an unsupported format.';
+  }
+
+  @override
+  String get ocrErr001 => 'Version not found.';
+
+  @override
+  String get ocrErr002 => 'Version is missing file metadata.';
+
+  @override
+  String get ocrErr003 => 'File not found.';
+
+  @override
+  String get ocrErr004 => 'Could not get image data from version file.';
+
+  @override
+  String get stiErr001 =>
+      'At least two source images are required for stitching.';
+
+  @override
+  String get stiErr002 => 'One or more source versions could not be found.';
+
+  @override
+  String stiErr003(String status) {
+    return 'Could not stitch images. Status: $status';
+  }
+
+  @override
+  String stiErr004(String pageId, String userId) {
+    return 'Page with ID $pageId not found for user $userId.';
+  }
+
+  @override
+  String get impErr001 => 'User ID must be provided for non-admin export.';
+
+  @override
+  String get impErr002 => 'data.json not found in the import archive.';
 }

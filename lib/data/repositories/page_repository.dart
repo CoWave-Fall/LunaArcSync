@@ -13,6 +13,9 @@ abstract class IPageRepository {
     int pageSize = 10,
   });
 
+  // 返回所有页面，不分页
+  Future<List<page_models.Page>> getAllPages();
+
   Future<page_models.Page> createPage({
     required String title,
     required Uint8List fileBytes,
@@ -72,6 +75,36 @@ class PageRepository implements IPageRepository {
     } on DioException catch (e) {
       throw Exception('Failed to load pages: ${e.message}');
     }
+  }
+
+  @override
+  Future<List<page_models.Page>> getAllPages() async {
+    final List<page_models.Page> allPages = [];
+    int pageNumber = 1;
+    bool hasNextPage = true;
+    const int pageSize = 10;
+
+    while (hasNextPage) {
+      try {
+        final response = await _apiClient.dio.get(
+          '/api/pages',
+          queryParameters: { 'pageNumber': pageNumber, 'pageSize': pageSize },
+        );
+        
+        final result = page_models.PaginatedResult.fromJson(
+          response.data,
+          (json) => page_models.Page.fromJson(json as Map<String, dynamic>),
+        );
+        
+        allPages.addAll(result.items);
+        hasNextPage = result.hasNextPage;
+        pageNumber++;
+      } on DioException catch (e) {
+        throw Exception('Failed to load pages: ${e.message}');
+      }
+    }
+
+    return allPages;
   }
 
   @override

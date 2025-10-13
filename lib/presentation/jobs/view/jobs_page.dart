@@ -10,6 +10,11 @@ import 'package:luna_arc_sync/presentation/jobs/cubit/jobs_state.dart';
 import 'package:luna_arc_sync/l10n/app_localizations.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:dio/dio.dart';
+import 'package:luna_arc_sync/core/animations/animated_list_item.dart';
+import 'package:provider/provider.dart';
+import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
+import 'package:luna_arc_sync/presentation/widgets/glassmorphic_container.dart';
+import 'package:luna_arc_sync/core/theme/no_overscroll_behavior.dart';
 
 class JobsPage extends StatefulWidget {
   const JobsPage({super.key});
@@ -202,13 +207,16 @@ class _JobsPageState extends State<JobsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
     // 启动轮询
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<JobsCubit>().startPolling();
     });
     
     return Scaffold(
+        backgroundColor: hasCustomBackground ? Colors.transparent : null,
         appBar: AppBar(
+          backgroundColor: hasCustomBackground ? Colors.transparent : null,
           title: Text(AppLocalizations.of(context)!.jobsPageTitle),
           actions: [
             IconButton(
@@ -268,25 +276,36 @@ class _JobsPageState extends State<JobsPage> {
                       onLoadHistory: () => context.read<JobsCubit>().loadLocalJobs(),
                   );
                 }
-                return RefreshIndicator(
-                    onRefresh: () async {
-                      _lastScrollPosition = _scrollController.hasClients 
-                          ? _scrollController.offset 
-                          : 0.0;
-                      await context.read<JobsCubit>().fetchJobs(forceUpdate: true);
-                    },
-                  child: ListView.builder(
+                return ScrollConfiguration(
+                  behavior: hasCustomBackground 
+                      ? const GlassmorphicScrollBehavior() 
+                      : ScrollConfiguration.of(context).copyWith(),
+                  child: RefreshIndicator(
+                      onRefresh: () async {
+                        _lastScrollPosition = _scrollController.hasClients 
+                            ? _scrollController.offset 
+                            : 0.0;
+                        await context.read<JobsCubit>().fetchJobs(forceUpdate: true);
+                      },
+                    child: ListView.builder(
                       controller: _scrollController,
                       padding: const EdgeInsets.all(16),
                     itemCount: jobs.length,
                     itemBuilder: (context, index) {
                       final job = jobs[index];
-                        return _JobCard(
-                          job: job,
-                          onDelete: (jobId) => _showDeleteDialog(context, jobId),
-                          onDownload: (job) => _downloadResult(context, job),
+                        return AnimatedListItem(
+                          index: index,
+                          delay: const Duration(milliseconds: 40),
+                          duration: const Duration(milliseconds: 400),
+                          animationType: AnimationType.fadeSlideUp,
+                          child: _JobCard(
+                            job: job,
+                            onDelete: (jobId) => _showDeleteDialog(context, jobId),
+                            onDownload: (job) => _downloadResult(context, job),
+                          ),
                         );
                       },
+                    ),
                     ),
                   );
                 },
@@ -313,12 +332,9 @@ class _JobCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final status = job.status.toJobStatusEnum();
     final isProcessing = status == JobStatusEnum.Processing || status == JobStatusEnum.Running;
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
     
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+    final cardContent = Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -439,7 +455,25 @@ class _JobCard extends StatelessWidget {
               ),
             ],
           ],
-        ),
+        );
+
+    // 如果有自定义背景，使用毛玻璃卡片
+    if (hasCustomBackground) {
+      return GlassmorphicCard(
+        blur: 10.0,
+        opacity: 0.2,
+        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.only(bottom: 12),
+        child: cardContent,
+      );
+    }
+
+    // 没有自定义背景时，使用普通卡片
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: cardContent,
       ),
     );
   }

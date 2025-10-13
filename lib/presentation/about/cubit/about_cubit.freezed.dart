@@ -12,11 +12,17 @@ part of 'about_cubit.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$AboutState {
+mixin _$AboutState implements DiagnosticableTreeMixin {
 
 
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'AboutState'))
+    ;
+}
 
 @override
 bool operator ==(Object other) {
@@ -28,7 +34,7 @@ bool operator ==(Object other) {
 int get hashCode => runtimeType.hashCode;
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'AboutState()';
 }
 
@@ -87,10 +93,7 @@ case _Initial():
 return initial(_that);case _Loading():
 return loading(_that);case _Loaded():
 return loaded(_that);case _Error():
-return error(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return error(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -128,13 +131,13 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( AboutResponse about)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( AboutResponse about)?  loaded,TResult Function( String message,  bool isConnectionError,  bool isAuthError)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
 return loaded(_that.about);case _Error() when error != null:
-return error(_that.message);case _:
+return error(_that.message,_that.isConnectionError,_that.isAuthError);case _:
   return orElse();
 
 }
@@ -152,16 +155,13 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( AboutResponse about)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( AboutResponse about)  loaded,required TResult Function( String message,  bool isConnectionError,  bool isAuthError)  error,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Loading():
 return loading();case _Loaded():
 return loaded(_that.about);case _Error():
-return error(_that.message);case _:
-  throw StateError('Unexpected subclass');
-
-}
+return error(_that.message,_that.isConnectionError,_that.isAuthError);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -175,13 +175,13 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( AboutResponse about)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( AboutResponse about)?  loaded,TResult? Function( String message,  bool isConnectionError,  bool isAuthError)?  error,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Loading() when loading != null:
 return loading();case _Loaded() when loaded != null:
 return loaded(_that.about);case _Error() when error != null:
-return error(_that.message);case _:
+return error(_that.message,_that.isConnectionError,_that.isAuthError);case _:
   return null;
 
 }
@@ -192,7 +192,7 @@ return error(_that.message);case _:
 /// @nodoc
 
 
-class _Initial implements AboutState {
+class _Initial with DiagnosticableTreeMixin implements AboutState {
   const _Initial();
   
 
@@ -200,6 +200,12 @@ class _Initial implements AboutState {
 
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'AboutState.initial'))
+    ;
+}
 
 @override
 bool operator ==(Object other) {
@@ -211,7 +217,7 @@ bool operator ==(Object other) {
 int get hashCode => runtimeType.hashCode;
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'AboutState.initial()';
 }
 
@@ -224,7 +230,7 @@ String toString() {
 /// @nodoc
 
 
-class _Loading implements AboutState {
+class _Loading with DiagnosticableTreeMixin implements AboutState {
   const _Loading();
   
 
@@ -232,6 +238,12 @@ class _Loading implements AboutState {
 
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'AboutState.loading'))
+    ;
+}
 
 @override
 bool operator ==(Object other) {
@@ -243,7 +255,7 @@ bool operator ==(Object other) {
 int get hashCode => runtimeType.hashCode;
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'AboutState.loading()';
 }
 
@@ -256,7 +268,7 @@ String toString() {
 /// @nodoc
 
 
-class _Loaded implements AboutState {
+class _Loaded with DiagnosticableTreeMixin implements AboutState {
   const _Loaded(this.about);
   
 
@@ -269,6 +281,12 @@ class _Loaded implements AboutState {
 _$LoadedCopyWith<_Loaded> get copyWith => __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'AboutState.loaded'))
+    ..add(DiagnosticsProperty('about', about));
+}
 
 @override
 bool operator ==(Object other) {
@@ -280,7 +298,7 @@ bool operator ==(Object other) {
 int get hashCode => Object.hash(runtimeType,about);
 
 @override
-String toString() {
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
   return 'AboutState.loaded(about: $about)';
 }
 
@@ -331,11 +349,13 @@ $AboutResponseCopyWith<$Res> get about {
 /// @nodoc
 
 
-class _Error implements AboutState {
-  const _Error(this.message);
+class _Error with DiagnosticableTreeMixin implements AboutState {
+  const _Error({required this.message, this.isConnectionError = false, this.isAuthError = false});
   
 
  final  String message;
+@JsonKey() final  bool isConnectionError;
+@JsonKey() final  bool isAuthError;
 
 /// Create a copy of AboutState
 /// with the given fields replaced by the non-null parameter values.
@@ -344,19 +364,25 @@ class _Error implements AboutState {
 _$ErrorCopyWith<_Error> get copyWith => __$ErrorCopyWithImpl<_Error>(this, _$identity);
 
 
+@override
+void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+  properties
+    ..add(DiagnosticsProperty('type', 'AboutState.error'))
+    ..add(DiagnosticsProperty('message', message))..add(DiagnosticsProperty('isConnectionError', isConnectionError))..add(DiagnosticsProperty('isAuthError', isAuthError));
+}
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Error&&(identical(other.message, message) || other.message == message)&&(identical(other.isConnectionError, isConnectionError) || other.isConnectionError == isConnectionError)&&(identical(other.isAuthError, isAuthError) || other.isAuthError == isAuthError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,message);
+int get hashCode => Object.hash(runtimeType,message,isConnectionError,isAuthError);
 
 @override
-String toString() {
-  return 'AboutState.error(message: $message)';
+String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
+  return 'AboutState.error(message: $message, isConnectionError: $isConnectionError, isAuthError: $isAuthError)';
 }
 
 
@@ -367,7 +393,7 @@ abstract mixin class _$ErrorCopyWith<$Res> implements $AboutStateCopyWith<$Res> 
   factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) = __$ErrorCopyWithImpl;
 @useResult
 $Res call({
- String message
+ String message, bool isConnectionError, bool isAuthError
 });
 
 
@@ -384,10 +410,12 @@ class __$ErrorCopyWithImpl<$Res>
 
 /// Create a copy of AboutState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? message = null,Object? isConnectionError = null,Object? isAuthError = null,}) {
   return _then(_Error(
-null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,
+message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,isConnectionError: null == isConnectionError ? _self.isConnectionError : isConnectionError // ignore: cast_nullable_to_non_nullable
+as bool,isAuthError: null == isAuthError ? _self.isAuthError : isAuthError // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

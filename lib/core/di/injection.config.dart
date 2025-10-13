@@ -14,12 +14,18 @@ import 'package:injectable/injectable.dart' as _i526;
 import 'package:luna_arc_sync/core/api/api_client.dart' as _i423;
 import 'package:luna_arc_sync/core/api/auth_interceptor.dart' as _i119;
 import 'package:luna_arc_sync/core/di/register_module.dart' as _i742;
+import 'package:luna_arc_sync/core/services/auto_login_service.dart' as _i728;
+import 'package:luna_arc_sync/core/services/server_status_service.dart'
+    as _i1067;
 import 'package:luna_arc_sync/core/storage/image_cache_service.dart' as _i347;
 import 'package:luna_arc_sync/core/storage/job_history_service.dart' as _i541;
 import 'package:luna_arc_sync/core/storage/secure_storage_service.dart'
     as _i972;
 import 'package:luna_arc_sync/core/storage/server_cache_service.dart' as _i142;
+import 'package:luna_arc_sync/core/theme/background_image_notifier.dart'
+    as _i562;
 import 'package:luna_arc_sync/core/theme/font_notifier.dart' as _i402;
+import 'package:luna_arc_sync/core/theme/theme_color_notifier.dart' as _i73;
 import 'package:luna_arc_sync/data/repositories/about_repository.dart'
     as _i1061;
 import 'package:luna_arc_sync/data/repositories/auth_repository.dart' as _i125;
@@ -40,6 +46,8 @@ import 'package:luna_arc_sync/presentation/documents/cubit/document_detail_cubit
 import 'package:luna_arc_sync/presentation/documents/cubit/document_list_cubit.dart'
     as _i921;
 import 'package:luna_arc_sync/presentation/jobs/cubit/jobs_cubit.dart' as _i685;
+import 'package:luna_arc_sync/presentation/overview/cubit/overview_cubit.dart'
+    as _i287;
 import 'package:luna_arc_sync/presentation/pages/cubit/page_detail_cubit.dart'
     as _i464;
 import 'package:luna_arc_sync/presentation/pages/cubit/page_list_cubit.dart'
@@ -52,6 +60,8 @@ import 'package:luna_arc_sync/presentation/settings/cubit/data_transfer_cubit.da
     as _i199;
 import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_notifier.dart'
     as _i22;
+import 'package:luna_arc_sync/presentation/settings/notifiers/precaching_settings_notifier.dart'
+    as _i751;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -61,14 +71,25 @@ extension GetItInjectableX on _i174.GetIt {
   }) async {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule();
+    gh.factory<_i562.BackgroundImageNotifier>(
+      () => _i562.BackgroundImageNotifier(),
+    );
     gh.factory<_i402.FontNotifier>(() => _i402.FontNotifier());
+    gh.factory<_i73.ThemeColorNotifier>(() => _i73.ThemeColorNotifier());
     await gh.singletonAsync<_i22.GridSettingsNotifier>(
       () => registerModule.gridSettingsNotifier(),
+      preResolve: true,
+    );
+    await gh.singletonAsync<_i751.PrecachingSettingsNotifier>(
+      () => registerModule.precachingSettingsNotifier(),
       preResolve: true,
     );
     await gh.lazySingletonAsync<_i347.ImageCacheService>(
       () => registerModule.imageCacheService(),
       preResolve: true,
+    );
+    gh.lazySingleton<_i1067.ServerStatusService>(
+      () => _i1067.ServerStatusService(),
     );
     gh.lazySingleton<_i541.JobHistoryService>(() => _i541.JobHistoryService());
     gh.lazySingleton<_i972.SecureStorageService>(
@@ -98,12 +119,6 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.lazySingleton<_i431.IPageRepository>(
       () => _i431.PageRepository(gh<_i423.ApiClient>()),
-    );
-    gh.lazySingleton<_i887.AuthCubit>(
-      () => _i887.AuthCubit(
-        gh<_i125.IAuthRepository>(),
-        gh<_i972.SecureStorageService>(),
-      ),
     );
     gh.lazySingleton<_i757.IJobRepository>(
       () => _i757.JobRepository(gh<_i423.ApiClient>()),
@@ -141,6 +156,12 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i757.IJobRepository>(),
       ),
     );
+    gh.lazySingleton<_i728.AutoLoginService>(
+      () => _i728.AutoLoginService(
+        gh<_i972.SecureStorageService>(),
+        gh<_i125.IAuthRepository>(),
+      ),
+    );
     gh.factory<_i576.PageListCubit>(
       () => _i576.PageListCubit(gh<_i431.IPageRepository>()),
     );
@@ -152,6 +173,18 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i757.IJobRepository>(),
         gh<_i541.JobHistoryService>(),
         gh<_i972.SecureStorageService>(),
+      ),
+    );
+    gh.factory<_i287.OverviewCubit>(
+      () => _i287.OverviewCubit(
+        gh<_i655.IUserRepository>(),
+        gh<_i393.IDocumentRepository>(),
+      ),
+    );
+    gh.lazySingleton<_i887.AuthCubit>(
+      () => _i887.AuthCubit(
+        gh<_i125.IAuthRepository>(),
+        gh<_i728.AutoLoginService>(),
       ),
     );
     gh.factory<_i630.AboutCubit>(

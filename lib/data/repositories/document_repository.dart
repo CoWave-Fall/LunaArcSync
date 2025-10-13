@@ -11,6 +11,10 @@ abstract class IDocumentRepository {
     String? sortBy,
     List<String>? tags,
   });
+  Future<List<Document>> getAllDocuments({
+    String? sortBy,
+    List<String>? tags,
+  });
   Future<DocumentDetail> getDocumentById(String documentId);
   Future<page_models.PaginatedResult<page_models.Page>> getPagesForDocument(String documentId, {required int page, required int limit});
   Future<Document> createDocument(String title);
@@ -62,6 +66,40 @@ class DocumentRepository implements IDocumentRepository {
     );
     return PagedResult.fromJson(
         response.data, (json) => Document.fromJson(json as Map<String, dynamic>));
+  }
+
+  @override
+  Future<List<Document>> getAllDocuments({
+    String? sortBy,
+    List<String>? tags,
+  }) async {
+    final List<Document> allDocuments = [];
+    int pageNumber = 1;
+    bool hasNextPage = true;
+
+    while (hasNextPage) {
+      final queryParams = <String, dynamic>{'pageNumber': pageNumber};
+      if (sortBy != null) {
+        queryParams['sortBy'] = sortBy;
+      }
+      if (tags != null && tags.isNotEmpty) {
+        queryParams['tags'] = tags.join(',');
+      }
+      
+      final response = await _apiClient.dio.get(
+        '/api/documents',
+        queryParameters: queryParams,
+      );
+      
+      final result = PagedResult.fromJson(
+          response.data, (json) => Document.fromJson(json as Map<String, dynamic>));
+      
+      allDocuments.addAll(result.items);
+      hasNextPage = result.hasNextPage == true;
+      pageNumber++;
+    }
+
+    return allDocuments;
   }
 
   @override

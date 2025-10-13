@@ -95,8 +95,9 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<void> logout() async {
-    // Clear token and expiration from secure storage
+    // Clear token, userId and expiration from secure storage
     await _storageService.deleteToken();
+    await _storageService.deleteUserId();
     await _storageService.deleteExpiration();
     // Here you might also call a backend logout endpoint if it exists
   }

@@ -4,6 +4,7 @@ import 'package:luna_arc_sync/core/api/api_client.dart';
 import 'package:luna_arc_sync/core/di/injection.dart';
 import 'package:luna_arc_sync/core/storage/secure_storage_service.dart';
 import 'package:luna_arc_sync/core/storage/server_cache_service.dart';
+import 'package:luna_arc_sync/core/services/server_status_service.dart';
 import 'package:luna_arc_sync/data/models/about_models.dart';
 import 'package:luna_arc_sync/l10n/app_localizations.dart';
 import 'package:luna_arc_sync/presentation/auth/cubit/auth_cubit.dart';
@@ -11,6 +12,10 @@ import 'package:luna_arc_sync/presentation/auth/cubit/auth_state.dart';
 import 'package:luna_arc_sync/presentation/auth/view/register_Page.dart';
 import 'package:luna_arc_sync/presentation/auth/widgets/server_card.dart';
 import 'package:luna_arc_sync/presentation/widgets/custom_animated_logo_banner.dart';
+import 'package:luna_arc_sync/core/animations/animated_page_content.dart';
+import 'package:luna_arc_sync/core/animations/animated_list_item.dart';
+import 'package:luna_arc_sync/core/animations/animated_button.dart';
+import 'package:luna_arc_sync/core/animations/expandable_card.dart';
 
 class LoginPage extends StatefulWidget {
   final String? initialServerUrl;
@@ -32,11 +37,18 @@ class _LoginPageState extends State<LoginPage> {
   
   // 缓存的服务器列表
   List<CachedServerInfo> _cachedServers = [];
+  
+  // 服务器状态映射 (serverId -> ServerStatus)
+  Map<String, ServerStatus> _serverStatuses = {};
+  
+  // 登录成功状态
+  bool _showLoginSuccess = false;
 
   // Get instances from GetIt
   final _storageService = getIt<SecureStorageService>();
   final _apiClient = getIt<ApiClient>();
   final _serverCacheService = getIt<ServerCacheService>();
+  final _serverStatusService = getIt<ServerStatusService>();
 
   @override
   void initState() {
@@ -67,10 +79,48 @@ class _LoginPageState extends State<LoginPage> {
         _cachedServers = servers;
         // 当没有缓存服务器时默认展开卡片
         _isExpanded = servers.isEmpty;
+        // 初始化所有服务器状态为检查中
+        _serverStatuses = {
+          for (var server in servers)
+            _getServerId(server): ServerStatus.checking,
+        };
       });
+      
+      // 异步检查服务器状态
+      if (servers.isNotEmpty) {
+        _checkServersStatus(servers);
+      }
     } catch (e) {
       debugPrint('🔍 加载缓存服务器失败: $e');
     }
+  }
+  
+  // 检查服务器状态
+  Future<void> _checkServersStatus(List<CachedServerInfo> servers) async {
+    try {
+      debugPrint('🔍 开始检查 ${servers.length} 个服务器的状态');
+      final statusMap = await _serverStatusService.checkMultipleServers(servers);
+      
+      if (mounted) {
+        setState(() {
+          _serverStatuses = {
+            for (var entry in statusMap.entries)
+              entry.key: entry.value.status,
+          };
+        });
+      }
+      
+      debugPrint('🔍 服务器状态检查完成');
+    } catch (e) {
+      debugPrint('🔍 检查服务器状态失败: $e');
+    }
+  }
+  
+  // 获取服务器ID
+  String _getServerId(CachedServerInfo serverInfo) {
+    return serverInfo.serverUrl != null
+        ? ServerCacheService.getServerId(serverInfo.about, serverInfo.serverUrl!)
+        : (serverInfo.about.serverId ?? serverInfo.about.serverName.hashCode.toString());
   }
 
   Future<void> _selectServer(CachedServerInfo serverInfo) async {
@@ -90,42 +140,19 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _handleAutoLogin(String serverUrl) async {
     try {
-      // 1. 构建完整的服务器 URL
-      debugPrint('🔍 自动登录 - 服务器URL: $serverUrl');
+      debugPrint('🔍 选择服务器 - 准备自动登录: $serverUrl');
 
-      // 2. Save the server URL
+      // 1. 保存并设置服务器 URL
       await _storageService.saveServerUrl(serverUrl);
-
-      // 3. Update the ApiClient's base URL in real-time
       _apiClient.setBaseUrl(serverUrl);
 
-      // 4. 获取存储的凭据
-      final email = await _storageService.getEmail();
-      final password = await _storageService.getPassword();
-
-      debugPrint('🔍 自动登录 - 获取到的凭据: email=${email != null ? "有" : "无"}, password=${password != null ? "有" : "无"}');
-
-      if (email == null || password == null) {
-        debugPrint('🔍 自动登录失败 - 没有存储的凭据');
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(AppLocalizations.of(context)!.loginManualLoginRequired),
-              backgroundColor: Colors.orange,
-            ),
-          );
-        }
-        return;
-      }
-
-      // 5. 获取服务器信息并缓存
+      // 2. 获取服务器信息并缓存
       try {
         final aboutResponse = await _apiClient.dio.get('/api/about');
         final about = AboutResponse.fromJson(aboutResponse.data);
         
-        // 缓存服务器信息，包含服务器URL
-        final serverId = about.serverId ?? about.serverName.hashCode.toString();
-        await _serverCacheService.cacheServerInfo(serverId, about, serverUrl: serverUrl);
+        // 使用服务器返回的 serverId（如果有）或基于 URL 生成
+        await _serverCacheService.cacheServerInfo(about, serverUrl: serverUrl);
         
         // 重新加载服务器列表
         await _loadCachedServers();
@@ -133,15 +160,29 @@ class _LoginPageState extends State<LoginPage> {
         debugPrint('🔍 获取服务器信息失败: $e');
       }
 
-      // 6. 自动填充表单
-      setState(() {
-        _emailController.text = email;
-        _passwordController.text = password;
-      });
+      // 3. 检查是否有存储的凭据
+      final hasCredentials = await context.read<AuthCubit>().hasStoredCredentials();
+      
+      if (!hasCredentials) {
+        debugPrint('🔍 没有存储的凭据 - 需要手动登录');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.loginManualLoginRequired),
+              backgroundColor: Colors.orange,
+            ),
+          );
+          // 展开登录表单
+          setState(() {
+            _isExpanded = true;
+          });
+        }
+        return;
+      }
 
-      // 7. Trigger the login process
+      // 4. 使用 AuthCubit 的自动登录功能
       if (mounted) {
-        context.read<AuthCubit>().login(email, password);
+        await context.read<AuthCubit>().attemptAutoLogin();
       }
     } catch (e) {
       debugPrint('🔍 自动登录失败: $e');
@@ -152,12 +193,19 @@ class _LoginPageState extends State<LoginPage> {
             backgroundColor: Colors.red,
           ),
         );
+        // 展开登录表单让用户手动登录
+        setState(() {
+          _isExpanded = true;
+        });
       }
     }
   }
 
   Future<void> _deleteServer(CachedServerInfo serverInfo) async {
-    final serverId = serverInfo.about.serverId ?? serverInfo.about.serverName.hashCode.toString();
+    // 使用服务器信息生成 serverId
+    final serverId = serverInfo.serverUrl != null
+        ? ServerCacheService.getServerId(serverInfo.about, serverInfo.serverUrl!)
+        : (serverInfo.about.serverId ?? serverInfo.about.serverName.hashCode.toString());
     
     // 显示确认对话框
     final confirmed = await showDialog<bool>(
@@ -245,23 +293,20 @@ class _LoginPageState extends State<LoginPage> {
 
       // 1. 构建完整的服务器 URL
       final serverUrl = _buildFullUrl(ipPort);
-      debugPrint('🔍 登录调试 - 用户输入: $ipPort');
-      debugPrint('🔍 登录调试 - 构建的完整URL: $serverUrl');
+      debugPrint('🔍 登录 - 用户输入: $ipPort');
+      debugPrint('🔍 登录 - 构建的完整URL: $serverUrl');
 
-      // 2. Save the server URL
+      // 2. 保存并设置服务器 URL
       await _storageService.saveServerUrl(serverUrl);
-
-      // 3. Update the ApiClient's base URL in real-time
       _apiClient.setBaseUrl(serverUrl);
 
-      // 4. 获取服务器信息并缓存
+      // 3. 获取服务器信息并缓存
       try {
         final aboutResponse = await _apiClient.dio.get('/api/about');
         final about = AboutResponse.fromJson(aboutResponse.data);
         
-        // 缓存服务器信息，包含服务器URL
-        final serverId = about.serverId ?? about.serverName.hashCode.toString();
-        await _serverCacheService.cacheServerInfo(serverId, about, serverUrl: serverUrl);
+        // 使用服务器返回的 serverId（如果有）或基于 URL 生成
+        await _serverCacheService.cacheServerInfo(about, serverUrl: serverUrl);
         
         // 重新加载服务器列表
         await _loadCachedServers();
@@ -269,13 +314,13 @@ class _LoginPageState extends State<LoginPage> {
         debugPrint('🔍 获取服务器信息失败: $e');
       }
 
-      // 5. 保存登录凭据
-      await _storageService.saveEmail(email);
-      await _storageService.savePassword(password);
-
-      // 6. Trigger the login process
+      // 4. 使用 AuthCubit 登录（会自动保存凭据）
       if (mounted) {
-        context.read<AuthCubit>().login(email, password);
+        context.read<AuthCubit>().login(
+          email,
+          password,
+          saveCredentials: true, // 保存凭据以支持自动登录
+        );
       }
     }
   }
@@ -283,22 +328,40 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<AuthCubit, AuthState>(
-        listener: (context, state) {
-          state.whenOrNull(
-            unauthenticated: (isLoading, error) {
-              if (error != null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(error),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
+      body: Stack(
+        children: [
+          BlocListener<AuthCubit, AuthState>(
+            listener: (context, state) {
+              state.whenOrNull(
+                authenticated: (userId) {
+                  // 显示登录成功动画
+                  setState(() {
+                    _showLoginSuccess = true;
+                  });
+                },
+                unauthenticated: (isLoading, error) {
+                  if (error != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(error),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                },
+              );
             },
-          );
-        },
-        child: _buildLoginForm(),
+            child: _buildLoginForm(),
+          ),
+          // 登录成功过渡动画
+          LoginSuccessTransition(
+            show: _showLoginSuccess,
+            message: AppLocalizations.of(context)!.loginSuccess,
+            onComplete: () {
+              // 动画完成后导航会自动触发（通过AuthCubit的状态改变）
+            },
+          ),
+        ],
       ),
     );
   }
@@ -309,98 +372,77 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.all(24.0),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 500),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: StaggeredAnimatedColumn(
+            staggerDelay: const Duration(milliseconds: 80),
+            itemDuration: const Duration(milliseconds: 600),
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // 自定义动画Logo横幅 - 无背景logo + 蓝色分割符 + 泠月案阁文字
               const CustomAnimatedLogoBanner(
                 height: 120,
-                animationDuration: Duration(milliseconds: 1200),
-                delayBetweenSteps: Duration(milliseconds: 400),
+                animationDuration: Duration(milliseconds: 400),
+                delayBetweenSteps: Duration(milliseconds: 200),
               ),
               const SizedBox(height: 40),
               
               // 缓存的服务器列表
-              if (_cachedServers.isNotEmpty) ...[
-                Text(
-                  AppLocalizations.of(context)!.loginSelectServer,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                ...(_cachedServers.map((server) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: ServerCard(
-                    serverInfo: server,
-                    onTap: () => _selectServer(server),
-                    onLongPress: () => _deleteServer(server),
-                  ),
-                ))),
-                const SizedBox(height: 24),
-              ],
-              
-              // 可折叠的登录信息卡片
-              Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
+              if (_cachedServers.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // 卡片头部 - 可点击展开/收起
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          _isExpanded = !_isExpanded;
-                        });
-                      },
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                          color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.settings,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              AppLocalizations.of(context)!.loginAddServer,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const Spacer(),
-                            AnimatedRotation(
-                              turns: _isExpanded ? 0.5 : 0,
-                              duration: const Duration(milliseconds: 200),
-                              child: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                          ],
-                        ),
+                    Text(
+                      AppLocalizations.of(context)!.loginSelectServer,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    
-                    // 可折叠的内容区域
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      height: _isExpanded ? null : 0,
-                      child: _isExpanded
-                          ? Form(
-                              key: _formKey,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Column(
+                    const SizedBox(height: 12),
+                    ...(_cachedServers.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final server = entry.value;
+                      final serverId = _getServerId(server);
+                      final status = _serverStatuses[serverId];
+                      return AnimatedListItem(
+                        index: index,
+                        delay: const Duration(milliseconds: 100),
+                        duration: const Duration(milliseconds: 500),
+                        animationType: AnimationType.fadeSlideRight,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: ServerCard(
+                            serverInfo: server,
+                            status: status,
+                            onTap: () => _selectServer(server),
+                            onLongPress: () => _deleteServer(server),
+                          ),
+                        ),
+                      );
+                    })),
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              
+              // 可折叠的登录信息卡片
+              ExpandableCard(
+                isExpanded: _isExpanded,
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeInOutCubic,
+                header: ExpandableCardHeader(
+                  onTap: () {
+                    setState(() {
+                      _isExpanded = !_isExpanded;
+                    });
+                  },
+                  isExpanded: _isExpanded,
+                  leadingIcon: Icons.add_circle_outline,
+                  title: AppLocalizations.of(context)!.loginAddServer,
+                  animationDuration: const Duration(milliseconds: 400),
+                ),
+                content: Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
                                   children: [
                                     // 服务器地址输入
                                     TextFormField(
@@ -472,7 +514,7 @@ class _LoginPageState extends State<LoginPage> {
                                           orElse: () => false,
                                         );
 
-                                        return ElevatedButton(
+                                        return AnimatedElevatedButton(
                                           onPressed: isLoading ? null : _handleLogin,
                                           style: ElevatedButton.styleFrom(
                                             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -493,7 +535,7 @@ class _LoginPageState extends State<LoginPage> {
                                     const SizedBox(height: 16),
                                     
                                     // 注册按钮
-                                    TextButton(
+                                    AnimatedTextButton(
                                       onPressed: () {
                                         Navigator.of(context).push(MaterialPageRoute(
                                           builder: (_) => const RegisterPage(),
@@ -501,13 +543,9 @@ class _LoginPageState extends State<LoginPage> {
                                       },
                                       child: Text(AppLocalizations.of(context)!.loginRegisterPrompt),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            )
-                          : const SizedBox.shrink(),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ],

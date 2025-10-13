@@ -20,6 +20,10 @@ import 'package:luna_arc_sync/presentation/documents/cubit/document_detail_state
 import 'package:luna_arc_sync/presentation/pages/view/page_detail_page.dart';
 import 'package:luna_arc_sync/presentation/pages/widgets/page_list_item.dart';
 import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_notifier.dart';
+import 'package:luna_arc_sync/core/animations/animated_list_item.dart';
+import 'package:provider/provider.dart';
+import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
+import 'package:luna_arc_sync/core/theme/no_overscroll_behavior.dart';
 
 enum DocumentViewType { list, grid }
 
@@ -386,7 +390,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
 
   Future<void> _exportDocumentAsPdf(BuildContext context) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
-    final doc = _cubit.state.whenOrNull(success: (d, hasReachedMax, _, _) => d);
+    final doc = _cubit.state.whenOrNull(success: (d, hasReachedMax, _, _, _) => d);
     if (doc == null) {
       scaffoldMessenger.showSnackBar(
         SnackBar(
@@ -500,9 +504,12 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
         },
         child: BlocBuilder<DocumentDetailCubit, DocumentDetailState>(
           builder: (context, state) {
+            final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
             return Scaffold(
+              backgroundColor: hasCustomBackground ? Colors.transparent : null,
               appBar: AppBar(
-                title: state.whenOrNull(success: (doc, _, _, isRefreshing) => 
+                backgroundColor: hasCustomBackground ? Colors.transparent : null,
+                title: state.whenOrNull(success: (doc, _, _, isRefreshing, _) => 
                   Row(
                     children: [
                       Text(doc.title),
@@ -523,7 +530,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                 initial: () => const SizedBox.shrink(),
                 loading: () => const Center(child: CircularProgressIndicator()),
                 failure: (message) => Center(child: Text(message)),
-                success: (document, hasReachedMax, _, isRefreshing) {
+                success: (document, hasReachedMax, _, isRefreshing, totalPageCount) {
                   final pages = document.pages;
                   if (pages.isEmpty) {
                     return Center(
@@ -536,9 +543,9 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                   } else {
                     switch (_viewType) {
                       case DocumentViewType.list:
-                        return _buildListView(context, pages, hasReachedMax);
+                        return _buildListView(context, pages, hasReachedMax, totalPageCount);
                       case DocumentViewType.grid:
-                        return _buildGridView(context, gridSettings, pages, hasReachedMax);
+                        return _buildGridView(context, gridSettings, pages, hasReachedMax, totalPageCount);
                     }
                   }
                 },
@@ -590,7 +597,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
       IconButton(
         icon: Icon(_isEditMode ? Icons.done : Icons.edit),
         onPressed: () {
-          final doc = state.whenOrNull(success: (d, _, _, _) => d)!;
+          final doc = state.whenOrNull(success: (d, _, _, _, _) => d)!;
           final canDragAndDrop = doc.pages.length < _reorderThreshold;
 
           if (_isEditMode && canDragAndDrop) {
@@ -609,7 +616,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
         },
       ),
       state.whenOrNull(
-            success: (doc, _, _, _) => IconButton(
+            success: (doc, _, _, _, _) => IconButton(
               icon: const Icon(Icons.edit_note),
               onPressed: () => _showEditDocumentDialog(context, doc),
               tooltip: AppLocalizations.of(context)?.editDocumentInfo ?? 'Edit Document Info',
@@ -619,44 +626,90 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
     ];
   }
 
-  Widget _buildListView(BuildContext context, List<page_models.Page> pages, bool hasReachedMax) {
-    return ListView.builder(
-      controller: _scrollController,
-      itemCount: hasReachedMax ? pages.length : pages.length + 1,
-      itemBuilder: (context, index) {
-        if (index >= pages.length) {
-          return const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator()));
-        }
-        final page = pages[index];
-        return PageListItem(
-          page: page,
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => PageDetailPage(pageId: page.pageId))),
-        );
-      },
+  Widget _buildListView(BuildContext context, List<page_models.Page> pages, bool hasReachedMax, int totalPageCount) {
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
+    
+    return ScrollConfiguration(
+      behavior: hasCustomBackground 
+          ? const GlassmorphicScrollBehavior() 
+          : ScrollConfiguration.of(context).copyWith(),
+      child: ListView.builder(
+        controller: _scrollController,
+        itemCount: hasReachedMax ? pages.length : pages.length + 1,
+        itemBuilder: (context, index) {
+          if (index >= pages.length) {
+            return const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator()));
+          }
+          final page = pages[index];
+          return AnimatedListItem(
+            index: index,
+            delay: const Duration(milliseconds: 30),
+            duration: const Duration(milliseconds: 400),
+            animationType: AnimationType.fadeSlideUp,
+            child: PageListItem(
+              page: page,
+              onTap: () {
+                final pageIds = pages.map((p) => p.pageId).toList();
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => PageDetailPage(
+                    pageId: page.pageId,
+                    pageIds: pageIds,
+                    currentIndex: index,
+                    totalPageCount: totalPageCount,
+                  ),
+                ));
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildGridView(BuildContext context, GridSettingsNotifier gridSettings, List<page_models.Page> pages, bool hasReachedMax) {
-    return GridView.builder(
-      controller: _scrollController,
-      padding: const EdgeInsets.all(8.0),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: gridSettings.crossAxisCount,
-        crossAxisSpacing: 8.0,
-        mainAxisSpacing: 8.0,
-        childAspectRatio: 0.75,
-      ),
-      itemCount: hasReachedMax ? pages.length : pages.length + 1,
-      itemBuilder: (context, index) {
-        if (index >= pages.length) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final page = pages[index];
-        return _PageGridItem(
-          page: page,
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => PageDetailPage(pageId: page.pageId))),
+  Widget _buildGridView(BuildContext context, GridSettingsNotifier gridSettings, List<page_models.Page> pages, bool hasReachedMax, int totalPageCount) {
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
+    
+    return ScrollConfiguration(
+      behavior: hasCustomBackground 
+          ? const GlassmorphicScrollBehavior() 
+          : ScrollConfiguration.of(context).copyWith(),
+      child: GridView.builder(
+        controller: _scrollController,
+        padding: const EdgeInsets.all(8.0),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: gridSettings.crossAxisCount,
+          crossAxisSpacing: 8.0,
+          mainAxisSpacing: 8.0,
+          childAspectRatio: 0.75,
+        ),
+        itemCount: hasReachedMax ? pages.length : pages.length + 1,
+        itemBuilder: (context, index) {
+          if (index >= pages.length) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final page = pages[index];
+          return AnimatedListItem(
+            index: index,
+            delay: const Duration(milliseconds: 30),
+            duration: const Duration(milliseconds: 400),
+            animationType: AnimationType.fadeScale,
+            child: _PageGridItem(
+              page: page,
+              onTap: () {
+                final pageIds = pages.map((p) => p.pageId).toList();
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => PageDetailPage(
+                    pageId: page.pageId,
+                    pageIds: pageIds,
+                    currentIndex: index,
+                    totalPageCount: totalPageCount,
+                  ),
+              ));
+            },
+          ),
         );
       },
+      ),
     );
   }
 

@@ -10,8 +10,31 @@ class ServerCacheService {
   static const String _serverListKey = 'server_list';
   static const int _maxCacheSize = 20; // 最大缓存服务器数量
 
+  // 生成服务器唯一标识符
+  // 优先使用服务器返回的 serverId，如果没有则基于 URL 生成
+  static String getServerId(AboutResponse aboutResponse, String serverUrl) {
+    // 1. 优先使用服务器返回的 serverId
+    if (aboutResponse.serverId != null && aboutResponse.serverId!.isNotEmpty) {
+      debugPrint('🔍 服务器缓存 - 使用服务器返回的 serverId: ${aboutResponse.serverId}');
+      return aboutResponse.serverId!;
+    }
+    
+    // 2. 后备方案：基于 URL 生成（host:port）
+    try {
+      final uri = Uri.parse(serverUrl);
+      final generatedId = '${uri.host}:${uri.port}';
+      debugPrint('🔍 服务器缓存 - 服务器未返回 serverId，使用 URL 生成: $generatedId');
+      return generatedId;
+    } catch (e) {
+      debugPrint('🔍 服务器缓存 - 生成serverId失败，使用hashCode: $e');
+      return serverUrl.hashCode.toString();
+    }
+  }
+
   // 保存服务器信息到缓存
-  Future<void> cacheServerInfo(String serverId, AboutResponse aboutResponse, {String? serverUrl}) async {
+  Future<void> cacheServerInfo(AboutResponse aboutResponse, {required String serverUrl}) async {
+    final serverId = getServerId(aboutResponse, serverUrl);
+    
     try {
       final prefs = await SharedPreferences.getInstance();
       final cacheKey = '$_serverCachePrefix$serverId';
@@ -31,7 +54,7 @@ class ServerCacheService {
       // 更新服务器列表
       await _updateServerList(serverId);
       
-      debugPrint('🔍 服务器缓存 - 已缓存服务器: $serverId');
+      debugPrint('🔍 服务器缓存 - 已缓存服务器: $serverId (URL: $serverUrl, Name: ${aboutResponse.serverName})');
     } catch (e) {
       debugPrint('🔍 服务器缓存 - 缓存失败: $e');
     }

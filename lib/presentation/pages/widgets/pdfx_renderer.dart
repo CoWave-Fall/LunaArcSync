@@ -1,19 +1,26 @@
+import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pdfx/pdfx.dart';
-import 'package:luna_arc_sync/presentation/pages/view/page_detail_page.dart';
 import 'package:luna_arc_sync/l10n/app_localizations.dart';
+import 'package:luna_arc_sync/core/cache/pdf_cache_service.dart';
+import 'package:luna_arc_sync/core/services/dark_mode_image_processor.dart';
 
 /// pdfx高清渲染器
 /// 使用4倍分辨率渲染，提供超清显示效果
+/// 支持昼间/夜间主题双版本缓存
 class PdfxRenderer extends StatefulWidget {
   final Uint8List pdfBytes;
+  final String pageId;
+  final String versionId;
   final GlobalKey imageKey;
   final Function(Size)? onImageRendered;
   
   const PdfxRenderer({
     super.key,
     required this.pdfBytes,
+    required this.pageId,
+    required this.versionId,
     required this.imageKey,
     this.onImageRendered,
   });
@@ -22,7 +29,8 @@ class PdfxRenderer extends StatefulWidget {
   State<PdfxRenderer> createState() => _PdfxRendererState();
 }
 
-class _PdfxRendererState extends State<PdfxRenderer> {
+
+class _PdfxRendererState extends State<PdfxRenderer> with AutomaticKeepAliveClientMixin {
   PdfDocument? _document;
   PdfPage? _page;
   Uint8List? _renderedImage;
@@ -36,6 +44,9 @@ class _PdfxRendererState extends State<PdfxRenderer> {
   static const double _renderScale = 4.0;
 
   @override
+  bool get wantKeepAlive => true; // 保持状态，避免重建
+
+  @override
   void initState() {
     super.initState();
     // Don't call _loadAndRenderPdf here to avoid Theme.of() in initState
@@ -44,13 +55,78 @@ class _PdfxRendererState extends State<PdfxRenderer> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final newDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     if (!_dependenciesInitialized) {
-      _isDarkMode = Theme.of(context).brightness == Brightness.dark;
+      _isDarkMode = newDarkMode;
       if (kDebugMode) {
         print('pdfx: Dark mode detected: $_isDarkMode');
       }
       _dependenciesInitialized = true;
-      _loadAndRenderPdf();
+      _loadFromCacheOrRender();
+    } else if (_isDarkMode != newDarkMode) {
+      // 主题切换，重新加载
+      if (kDebugMode) {
+        print('pdfx: 主题切换检测到 (${_isDarkMode ? "暗" : "亮"} -> ${newDarkMode ? "暗" : "亮"})');
+      }
+      _isDarkMode = newDarkMode;
+      setState(() {
+        _isLoading = true;
+        _renderedImage = null;
+        _errorMessage = null;
+      });
+      _loadFromCacheOrRender();
+    }
+  }
+
+  /// 首先尝试从缓存加载，如果没有缓存则渲染
+  Future<void> _loadFromCacheOrRender() async {
+    try {
+      // 尝试从缓存加载
+      final cachedImage = await PdfCacheService.getCachedPdf(
+        pageId: widget.pageId,
+        versionId: widget.versionId,
+        isDarkMode: _isDarkMode,
+      );
+
+      if (cachedImage != null) {
+        if (kDebugMode) {
+          print('pdfx: ✅ 从缓存加载成功');
+        }
+        
+        // 解码图像以获取尺寸
+        final codec = await ui.instantiateImageCodec(cachedImage);
+        final frameInfo = await codec.getNextFrame();
+        final image = frameInfo.image;
+        
+        // 由于图像是4倍分辨率渲染的，需要除以4得到原始PDF尺寸
+        _imageIntrinsicSize = Size(
+          image.width / _renderScale,
+          image.height / _renderScale,
+        );
+        
+        if (mounted) {
+          setState(() {
+            _renderedImage = cachedImage;
+            _isLoading = false;
+          });
+          
+          // 报告渲染尺寸
+          _reportImageSize();
+        }
+        return;
+      }
+
+      // 缓存未命中，开始渲染
+      if (kDebugMode) {
+        print('pdfx: 缓存未命中，开始渲染');
+      }
+      await _loadAndRenderPdf();
+    } catch (e) {
+      if (kDebugMode) {
+        print('pdfx: 缓存加载失败: $e');
+      }
+      await _loadAndRenderPdf();
     }
   }
 
@@ -133,41 +209,21 @@ class _PdfxRendererState extends State<PdfxRenderer> {
         print('pdfx: PDF页面固有尺寸: $_imageIntrinsicSize');
       }
       
+      // 缓存渲染结果
+      PdfCacheService.cachePdf(
+        pageId: widget.pageId,
+        versionId: widget.versionId,
+        isDarkMode: _isDarkMode,
+        imageBytes: finalBytes,
+      );
+      
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
         
-        // 等待图像渲染后报告实际渲染尺寸
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (widget.onImageRendered != null && 
-              widget.imageKey.currentContext != null && 
-              mounted &&
-              _imageIntrinsicSize != null) {
-            final renderObject = widget.imageKey.currentContext!.findRenderObject();
-            if (renderObject is RenderBox && renderObject.hasSize) {
-              // 计算 BoxFit.contain 下的实际渲染尺寸
-              final containerSize = renderObject.size;
-              final imageAspectRatio = _imageIntrinsicSize!.width / _imageIntrinsicSize!.height;
-              final containerAspectRatio = containerSize.width / containerSize.height;
-              
-              Size actualSize;
-              if (imageAspectRatio > containerAspectRatio) {
-                // 图片更宽，以宽度为准
-                final width = containerSize.width;
-                final height = width / imageAspectRatio;
-                actualSize = Size(width, height);
-              } else {
-                // 图片更高，以高度为准
-                final height = containerSize.height;
-                final width = height * imageAspectRatio;
-                actualSize = Size(width, height);
-              }
-              
-              widget.onImageRendered!(actualSize);
-            }
-          }
-        });
+        // 报告渲染尺寸
+        _reportImageSize();
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
@@ -184,8 +240,43 @@ class _PdfxRendererState extends State<PdfxRenderer> {
     }
   }
 
+  /// 报告图像渲染尺寸
+  void _reportImageSize() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.onImageRendered != null && 
+          widget.imageKey.currentContext != null && 
+          mounted &&
+          _imageIntrinsicSize != null) {
+        final renderObject = widget.imageKey.currentContext!.findRenderObject();
+        if (renderObject is RenderBox && renderObject.hasSize) {
+          // 计算 BoxFit.contain 下的实际渲染尺寸
+          final containerSize = renderObject.size;
+          final imageAspectRatio = _imageIntrinsicSize!.width / _imageIntrinsicSize!.height;
+          final containerAspectRatio = containerSize.width / containerSize.height;
+          
+          Size actualSize;
+          if (imageAspectRatio > containerAspectRatio) {
+            // 图片更宽，以宽度为准
+            final width = containerSize.width;
+            final height = width / imageAspectRatio;
+            actualSize = Size(width, height);
+          } else {
+            // 图片更高，以高度为准
+            final height = containerSize.height;
+            final width = height * imageAspectRatio;
+            actualSize = Size(width, height);
+          }
+          
+          widget.onImageRendered!(actualSize);
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context); // 必须调用以保持状态
+    
     if (_isLoading) {
       return Container(
         color: Theme.of(context).scaffoldBackgroundColor,
