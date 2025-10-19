@@ -6,7 +6,7 @@
 *.swp
 .buildlog/
 .history
-
+scripts/
 
 
 # Flutter repo-specific
@@ -103,6 +103,10 @@ unlinked_spec.ds
 **/linux/flutter/generated_plugin_registrant.cc
 **/linux/flutter/generated_plugin_registrant.h
 **/linux/flutter/generated_plugins.cmake
+
+# Release builds
+Release-*/
+luna_arc_sync-*.zip
 
 # Coverage
 coverage/

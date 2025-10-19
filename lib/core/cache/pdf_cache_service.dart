@@ -28,19 +28,26 @@ class PdfCacheEntry {
         'pageId': pageId,
         'versionId': versionId,
         'isDarkMode': isDarkMode,
-        'timestamp': timestamp.toIso8601String(),
+        'timestamp': timestamp.millisecondsSinceEpoch,
         'fileSize': fileSize,
         'filePath': filePath,
       };
 
-  factory PdfCacheEntry.fromJson(Map<String, dynamic> json) => PdfCacheEntry(
-        pageId: json['pageId'] as String,
-        versionId: json['versionId'] as String,
-        isDarkMode: json['isDarkMode'] as bool,
-        timestamp: DateTime.parse(json['timestamp'] as String),
-        fileSize: json['fileSize'] as int,
-        filePath: json['filePath'] as String,
-      );
+  factory PdfCacheEntry.fromJson(Map<String, dynamic> json) {
+    final timestampValue = json['timestamp'];
+    final timestamp = timestampValue is int
+        ? DateTime.fromMillisecondsSinceEpoch(timestampValue)
+        : DateTime.parse(timestampValue as String); // 兼容旧数据
+    
+    return PdfCacheEntry(
+      pageId: json['pageId'] as String,
+      versionId: json['versionId'] as String,
+      isDarkMode: json['isDarkMode'] as bool,
+      timestamp: timestamp,
+      fileSize: json['fileSize'] as int,
+      filePath: json['filePath'] as String,
+    );
+  }
 }
 
 /// 增强的PDF缓存服务

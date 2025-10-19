@@ -22,17 +22,24 @@ class ImageCacheEntry {
 
   Map<String, dynamic> toJson() => {
         'url': url,
-        'timestamp': timestamp.toIso8601String(),
+        'timestamp': timestamp.millisecondsSinceEpoch,
         'fileSize': fileSize,
         'filePath': filePath,
       };
 
-  factory ImageCacheEntry.fromJson(Map<String, dynamic> json) => ImageCacheEntry(
-        url: json['url'] as String,
-        timestamp: DateTime.parse(json['timestamp'] as String),
-        fileSize: json['fileSize'] as int,
-        filePath: json['filePath'] as String,
-      );
+  factory ImageCacheEntry.fromJson(Map<String, dynamic> json) {
+    final timestampValue = json['timestamp'];
+    final timestamp = timestampValue is int
+        ? DateTime.fromMillisecondsSinceEpoch(timestampValue)
+        : DateTime.parse(timestampValue as String); // 兼容旧数据
+    
+    return ImageCacheEntry(
+      url: json['url'] as String,
+      timestamp: timestamp,
+      fileSize: json['fileSize'] as int,
+      filePath: json['filePath'] as String,
+    );
+  }
 }
 
 /// 增强的图片缓存服务

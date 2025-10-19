@@ -1,17 +1,27 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:luna_arc_sync/data/repositories/document_repository.dart';
+import 'package:luna_arc_sync/data/repositories/user_repository.dart';
+import 'package:luna_arc_sync/data/models/user_models.dart';
+import 'package:luna_arc_sync/core/storage/secure_storage_service.dart';
 import 'document_list_state.dart';
 
 @injectable
 class DocumentListCubit extends Cubit<DocumentListState> {
   final IDocumentRepository _documentRepository;
+  final IUserRepository _userRepository;
+  final SecureStorageService _secureStorageService;
   
   // 添加请求管理，防止并发请求导致顺序错误
   final Set<int> _loadingPages = {};
 
-  DocumentListCubit(this._documentRepository) : super(const DocumentListState());
+  DocumentListCubit(
+    this._documentRepository,
+    this._userRepository,
+    this._secureStorageService,
+  ) : super(const DocumentListState());
 
   Future<void> fetchDocuments({bool isRefresh = false}) async {
     if (state.isLoading) return;
@@ -37,6 +47,9 @@ class DocumentListCubit extends Cubit<DocumentListState> {
           hasReachedMax: true, // 已经获取了所有数据
           isLoading: false,
         ));
+        
+        // 如果是admin，获取所有文档属主的用户信息
+        await _fetchOwnerInfoForDocuments(allDocuments);
       }
     } on DioException catch (e) {
       if (!isClosed) {
@@ -139,6 +152,49 @@ class DocumentListCubit extends Cubit<DocumentListState> {
       return jobId;
     } catch (e) {
       rethrow;
+    }
+  }
+
+  /// 获取文档属主的用户信息（仅admin可见）
+  Future<void> _fetchOwnerInfoForDocuments(List<dynamic> documents) async {
+    // 检查是否是admin
+    final isAdmin = await _secureStorageService.getIsAdmin();
+    if (isAdmin != true) {
+      return; // 不是admin，不需要获取用户信息
+    }
+
+    // 提取所有不重复的ownerUserId
+    final ownerUserIds = documents
+        .map((doc) => doc.ownerUserId)
+        .whereType<String>()
+        .toSet();
+
+    if (ownerUserIds.isEmpty) {
+      return;
+    }
+
+    // 创建新的用户信息缓存
+    final newCache = Map<String, UserDto>.from(state.userInfoCache);
+
+    // 批量获取用户信息
+    for (final userId in ownerUserIds) {
+      // 如果缓存中已有，跳过
+      if (newCache.containsKey(userId)) {
+        continue;
+      }
+
+      try {
+        final userDto = await _userRepository.getUserById(userId);
+        newCache[userId] = userDto;
+      } catch (e) {
+        // 获取失败时，记录错误但继续处理其他用户
+        debugPrint('Failed to fetch user info for $userId: $e');
+      }
+    }
+
+    // 更新状态
+    if (!isClosed && newCache.length > state.userInfoCache.length) {
+      emit(state.copyWith(userInfoCache: newCache));
     }
   }
 }

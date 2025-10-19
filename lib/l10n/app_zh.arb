@@ -626,5 +626,20 @@
         }
     },
     "impErr001": "非管理员导出必须提供用户ID。",
-    "impErr002": "导入归档中未找到data.json。"
+    "impErr002": "导入归档中未找到data.json。",
+    "networkErrorTitle": "网络错误",
+    "networkErrorServerOffline": "服务器离线或无法访问\n\n建议：\n1. 检查网络连接\n2. 尝试切换服务器\n3. 稍后重试",
+    "networkErrorConnectionFailed": "无法连接到服务器\n\n建议：\n1. 检查服务器地址是否正确\n2. 检查网络连接\n3. 检查防火墙设置",
+    "networkErrorConnectionTimeout": "连接超时\n\n建议：\n1. 检查网络连接速度\n2. 尝试切换到更稳定的网络\n3. 稍后重试",
+    "networkErrorUnauthorized": "认证失败\n\n您的登录已过期，请重新登录",
+    "networkErrorForbidden": "权限不足\n\n您没有权限访问此资源",
+    "networkErrorNotFound": "资源不存在\n\n请求的资源未找到",
+    "networkErrorServerError": "服务器错误\n\n服务器遇到了问题，请稍后重试",
+    "networkErrorGeneric": "网络错误\n\n请检查您的网络连接并重试",
+    "errorRetry": "重试",
+    "errorDismiss": "关闭",
+    "errorDetails": "技术详情",
+    "errorServerUnreachable": "服务器不可达",
+    "errorAuthenticationFailed": "认证失败",
+    "errorOccurredTitle": "出错了"
 }

@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:pdfx/pdfx.dart';
 import 'package:luna_arc_sync/l10n/app_localizations.dart';
 import 'package:luna_arc_sync/core/cache/pdf_cache_service.dart';
+import 'package:luna_arc_sync/core/cache/pdf_preload_manager.dart';
 import 'package:luna_arc_sync/core/services/dark_mode_image_processor.dart';
+import 'package:luna_arc_sync/core/config/pdf_background_config.dart';
 
 /// pdfx高清渲染器
 /// 使用4倍分辨率渲染，提供超清显示效果
@@ -46,11 +48,6 @@ class _PdfxRendererState extends State<PdfxRenderer> with AutomaticKeepAliveClie
   @override
   bool get wantKeepAlive => true; // 保持状态，避免重建
 
-  @override
-  void initState() {
-    super.initState();
-    // Don't call _loadAndRenderPdf here to avoid Theme.of() in initState
-  }
 
   @override
   void didChangeDependencies() {
@@ -82,7 +79,42 @@ class _PdfxRendererState extends State<PdfxRenderer> with AutomaticKeepAliveClie
   /// 首先尝试从缓存加载，如果没有缓存则渲染
   Future<void> _loadFromCacheOrRender() async {
     try {
-      // 尝试从缓存加载
+      // 首先尝试从内存缓存加载（最快）
+      final memoryCache = PdfPreloadManager().getFromMemory(
+        pageId: widget.pageId,
+        versionId: widget.versionId,
+        isDarkMode: _isDarkMode,
+      );
+      
+      if (memoryCache != null) {
+        if (kDebugMode) {
+          print('pdfx: ⚡ 从内存缓存加载成功（无闪烁）');
+        }
+        
+        // 解码图像以获取尺寸
+        final codec = await ui.instantiateImageCodec(memoryCache);
+        final frameInfo = await codec.getNextFrame();
+        final image = frameInfo.image;
+        
+        // 由于图像是4倍分辨率渲染的，需要除以4得到原始PDF尺寸
+        _imageIntrinsicSize = Size(
+          image.width / _renderScale,
+          image.height / _renderScale,
+        );
+        
+        if (mounted) {
+          setState(() {
+            _renderedImage = memoryCache;
+            _isLoading = false;
+          });
+          
+          // 报告渲染尺寸
+          _reportImageSize();
+        }
+        return;
+      }
+      
+      // 尝试从磁盘缓存加载
       final cachedImage = await PdfCacheService.getCachedPdf(
         pageId: widget.pageId,
         versionId: widget.versionId,
@@ -91,8 +123,16 @@ class _PdfxRendererState extends State<PdfxRenderer> with AutomaticKeepAliveClie
 
       if (cachedImage != null) {
         if (kDebugMode) {
-          print('pdfx: ✅ 从缓存加载成功');
+          print('pdfx: ✅ 从磁盘缓存加载成功');
         }
+        
+        // 放入内存缓存供下次使用
+        PdfPreloadManager().putToMemory(
+          pageId: widget.pageId,
+          versionId: widget.versionId,
+          isDarkMode: _isDarkMode,
+          data: cachedImage,
+        );
         
         // 解码图像以获取尺寸
         final codec = await ui.instantiateImageCodec(cachedImage);
@@ -143,6 +183,18 @@ class _PdfxRendererState extends State<PdfxRenderer> with AutomaticKeepAliveClie
         print('pdfx: 开始加载PDF，大小: ${widget.pdfBytes.length} bytes');
       }
       
+      // 获取背景颜色配置
+      final backgroundColor = _isDarkMode
+          ? await PdfBackgroundConfig.getDarkColor()
+          : await PdfBackgroundConfig.getLightColor();
+      
+      // 正确转换包含alpha通道的颜色值（ARGB格式）
+      final backgroundColorHex = '#${backgroundColor.value.toRadixString(16).padLeft(8, '0')}';
+      
+      if (kDebugMode) {
+        print('pdfx: 使用背景颜色: $backgroundColorHex (${_isDarkMode ? "暗色" : "亮色"}, alpha: ${backgroundColor.alpha})');
+      }
+      
       // 加载PDF文档
       _document = await PdfDocument.openData(widget.pdfBytes);
       
@@ -178,7 +230,7 @@ class _PdfxRendererState extends State<PdfxRenderer> with AutomaticKeepAliveClie
         width: width.toDouble(),
         height: height.toDouble(),
         format: PdfPageImageFormat.png,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: backgroundColorHex,
       );
       
       if (pageImage == null) {
@@ -187,12 +239,17 @@ class _PdfxRendererState extends State<PdfxRenderer> with AutomaticKeepAliveClie
       
       Uint8List finalBytes = pageImage.bytes;
       
-      // Apply dark mode processing if needed
+      // 在深色模式下应用颜色反转处理（根据"深色模式图像处理"配置）
+      // 注意：这里反转的是PDF内容颜色，背景颜色已经在渲染时设置
+      // 传入backgroundColor参数以确保背景色不会被反转
       if (_isDarkMode) {
         if (kDebugMode) {
-          print('pdfx: Applying dark mode processing');
+          print('pdfx: Applying dark mode processing to PDF content (filtering background color)');
         }
-        finalBytes = await DarkModeImageProcessor.processImageForDarkMode(finalBytes);
+        finalBytes = await DarkModeImageProcessor.processImageForDarkMode(
+          finalBytes,
+          backgroundColor: backgroundColor,
+        );
       } else {
         if (kDebugMode) {
           print('pdfx: Skipping dark mode processing (light mode)');
@@ -209,12 +266,20 @@ class _PdfxRendererState extends State<PdfxRenderer> with AutomaticKeepAliveClie
         print('pdfx: PDF页面固有尺寸: $_imageIntrinsicSize');
       }
       
-      // 缓存渲染结果
+      // 缓存渲染结果到磁盘
       PdfCacheService.cachePdf(
         pageId: widget.pageId,
         versionId: widget.versionId,
         isDarkMode: _isDarkMode,
         imageBytes: finalBytes,
+      );
+      
+      // 同时放入内存缓存
+      PdfPreloadManager().putToMemory(
+        pageId: widget.pageId,
+        versionId: widget.versionId,
+        isDarkMode: _isDarkMode,
+        data: finalBytes,
       );
       
       if (mounted) {

@@ -11,11 +11,13 @@ abstract class Document with _$Document {
     required String documentId,
     required String title,
     @Default([]) List<String> tags,
-    @HighPrecisionDateTimeConverter()
+    @UnixTimestampConverter()
     required DateTime createdAt,
-    @HighPrecisionDateTimeConverter()
+    @UnixTimestampConverter()
     required DateTime updatedAt,
     @Default(0) int pageCount,
+    String? ownerUserId,
+    String? thumbnailUrl,
   }) = _Document;
 
   factory Document.fromJson(Map<String, dynamic> json) {
@@ -23,9 +25,11 @@ abstract class Document with _$Document {
       documentId: json['documentId'] as String,
       title: json['title'] as String,
       tags: (json['tags'] as List<dynamic>? ?? []).map((e) => e as String).toList(),
-      createdAt: const HighPrecisionDateTimeConverter().fromJson(json['createdAt'] as String),
-      updatedAt: const HighPrecisionDateTimeConverter().fromJson(json['updatedAt'] as String),
+      createdAt: const UnixTimestampConverter().fromJson(json['createdAt'] as int),
+      updatedAt: const UnixTimestampConverter().fromJson(json['updatedAt'] as int),
       pageCount: json['pageCount'] as int? ?? 0,
+      ownerUserId: json['ownerUserId'] as String?,
+      thumbnailUrl: json['thumbnailUrl'] as String?,
     );
   }
 }
@@ -36,9 +40,9 @@ abstract class DocumentDetail with _$DocumentDetail {
     required String documentId,
     required String title,
     @Default([]) List<String> tags,
-    @HighPrecisionDateTimeConverter()
+    @UnixTimestampConverter()
     required DateTime createdAt,
-    @HighPrecisionDateTimeConverter()
+    @UnixTimestampConverter()
     required DateTime updatedAt,
     @Default([]) List<Page> pages,
   }) = _DocumentDetail;
@@ -48,8 +52,8 @@ abstract class DocumentDetail with _$DocumentDetail {
       documentId: json['documentId'] as String,
       title: json['title'] as String,
       tags: (json['tags'] as List<dynamic>? ?? []).map((e) => e as String).toList(),
-      createdAt: const HighPrecisionDateTimeConverter().fromJson(json['createdAt'] as String),
-      updatedAt: const HighPrecisionDateTimeConverter().fromJson(json['updatedAt'] as String),
+      createdAt: const UnixTimestampConverter().fromJson(json['createdAt'] as int),
+      updatedAt: const UnixTimestampConverter().fromJson(json['updatedAt'] as int),
       pages: (json['pages'] as List<dynamic>? ?? []).map((e) => Page.fromJson(e as Map<String, dynamic>)).toList(),
     );
   }

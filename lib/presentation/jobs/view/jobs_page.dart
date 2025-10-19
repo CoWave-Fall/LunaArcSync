@@ -11,10 +11,14 @@ import 'package:luna_arc_sync/l10n/app_localizations.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:dio/dio.dart';
 import 'package:luna_arc_sync/core/animations/animated_list_item.dart';
-import 'package:provider/provider.dart';
 import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
-import 'package:luna_arc_sync/presentation/widgets/glassmorphic_container.dart';
+import 'package:luna_arc_sync/presentation/widgets/optimized_glassmorphic_container.dart';
+import 'package:luna_arc_sync/presentation/widgets/optimized_glassmorphic_list.dart';
+import 'package:luna_arc_sync/core/theme/glassmorphic_performance_notifier.dart';
 import 'package:luna_arc_sync/core/theme/no_overscroll_behavior.dart';
+import 'package:luna_arc_sync/core/cache/glassmorphic_cache.dart';
+import 'package:luna_arc_sync/core/config/glassmorphic_presets.dart';
+import 'package:provider/provider.dart';
 
 class JobsPage extends StatefulWidget {
   const JobsPage({super.key});
@@ -287,25 +291,49 @@ class _JobsPageState extends State<JobsPage> {
                             : 0.0;
                         await context.read<JobsCubit>().fetchJobs(forceUpdate: true);
                       },
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.all(16),
-                    itemCount: jobs.length,
-                    itemBuilder: (context, index) {
-                      final job = jobs[index];
-                        return AnimatedListItem(
-                          index: index,
-                          delay: const Duration(milliseconds: 40),
-                          duration: const Duration(milliseconds: 400),
-                          animationType: AnimationType.fadeSlideUp,
-                          child: _JobCard(
-                            job: job,
-                            onDelete: (jobId) => _showDeleteDialog(context, jobId),
-                            onDownload: (job) => _downloadResult(context, job),
+                    // 🚀 性能优化：使用共享模糊层提升Jobs列表渲染性能
+                    child: hasCustomBackground
+                        ? OptimizedGlassmorphicListBuilder(
+                            blurGroup: 'jobs_list',
+                            blur: GlassmorphicPresets.jobListBlur,
+                            opacity: GlassmorphicPresets.jobListOpacity,
+                            controller: _scrollController,
+                            padding: const EdgeInsets.all(16),
+                            itemCount: jobs.length,
+                            itemBuilder: (context, index) {
+                              final job = jobs[index];
+                              return AnimatedListItem(
+                                index: index,
+                                delay: const Duration(milliseconds: 40),
+                                duration: const Duration(milliseconds: 400),
+                                animationType: AnimationType.fadeSlideUp,
+                                child: _JobCard(
+                                  job: job,
+                                  onDelete: (jobId) => _showDeleteDialog(context, jobId),
+                                  onDownload: (job) => _downloadResult(context, job),
+                                ),
+                              );
+                            },
+                          )
+                        : ListView.builder(
+                            controller: _scrollController,
+                            padding: const EdgeInsets.all(16),
+                            itemCount: jobs.length,
+                            itemBuilder: (context, index) {
+                              final job = jobs[index];
+                              return AnimatedListItem(
+                                index: index,
+                                delay: const Duration(milliseconds: 40),
+                                duration: const Duration(milliseconds: 400),
+                                animationType: AnimationType.fadeSlideUp,
+                                child: _JobCard(
+                                  job: job,
+                                  onDelete: (jobId) => _showDeleteDialog(context, jobId),
+                                  onDownload: (job) => _downloadResult(context, job),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
                     ),
                   );
                 },
@@ -457,14 +485,27 @@ class _JobCard extends StatelessWidget {
           ],
         );
 
-    // 如果有自定义背景，使用毛玻璃卡片
+    // 如果有自定义背景，使用优化的毛玻璃卡片
     if (hasCustomBackground) {
-      return GlassmorphicCard(
-        blur: 10.0,
-        opacity: 0.2,
-        padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.only(bottom: 12),
-        child: cardContent,
+       return Consumer<GlassmorphicPerformanceNotifier>(
+         builder: (context, performanceNotifier, child) {
+           final config = performanceNotifier.config;
+           // 使用任务列表预设（更强的毛玻璃效果）
+           final blur = config.getActualBlur(GlassmorphicPresets.jobListBlur);
+           final opacity = config.getActualOpacity(GlassmorphicPresets.jobListOpacity);
+          
+          return OptimizedGlassmorphicCard(
+            blur: blur,
+            opacity: opacity,
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.only(bottom: 12),
+            useSharedBlur: true,  // 🚀 使用共享模糊，由 OptimizedGlassmorphicListBuilder 提供
+            blurGroup: 'jobs_list',
+            blurMethod: config.blurMethod,
+            kawaseConfig: config.blurMethod == BlurMethod.kawase ? config.getKawaseConfig() : null,
+            child: cardContent,
+          );
+        },
       );
     }
 

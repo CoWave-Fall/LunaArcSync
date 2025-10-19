@@ -17,7 +17,8 @@ class OverviewCubit extends Cubit<OverviewState> {
   Future<void> fetchOverviewData() async {
     emit(const OverviewState.loading());
     try {
-      final userCount = await _userRepository.getUserCount();
+      final adminStats = await _userRepository.getAdminStats();
+      final userCount = adminStats.totalUsers;
       final documentStats = await _documentRepository.getStats();
 
       emit(OverviewState.success(

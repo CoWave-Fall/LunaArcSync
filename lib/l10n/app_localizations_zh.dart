@@ -1154,4 +1154,52 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get impErr002 => '导入归档中未找到data.json。';
+
+  @override
+  String get networkErrorTitle => '网络错误';
+
+  @override
+  String get networkErrorServerOffline =>
+      '服务器离线或无法访问\n\n建议：\n1. 检查网络连接\n2. 尝试切换服务器\n3. 稍后重试';
+
+  @override
+  String get networkErrorConnectionFailed =>
+      '无法连接到服务器\n\n建议：\n1. 检查服务器地址是否正确\n2. 检查网络连接\n3. 检查防火墙设置';
+
+  @override
+  String get networkErrorConnectionTimeout =>
+      '连接超时\n\n建议：\n1. 检查网络连接速度\n2. 尝试切换到更稳定的网络\n3. 稍后重试';
+
+  @override
+  String get networkErrorUnauthorized => '认证失败\n\n您的登录已过期，请重新登录';
+
+  @override
+  String get networkErrorForbidden => '权限不足\n\n您没有权限访问此资源';
+
+  @override
+  String get networkErrorNotFound => '资源不存在\n\n请求的资源未找到';
+
+  @override
+  String get networkErrorServerError => '服务器错误\n\n服务器遇到了问题，请稍后重试';
+
+  @override
+  String get networkErrorGeneric => '网络错误\n\n请检查您的网络连接并重试';
+
+  @override
+  String get errorRetry => '重试';
+
+  @override
+  String get errorDismiss => '关闭';
+
+  @override
+  String get errorDetails => '技术详情';
+
+  @override
+  String get errorServerUnreachable => '服务器不可达';
+
+  @override
+  String get errorAuthenticationFailed => '认证失败';
+
+  @override
+  String get errorOccurredTitle => '出错了';
 }

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,13 +17,22 @@ import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
 import 'package:luna_arc_sync/core/theme/font_notifier.dart';
 import 'package:luna_arc_sync/presentation/settings/cubit/data_transfer_cubit.dart';
 import 'package:luna_arc_sync/presentation/settings/cubit/data_transfer_state.dart';
+import 'package:luna_arc_sync/presentation/settings/view/pdf_background_settings_page.dart';
 import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_notifier.dart';
+import 'package:luna_arc_sync/core/cache/pdf_cache_service.dart';
+import 'package:luna_arc_sync/core/cache/image_cache_service_enhanced.dart';
 import 'package:luna_arc_sync/core/config/pdf_render_backend.dart';
 import 'package:luna_arc_sync/core/services/dark_mode_image_processor.dart';
 import 'package:provider/provider.dart';
 import 'package:luna_arc_sync/core/animations/animated_list_item.dart';
-import 'package:luna_arc_sync/presentation/widgets/glassmorphic_container.dart';
+import 'package:luna_arc_sync/presentation/widgets/optimized_glassmorphic_container.dart';
+import 'package:luna_arc_sync/core/theme/glassmorphic_performance_notifier.dart';
 import 'package:luna_arc_sync/core/theme/no_overscroll_behavior.dart';
+import 'package:luna_arc_sync/presentation/settings/view/glassmorphic_performance_settings_page.dart';
+import 'package:luna_arc_sync/core/cache/glassmorphic_cache.dart';
+import 'package:luna_arc_sync/core/config/glassmorphic_presets.dart';
+import 'package:luna_arc_sync/core/services/page_preload_service.dart';
+import 'package:luna_arc_sync/presentation/scanner/view/scanner_settings_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -49,8 +57,10 @@ class _SettingsViewState extends State<SettingsView> {
   bool _notificationsEnabled = true; // Placeholder
   int _maxJobHistoryRecords = 100;
   int _jobPollingInterval = 5;
+  int _preloadCount = 2;
   late JobHistoryService _jobHistoryService;
   PdfRenderBackend _pdfRenderBackend = PdfRenderBackend.pdfjs;
+  final PagePreloadService _preloadService = PagePreloadService();
 
   @override
   void initState() {
@@ -63,10 +73,12 @@ class _SettingsViewState extends State<SettingsView> {
     final maxRecords = await _jobHistoryService.getMaxRecords();
     final pollingInterval = await _jobHistoryService.getPollingInterval();
     final pdfBackend = await PdfRenderBackendService.getBackend();
+    final preloadCount = await _preloadService.getPreloadCount();
     setState(() {
       _maxJobHistoryRecords = maxRecords;
       _jobPollingInterval = pollingInterval;
       _pdfRenderBackend = pdfBackend;
+      _preloadCount = preloadCount;
     });
   }
 
@@ -81,6 +93,13 @@ class _SettingsViewState extends State<SettingsView> {
     await _jobHistoryService.setPollingInterval(newValue);
     setState(() {
       _jobPollingInterval = newValue;
+    });
+  }
+
+  Future<void> _updatePreloadCount(int newValue) async {
+    await _preloadService.setPreloadCount(newValue);
+    setState(() {
+      _preloadCount = newValue;
     });
   }
 
@@ -223,7 +242,7 @@ class _SettingsViewState extends State<SettingsView> {
         state.whenOrNull(
           exportSuccess: (data) async {
             try {
-              final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-').replaceAll('.', '-');
+              final timestamp = DateTime.now().millisecondsSinceEpoch;
               final fileName = 'LunaArcSync_MyData_Export_$timestamp.zip';
               
               // 使用 FilePicker 让用户选择保存位置
@@ -430,6 +449,33 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
                 const Divider(),
                 
+                // 设备设置
+                AnimatedListItem(
+                  index: 6,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: _buildSectionHeader('设备设置'),
+                ),
+                AnimatedListItem(
+                  index: 6,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: ListTile(
+                    leading: const Icon(Icons.scanner),
+                    title: const Text('打印机/扫描仪'),
+                    subtitle: const Text('配置和管理打印机与扫描仪设备'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ScannerSettingsPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const Divider(),
+                
                 // 显示设置
                 AnimatedListItem(
                   index: 7,
@@ -506,17 +552,34 @@ class _SettingsViewState extends State<SettingsView> {
                     onTap: () => _showPdfBackendPickerDialog(context),
                   ),
                 ),
+                // 毛玻璃性能设置
+                AnimatedListItem(
+                  index: 11,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: ListTile(
+                    leading: const Icon(Icons.blur_on),
+                    title: const Text('毛玻璃性能设置'),
+                    subtitle: const Text('调整毛玻璃效果的性能和视觉效果'),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GlassmorphicPerformanceSettingsPage(),
+                      ),
+                    ),
+                  ),
+                ),
                 const Divider(),
                 
                 // 任务设置
                 AnimatedListItem(
-                  index: 11,
+                  index: 12,
                   delay: const Duration(milliseconds: 50),
                   animationType: AnimationType.fadeSlideUp,
                   child: _buildSectionHeader(AppLocalizations.of(context)!.settingsJobSettings),
                 ),
                 AnimatedListItem(
-                  index: 12,
+                  index: 13,
                   delay: const Duration(milliseconds: 50),
                   animationType: AnimationType.fadeSlideUp,
                   child: ListTile(
@@ -539,7 +602,7 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
                 ),
                 AnimatedListItem(
-                  index: 13,
+                  index: 14,
                   delay: const Duration(milliseconds: 50),
                   animationType: AnimationType.fadeSlideUp,
                   child: ListTile(
@@ -559,6 +622,48 @@ class _SettingsViewState extends State<SettingsView> {
                         ),
                       ],
                     ),
+                  ),
+                ),
+                AnimatedListItem(
+                  index: 15,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: ListTile(
+                    leading: const Icon(Icons.download),
+                    title: const Text('页面预加载设置'),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('预加载前后 $_preloadCount 页'),
+                        Slider(
+                          value: _preloadCount.toDouble(),
+                          min: 0,
+                          max: 5,
+                          divisions: 5,
+                          label: '$_preloadCount 页',
+                          onChanged: (value) => _updatePreloadCount(value.toInt()),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                AnimatedListItem(
+                  index: 16,
+                  delay: const Duration(milliseconds: 50),
+                  animationType: AnimationType.fadeSlideUp,
+                  child: ListTile(
+                    leading: const Icon(Icons.color_lens),
+                    title: const Text('PDF背景颜色'),
+                    subtitle: const Text('自定义PDF渲染的背景颜色'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PdfBackgroundSettingsPage(),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const Divider(),
@@ -1897,6 +2002,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''';
       final prefs = await SharedPreferences.getInstance();
       final keys = prefs.getKeys();
       
+      // Clear PDF cache files
+      if (_clearPdfCache) {
+        await PdfCacheService.clearAllCache();
+        await ImageCacheServiceEnhanced.clearAllCache();
+      }
+      
       for (final key in keys) {
         bool shouldRemove = false;
         
@@ -1931,7 +2042,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''';
     try {
       final prefs = await SharedPreferences.getInstance();
       
-      // Clear PDF cache
+      // Clear PDF cache files
+      await PdfCacheService.clearAllCache();
+      await ImageCacheServiceEnhanced.clearAllCache();
+      
+      // Clear PDF cache preferences
       final keys = prefs.getKeys().where((key) => key.startsWith('pdf_cache_')).toList();
       for (final key in keys) {
         await prefs.remove(key);
@@ -2066,14 +2181,27 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.''';
         ],
       );
 
-    // 如果有自定义背景，使用毛玻璃卡片
+    // 如果有自定义背景，使用优化的毛玻璃卡片
     if (hasCustomBackground) {
-      return GlassmorphicCard(
-        blur: 12.0,
-        opacity: 0.18,
-        padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        child: aboutContent,
+      return Consumer<GlassmorphicPerformanceNotifier>(
+        builder: (context, performanceNotifier, child) {
+          final config = performanceNotifier.config;
+          // 使用设置页面卡片预设
+          final blur = config.getActualBlur(GlassmorphicPresets.settingsCardBlur);
+          final opacity = config.getActualOpacity(GlassmorphicPresets.settingsCardOpacity);
+          
+          return OptimizedGlassmorphicCard(
+            blur: blur,
+            opacity: opacity,
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            useSharedBlur: false,  // 使用独立模糊，因为没有父组件提供共享模糊
+            blurGroup: 'settings',
+            blurMethod: config.blurMethod,
+            kawaseConfig: config.blurMethod == BlurMethod.kawase ? config.getKawaseConfig() : null,
+            child: aboutContent,
+          );
+        },
       );
     }
 

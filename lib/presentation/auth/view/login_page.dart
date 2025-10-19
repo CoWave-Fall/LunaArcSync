@@ -322,6 +322,8 @@ class _LoginPageState extends State<LoginPage> {
           saveCredentials: true, // 保存凭据以支持自动登录
         );
       }
+      
+      // 注：登录成功后的用户信息保存已在AuthCubit中自动处理
     }
   }
 
@@ -333,7 +335,7 @@ class _LoginPageState extends State<LoginPage> {
           BlocListener<AuthCubit, AuthState>(
             listener: (context, state) {
               state.whenOrNull(
-                authenticated: (userId) {
+                authenticated: (userId, isAdmin, role) {
                   // 显示登录成功动画
                   setState(() {
                     _showLoginSuccess = true;

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Page {
 
- String get pageId; String get title;@HighPrecisionDateTimeConverter() DateTime get createdAt;@HighPrecisionDateTimeConverter() DateTime get updatedAt; int get order;// 新增 order 字段
+ String get pageId; String get title;@UnixTimestampConverter() DateTime get createdAt;@UnixTimestampConverter() DateTime get updatedAt; int get order;// 新增 order 字段
  String? get thumbnailUrl;
 /// Create a copy of Page
 /// with the given fields replaced by the non-null parameter values.
@@ -49,7 +49,7 @@ abstract mixin class $PageCopyWith<$Res>  {
   factory $PageCopyWith(Page value, $Res Function(Page) _then) = _$PageCopyWithImpl;
 @useResult
 $Res call({
- String pageId, String title,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int order, String? thumbnailUrl
+ String pageId, String title,@UnixTimestampConverter() DateTime createdAt,@UnixTimestampConverter() DateTime updatedAt, int order, String? thumbnailUrl
 });
 
 
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int order,  String? thumbnailUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String pageId,  String title, @UnixTimestampConverter()  DateTime createdAt, @UnixTimestampConverter()  DateTime updatedAt,  int order,  String? thumbnailUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Page() when $default != null:
 return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.order,_that.thumbnailUrl);case _:
@@ -180,7 +180,7 @@ return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.o
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int order,  String? thumbnailUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String pageId,  String title, @UnixTimestampConverter()  DateTime createdAt, @UnixTimestampConverter()  DateTime updatedAt,  int order,  String? thumbnailUrl)  $default,) {final _that = this;
 switch (_that) {
 case _Page():
 return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.order,_that.thumbnailUrl);case _:
@@ -200,7 +200,7 @@ return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.o
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int order,  String? thumbnailUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String pageId,  String title, @UnixTimestampConverter()  DateTime createdAt, @UnixTimestampConverter()  DateTime updatedAt,  int order,  String? thumbnailUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _Page() when $default != null:
 return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.order,_that.thumbnailUrl);case _:
@@ -215,13 +215,13 @@ return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.o
 @JsonSerializable()
 
 class _Page implements Page {
-  const _Page({required this.pageId, required this.title, @HighPrecisionDateTimeConverter() required this.createdAt, @HighPrecisionDateTimeConverter() required this.updatedAt, this.order = 0, this.thumbnailUrl});
+  const _Page({required this.pageId, required this.title, @UnixTimestampConverter() required this.createdAt, @UnixTimestampConverter() required this.updatedAt, this.order = 0, this.thumbnailUrl});
   factory _Page.fromJson(Map<String, dynamic> json) => _$PageFromJson(json);
 
 @override final  String pageId;
 @override final  String title;
-@override@HighPrecisionDateTimeConverter() final  DateTime createdAt;
-@override@HighPrecisionDateTimeConverter() final  DateTime updatedAt;
+@override@UnixTimestampConverter() final  DateTime createdAt;
+@override@UnixTimestampConverter() final  DateTime updatedAt;
 @override@JsonKey() final  int order;
 // 新增 order 字段
 @override final  String? thumbnailUrl;
@@ -259,7 +259,7 @@ abstract mixin class _$PageCopyWith<$Res> implements $PageCopyWith<$Res> {
   factory _$PageCopyWith(_Page value, $Res Function(_Page) _then) = __$PageCopyWithImpl;
 @override @useResult
 $Res call({
- String pageId, String title,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int order, String? thumbnailUrl
+ String pageId, String title,@UnixTimestampConverter() DateTime createdAt,@UnixTimestampConverter() DateTime updatedAt, int order, String? thumbnailUrl
 });
 
 
@@ -1438,7 +1438,7 @@ as int,
 /// @nodoc
 mixin _$PageVersion {
 
- String get versionId; int get versionNumber; String? get message;@HighPrecisionDateTimeConverter() DateTime get createdAt; OcrResult? get ocrResult; String? get fileUrl; String? get mimeType;
+ String get versionId; int get versionNumber; String? get message;@UnixTimestampConverter() DateTime get createdAt; OcrResult? get ocrResult; String? get fileUrl; String? get mimeType;
 /// Create a copy of PageVersion
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1471,7 +1471,7 @@ abstract mixin class $PageVersionCopyWith<$Res>  {
   factory $PageVersionCopyWith(PageVersion value, $Res Function(PageVersion) _then) = _$PageVersionCopyWithImpl;
 @useResult
 $Res call({
- String versionId, int versionNumber, String? message,@HighPrecisionDateTimeConverter() DateTime createdAt, OcrResult? ocrResult, String? fileUrl, String? mimeType
+ String versionId, int versionNumber, String? message,@UnixTimestampConverter() DateTime createdAt, OcrResult? ocrResult, String? fileUrl, String? mimeType
 });
 
 
@@ -1594,7 +1594,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String versionId,  int versionNumber,  String? message, @HighPrecisionDateTimeConverter()  DateTime createdAt,  OcrResult? ocrResult,  String? fileUrl,  String? mimeType)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String versionId,  int versionNumber,  String? message, @UnixTimestampConverter()  DateTime createdAt,  OcrResult? ocrResult,  String? fileUrl,  String? mimeType)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PageVersion() when $default != null:
 return $default(_that.versionId,_that.versionNumber,_that.message,_that.createdAt,_that.ocrResult,_that.fileUrl,_that.mimeType);case _:
@@ -1615,7 +1615,7 @@ return $default(_that.versionId,_that.versionNumber,_that.message,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String versionId,  int versionNumber,  String? message, @HighPrecisionDateTimeConverter()  DateTime createdAt,  OcrResult? ocrResult,  String? fileUrl,  String? mimeType)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String versionId,  int versionNumber,  String? message, @UnixTimestampConverter()  DateTime createdAt,  OcrResult? ocrResult,  String? fileUrl,  String? mimeType)  $default,) {final _that = this;
 switch (_that) {
 case _PageVersion():
 return $default(_that.versionId,_that.versionNumber,_that.message,_that.createdAt,_that.ocrResult,_that.fileUrl,_that.mimeType);case _:
@@ -1635,7 +1635,7 @@ return $default(_that.versionId,_that.versionNumber,_that.message,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String versionId,  int versionNumber,  String? message, @HighPrecisionDateTimeConverter()  DateTime createdAt,  OcrResult? ocrResult,  String? fileUrl,  String? mimeType)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String versionId,  int versionNumber,  String? message, @UnixTimestampConverter()  DateTime createdAt,  OcrResult? ocrResult,  String? fileUrl,  String? mimeType)?  $default,) {final _that = this;
 switch (_that) {
 case _PageVersion() when $default != null:
 return $default(_that.versionId,_that.versionNumber,_that.message,_that.createdAt,_that.ocrResult,_that.fileUrl,_that.mimeType);case _:
@@ -1650,13 +1650,13 @@ return $default(_that.versionId,_that.versionNumber,_that.message,_that.createdA
 @JsonSerializable()
 
 class _PageVersion implements PageVersion {
-  const _PageVersion({required this.versionId, required this.versionNumber, this.message, @HighPrecisionDateTimeConverter() required this.createdAt, this.ocrResult, this.fileUrl, this.mimeType});
+  const _PageVersion({required this.versionId, required this.versionNumber, this.message, @UnixTimestampConverter() required this.createdAt, this.ocrResult, this.fileUrl, this.mimeType});
   factory _PageVersion.fromJson(Map<String, dynamic> json) => _$PageVersionFromJson(json);
 
 @override final  String versionId;
 @override final  int versionNumber;
 @override final  String? message;
-@override@HighPrecisionDateTimeConverter() final  DateTime createdAt;
+@override@UnixTimestampConverter() final  DateTime createdAt;
 @override final  OcrResult? ocrResult;
 @override final  String? fileUrl;
 @override final  String? mimeType;
@@ -1694,7 +1694,7 @@ abstract mixin class _$PageVersionCopyWith<$Res> implements $PageVersionCopyWith
   factory _$PageVersionCopyWith(_PageVersion value, $Res Function(_PageVersion) _then) = __$PageVersionCopyWithImpl;
 @override @useResult
 $Res call({
- String versionId, int versionNumber, String? message,@HighPrecisionDateTimeConverter() DateTime createdAt, OcrResult? ocrResult, String? fileUrl, String? mimeType
+ String versionId, int versionNumber, String? message,@UnixTimestampConverter() DateTime createdAt, OcrResult? ocrResult, String? fileUrl, String? mimeType
 });
 
 
@@ -1743,7 +1743,7 @@ $OcrResultCopyWith<$Res>? get ocrResult {
 /// @nodoc
 mixin _$PageDetail {
 
- String get pageId; String get title;@HighPrecisionDateTimeConverter() DateTime get createdAt;@HighPrecisionDateTimeConverter() DateTime get updatedAt; PageVersion? get currentVersion; int get totalVersions; String? get thumbnailUrl;
+ String get pageId; String get title;@UnixTimestampConverter() DateTime get createdAt;@UnixTimestampConverter() DateTime get updatedAt; PageVersion? get currentVersion; int get totalVersions; String? get thumbnailUrl;
 /// Create a copy of PageDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1776,7 +1776,7 @@ abstract mixin class $PageDetailCopyWith<$Res>  {
   factory $PageDetailCopyWith(PageDetail value, $Res Function(PageDetail) _then) = _$PageDetailCopyWithImpl;
 @useResult
 $Res call({
- String pageId, String title,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, PageVersion? currentVersion, int totalVersions, String? thumbnailUrl
+ String pageId, String title,@UnixTimestampConverter() DateTime createdAt,@UnixTimestampConverter() DateTime updatedAt, PageVersion? currentVersion, int totalVersions, String? thumbnailUrl
 });
 
 
@@ -1899,7 +1899,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  PageVersion? currentVersion,  int totalVersions,  String? thumbnailUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String pageId,  String title, @UnixTimestampConverter()  DateTime createdAt, @UnixTimestampConverter()  DateTime updatedAt,  PageVersion? currentVersion,  int totalVersions,  String? thumbnailUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PageDetail() when $default != null:
 return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.currentVersion,_that.totalVersions,_that.thumbnailUrl);case _:
@@ -1920,7 +1920,7 @@ return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  PageVersion? currentVersion,  int totalVersions,  String? thumbnailUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String pageId,  String title, @UnixTimestampConverter()  DateTime createdAt, @UnixTimestampConverter()  DateTime updatedAt,  PageVersion? currentVersion,  int totalVersions,  String? thumbnailUrl)  $default,) {final _that = this;
 switch (_that) {
 case _PageDetail():
 return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.currentVersion,_that.totalVersions,_that.thumbnailUrl);case _:
@@ -1940,7 +1940,7 @@ return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String pageId,  String title, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  PageVersion? currentVersion,  int totalVersions,  String? thumbnailUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String pageId,  String title, @UnixTimestampConverter()  DateTime createdAt, @UnixTimestampConverter()  DateTime updatedAt,  PageVersion? currentVersion,  int totalVersions,  String? thumbnailUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _PageDetail() when $default != null:
 return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.currentVersion,_that.totalVersions,_that.thumbnailUrl);case _:
@@ -1955,13 +1955,13 @@ return $default(_that.pageId,_that.title,_that.createdAt,_that.updatedAt,_that.c
 @JsonSerializable()
 
 class _PageDetail implements PageDetail {
-  const _PageDetail({required this.pageId, required this.title, @HighPrecisionDateTimeConverter() required this.createdAt, @HighPrecisionDateTimeConverter() required this.updatedAt, required this.currentVersion, required this.totalVersions, this.thumbnailUrl});
+  const _PageDetail({required this.pageId, required this.title, @UnixTimestampConverter() required this.createdAt, @UnixTimestampConverter() required this.updatedAt, required this.currentVersion, required this.totalVersions, this.thumbnailUrl});
   factory _PageDetail.fromJson(Map<String, dynamic> json) => _$PageDetailFromJson(json);
 
 @override final  String pageId;
 @override final  String title;
-@override@HighPrecisionDateTimeConverter() final  DateTime createdAt;
-@override@HighPrecisionDateTimeConverter() final  DateTime updatedAt;
+@override@UnixTimestampConverter() final  DateTime createdAt;
+@override@UnixTimestampConverter() final  DateTime updatedAt;
 @override final  PageVersion? currentVersion;
 @override final  int totalVersions;
 @override final  String? thumbnailUrl;
@@ -1999,7 +1999,7 @@ abstract mixin class _$PageDetailCopyWith<$Res> implements $PageDetailCopyWith<$
   factory _$PageDetailCopyWith(_PageDetail value, $Res Function(_PageDetail) _then) = __$PageDetailCopyWithImpl;
 @override @useResult
 $Res call({
- String pageId, String title,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, PageVersion? currentVersion, int totalVersions, String? thumbnailUrl
+ String pageId, String title,@UnixTimestampConverter() DateTime createdAt,@UnixTimestampConverter() DateTime updatedAt, PageVersion? currentVersion, int totalVersions, String? thumbnailUrl
 });
 
 

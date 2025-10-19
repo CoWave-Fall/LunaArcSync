@@ -9,12 +9,23 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:connectivity_plus/connectivity_plus.dart' as _i895;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:luna_arc_sync/core/api/api_client.dart' as _i423;
 import 'package:luna_arc_sync/core/api/auth_interceptor.dart' as _i119;
+import 'package:luna_arc_sync/core/api/error_handler_interceptor.dart' as _i824;
+import 'package:luna_arc_sync/core/di/network_module.dart' as _i1016;
 import 'package:luna_arc_sync/core/di/register_module.dart' as _i742;
+import 'package:luna_arc_sync/core/scanner/scanner_config_service.dart'
+    as _i454;
+import 'package:luna_arc_sync/core/scanner/scanner_manager.dart' as _i511;
 import 'package:luna_arc_sync/core/services/auto_login_service.dart' as _i728;
+import 'package:luna_arc_sync/core/services/global_error_handler.dart' as _i690;
+import 'package:luna_arc_sync/core/services/multi_account_service.dart'
+    as _i1027;
+import 'package:luna_arc_sync/core/services/network_status_service.dart'
+    as _i378;
 import 'package:luna_arc_sync/core/services/server_status_service.dart'
     as _i1067;
 import 'package:luna_arc_sync/core/storage/image_cache_service.dart' as _i347;
@@ -25,6 +36,8 @@ import 'package:luna_arc_sync/core/storage/server_cache_service.dart' as _i142;
 import 'package:luna_arc_sync/core/theme/background_image_notifier.dart'
     as _i562;
 import 'package:luna_arc_sync/core/theme/font_notifier.dart' as _i402;
+import 'package:luna_arc_sync/core/theme/glassmorphic_performance_notifier.dart'
+    as _i962;
 import 'package:luna_arc_sync/core/theme/theme_color_notifier.dart' as _i73;
 import 'package:luna_arc_sync/data/repositories/about_repository.dart'
     as _i1061;
@@ -54,6 +67,8 @@ import 'package:luna_arc_sync/presentation/pages/cubit/page_list_cubit.dart'
     as _i576;
 import 'package:luna_arc_sync/presentation/pages/cubit/version_history_cubit.dart'
     as _i47;
+import 'package:luna_arc_sync/presentation/scanner/cubit/scanner_management_cubit.dart'
+    as _i307;
 import 'package:luna_arc_sync/presentation/search/cubit/search_cubit.dart'
     as _i235;
 import 'package:luna_arc_sync/presentation/settings/cubit/data_transfer_cubit.dart'
@@ -62,6 +77,7 @@ import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_noti
     as _i22;
 import 'package:luna_arc_sync/presentation/settings/notifiers/precaching_settings_notifier.dart'
     as _i751;
+import 'package:luna_arc_sync/presentation/user/cubit/user_cubit.dart' as _i943;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -71,6 +87,10 @@ extension GetItInjectableX on _i174.GetIt {
   }) async {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     final registerModule = _$RegisterModule();
+    final networkModule = _$NetworkModule();
+    gh.factory<_i824.ErrorHandlerInterceptor>(
+      () => _i824.ErrorHandlerInterceptor(),
+    );
     gh.factory<_i562.BackgroundImageNotifier>(
       () => _i562.BackgroundImageNotifier(),
     );
@@ -84,9 +104,24 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.precachingSettingsNotifier(),
       preResolve: true,
     );
+    await gh.singletonAsync<_i962.GlassmorphicPerformanceNotifier>(
+      () => registerModule.glassmorphicPerformanceNotifier(),
+      preResolve: true,
+    );
+    gh.lazySingleton<_i895.Connectivity>(() => networkModule.connectivity);
     await gh.lazySingletonAsync<_i347.ImageCacheService>(
       () => registerModule.imageCacheService(),
       preResolve: true,
+    );
+    gh.lazySingleton<_i511.ScannerManager>(
+      () => registerModule.scannerManager(),
+    );
+    await gh.lazySingletonAsync<_i454.ScannerConfigService>(
+      () => registerModule.scannerConfigService(),
+      preResolve: true,
+    );
+    gh.lazySingleton<_i690.GlobalErrorHandler>(
+      () => _i690.GlobalErrorHandler(),
     );
     gh.lazySingleton<_i1067.ServerStatusService>(
       () => _i1067.ServerStatusService(),
@@ -98,6 +133,18 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i142.ServerCacheService>(
       () => _i142.ServerCacheService(),
     );
+    gh.factory<_i307.ScannerManagementCubit>(
+      () => _i307.ScannerManagementCubit(
+        gh<_i511.ScannerManager>(),
+        gh<_i454.ScannerConfigService>(),
+      ),
+    );
+    gh.lazySingleton<_i378.NetworkStatusService>(
+      () => _i378.NetworkStatusService(gh<_i895.Connectivity>()),
+    );
+    gh.lazySingleton<_i1027.MultiAccountService>(
+      () => _i1027.MultiAccountService(gh<_i972.SecureStorageService>()),
+    );
     gh.factory<_i119.AuthInterceptor>(
       () => _i119.AuthInterceptor(gh<_i972.SecureStorageService>()),
     );
@@ -105,6 +152,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.apiClient(
         gh<_i972.SecureStorageService>(),
         gh<_i119.AuthInterceptor>(),
+        gh<_i824.ErrorHandlerInterceptor>(),
       ),
       preResolve: true,
     );
@@ -147,9 +195,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i235.SearchCubit>(
       () => _i235.SearchCubit(gh<_i693.ISearchRepository>()),
     );
-    gh.factory<_i921.DocumentListCubit>(
-      () => _i921.DocumentListCubit(gh<_i393.IDocumentRepository>()),
-    );
     gh.factory<_i464.PageDetailCubit>(
       () => _i464.PageDetailCubit(
         gh<_i431.IPageRepository>(),
@@ -181,10 +226,23 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i393.IDocumentRepository>(),
       ),
     );
+    gh.lazySingleton<_i943.UserCubit>(
+      () => _i943.UserCubit(gh<_i655.IUserRepository>()),
+    );
+    gh.factory<_i921.DocumentListCubit>(
+      () => _i921.DocumentListCubit(
+        gh<_i393.IDocumentRepository>(),
+        gh<_i655.IUserRepository>(),
+        gh<_i972.SecureStorageService>(),
+      ),
+    );
     gh.lazySingleton<_i887.AuthCubit>(
       () => _i887.AuthCubit(
         gh<_i125.IAuthRepository>(),
         gh<_i728.AutoLoginService>(),
+        gh<_i142.ServerCacheService>(),
+        gh<_i972.SecureStorageService>(),
+        gh<_i423.ApiClient>(),
       ),
     );
     gh.factory<_i630.AboutCubit>(
@@ -195,3 +253,5 @@ extension GetItInjectableX on _i174.GetIt {
 }
 
 class _$RegisterModule extends _i742.RegisterModule {}
+
+class _$NetworkModule extends _i1016.NetworkModule {}

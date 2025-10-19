@@ -122,11 +122,11 @@ return unauthenticated(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function( String userId)?  authenticated,TResult Function( bool isLoading,  String? error)?  unauthenticated,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function( String userId,  bool isAdmin,  String role)?  authenticated,TResult Function( bool isLoading,  String? error)?  unauthenticated,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Authenticated() when authenticated != null:
-return authenticated(_that.userId);case _Unauthenticated() when unauthenticated != null:
+return authenticated(_that.userId,_that.isAdmin,_that.role);case _Unauthenticated() when unauthenticated != null:
 return unauthenticated(_that.isLoading,_that.error);case _:
   return orElse();
 
@@ -145,11 +145,11 @@ return unauthenticated(_that.isLoading,_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function( String userId)  authenticated,required TResult Function( bool isLoading,  String? error)  unauthenticated,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function( String userId,  bool isAdmin,  String role)  authenticated,required TResult Function( bool isLoading,  String? error)  unauthenticated,}) {final _that = this;
 switch (_that) {
 case _Initial():
 return initial();case _Authenticated():
-return authenticated(_that.userId);case _Unauthenticated():
+return authenticated(_that.userId,_that.isAdmin,_that.role);case _Unauthenticated():
 return unauthenticated(_that.isLoading,_that.error);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -164,11 +164,11 @@ return unauthenticated(_that.isLoading,_that.error);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function( String userId)?  authenticated,TResult? Function( bool isLoading,  String? error)?  unauthenticated,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function( String userId,  bool isAdmin,  String role)?  authenticated,TResult? Function( bool isLoading,  String? error)?  unauthenticated,}) {final _that = this;
 switch (_that) {
 case _Initial() when initial != null:
 return initial();case _Authenticated() when authenticated != null:
-return authenticated(_that.userId);case _Unauthenticated() when unauthenticated != null:
+return authenticated(_that.userId,_that.isAdmin,_that.role);case _Unauthenticated() when unauthenticated != null:
 return unauthenticated(_that.isLoading,_that.error);case _:
   return null;
 
@@ -213,10 +213,12 @@ String toString() {
 
 
 class _Authenticated implements AuthState {
-  const _Authenticated({required this.userId});
+  const _Authenticated({required this.userId, required this.isAdmin, required this.role});
   
 
  final  String userId;
+ final  bool isAdmin;
+ final  String role;
 
 /// Create a copy of AuthState
 /// with the given fields replaced by the non-null parameter values.
@@ -228,16 +230,16 @@ _$AuthenticatedCopyWith<_Authenticated> get copyWith => __$AuthenticatedCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Authenticated&&(identical(other.userId, userId) || other.userId == userId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Authenticated&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.role, role) || other.role == role));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId);
+int get hashCode => Object.hash(runtimeType,userId,isAdmin,role);
 
 @override
 String toString() {
-  return 'AuthState.authenticated(userId: $userId)';
+  return 'AuthState.authenticated(userId: $userId, isAdmin: $isAdmin, role: $role)';
 }
 
 
@@ -248,7 +250,7 @@ abstract mixin class _$AuthenticatedCopyWith<$Res> implements $AuthStateCopyWith
   factory _$AuthenticatedCopyWith(_Authenticated value, $Res Function(_Authenticated) _then) = __$AuthenticatedCopyWithImpl;
 @useResult
 $Res call({
- String userId
+ String userId, bool isAdmin, String role
 });
 
 
@@ -265,9 +267,11 @@ class __$AuthenticatedCopyWithImpl<$Res>
 
 /// Create a copy of AuthState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? userId = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? userId = null,Object? isAdmin = null,Object? role = null,}) {
   return _then(_Authenticated(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,isAdmin: null == isAdmin ? _self.isAdmin : isAdmin // ignore: cast_nullable_to_non_nullable
+as bool,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

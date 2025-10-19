@@ -9,9 +9,9 @@ abstract class Page with _$Page {
   const factory Page({
     required String pageId,
     required String title,
-    @HighPrecisionDateTimeConverter()
+    @UnixTimestampConverter()
     required DateTime createdAt,
-    @HighPrecisionDateTimeConverter()
+    @UnixTimestampConverter()
     required DateTime updatedAt,
     @Default(0) int order, // 新增 order 字段
     String? thumbnailUrl,
@@ -113,7 +113,7 @@ abstract class PageVersion with _$PageVersion {
     required String versionId,
     required int versionNumber,
     String? message,
-    @HighPrecisionDateTimeConverter()
+    @UnixTimestampConverter()
     required DateTime createdAt,
     OcrResult? ocrResult,
     String? fileUrl,
@@ -128,9 +128,9 @@ abstract class PageDetail with _$PageDetail {
   const factory PageDetail({
     required String pageId,
     required String title,
-    @HighPrecisionDateTimeConverter()
+    @UnixTimestampConverter()
     required DateTime createdAt,
-    @HighPrecisionDateTimeConverter()
+    @UnixTimestampConverter()
     required DateTime updatedAt,
     required PageVersion? currentVersion,
     required int totalVersions,

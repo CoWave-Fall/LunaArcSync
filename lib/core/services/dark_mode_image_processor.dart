@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// 暗色模式图像处理器
@@ -73,7 +73,21 @@ class DarkModeImageProcessor {
     }
   }
   
-  static Future<Uint8List> processImageForDarkMode(Uint8List imageBytes) async {
+  /// 计算两个颜色之间的欧几里得距离
+  static double _calculateColorDistance(int r1, int g1, int b1, int r2, int g2, int b2) {
+    final dr = r1 - r2;
+    final dg = g1 - g2;
+    final db = b1 - b2;
+    return (dr * dr + dg * dg + db * db).toDouble();
+  }
+  
+  /// 处理图像以适应深色模式
+  /// [imageBytes] 原始图像字节
+  /// [backgroundColor] 用户自定义的背景颜色，将在反转时被过滤掉
+  static Future<Uint8List> processImageForDarkMode(
+    Uint8List imageBytes, {
+    Color? backgroundColor,
+  }) async {
     // Initialize settings if not already done
     await initialize();
     
@@ -81,6 +95,9 @@ class DarkModeImageProcessor {
       print('DarkModeImageProcessor: Processing image for dark mode');
       print('Black threshold: $_blackThreshold, White threshold: $_whiteThreshold');
       print('Darken factor: $_darkenFactor, Lighten factor: $_lightenFactor');
+      if (backgroundColor != null) {
+        print('Background color to filter: #${backgroundColor.value.toRadixString(16).padLeft(8, '0')}');
+      }
     }
     
     try {
@@ -96,12 +113,32 @@ class DarkModeImageProcessor {
       
       final bytes = pixelData.buffer.asUint8List();
       
+      // 提取背景色的RGB值（如果提供）
+      int? bgR, bgG, bgB;
+      if (backgroundColor != null) {
+        bgR = backgroundColor.red;
+        bgG = backgroundColor.green;
+        bgB = backgroundColor.blue;
+      }
+      
       // Process each pixel
       for (int i = 0; i < bytes.length; i += 4) {
         final r = bytes[i];
         final g = bytes[i + 1];
         final b = bytes[i + 2];
-        // final a = bytes[i + 3]; // Alpha channel, not used in processing
+        // final a = bytes[i + 3]; // Alpha channel preserved, not modified
+        
+        // 如果提供了背景色，检查当前像素是否接近背景色
+        // 如果是背景色，跳过处理，保持原样
+        if (bgR != null && bgG != null && bgB != null) {
+          // 使用欧几里得距离判断颜色相似度
+          // 阈值设为30，允许一定的容差
+          final colorDistance = _calculateColorDistance(r, g, b, bgR, bgG, bgB);
+          if (colorDistance < 30) {
+            // 这是背景色，跳过处理
+            continue;
+          }
+        }
         
         // Calculate brightness for better text detection
         final brightness = (r + g + b) / 3;

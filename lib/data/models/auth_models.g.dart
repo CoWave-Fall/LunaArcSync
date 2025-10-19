@@ -18,17 +18,29 @@ Map<String, dynamic> _$LoginRequestToJson(_LoginRequest instance) =>
 _LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
     _LoginResponse(
       token: json['token'] as String,
-      expiration: DateTime.parse(json['expiration'] as String),
+      expiration: const UnixTimestampConverter().fromJson(json['expiration']),
       userId: json['userId'] as String,
+      username: json['username'] as String,
+      nickname: json['nickname'] as String,
       email: json['email'] as String,
+      avatar: json['avatar'] as String?,
+      bio: json['bio'] as String?,
+      isAdmin: json['isAdmin'] as bool,
+      role: json['role'] as String,
     );
 
 Map<String, dynamic> _$LoginResponseToJson(_LoginResponse instance) =>
     <String, dynamic>{
       'token': instance.token,
-      'expiration': instance.expiration.toIso8601String(),
+      'expiration': const UnixTimestampConverter().toJson(instance.expiration),
       'userId': instance.userId,
+      'username': instance.username,
+      'nickname': instance.nickname,
       'email': instance.email,
+      'avatar': instance.avatar,
+      'bio': instance.bio,
+      'isAdmin': instance.isAdmin,
+      'role': instance.role,
     };
 
 _RegisterRequest _$RegisterRequestFromJson(Map<String, dynamic> json) =>

@@ -281,7 +281,7 @@ as String,
 /// @nodoc
 mixin _$Job {
 
- String get jobId; String get type; String get status; String? get associatedPageId; DateTime get submittedAt; DateTime? get startedAt; DateTime? get completedAt; String? get errorMessage; String? get resultUrl;
+ String get jobId; String get type; String get status; String? get associatedPageId;@UnixTimestampConverter() DateTime get submittedAt;@UnixTimestampConverter() DateTime? get startedAt;@UnixTimestampConverter() DateTime? get completedAt; String? get errorMessage; String? get resultUrl;
 /// Create a copy of Job
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -314,7 +314,7 @@ abstract mixin class $JobCopyWith<$Res>  {
   factory $JobCopyWith(Job value, $Res Function(Job) _then) = _$JobCopyWithImpl;
 @useResult
 $Res call({
- String jobId, String type, String status, String? associatedPageId, DateTime submittedAt, DateTime? startedAt, DateTime? completedAt, String? errorMessage, String? resultUrl
+ String jobId, String type, String status, String? associatedPageId,@UnixTimestampConverter() DateTime submittedAt,@UnixTimestampConverter() DateTime? startedAt,@UnixTimestampConverter() DateTime? completedAt, String? errorMessage, String? resultUrl
 });
 
 
@@ -427,7 +427,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String jobId,  String type,  String status,  String? associatedPageId,  DateTime submittedAt,  DateTime? startedAt,  DateTime? completedAt,  String? errorMessage,  String? resultUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String jobId,  String type,  String status,  String? associatedPageId, @UnixTimestampConverter()  DateTime submittedAt, @UnixTimestampConverter()  DateTime? startedAt, @UnixTimestampConverter()  DateTime? completedAt,  String? errorMessage,  String? resultUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Job() when $default != null:
 return $default(_that.jobId,_that.type,_that.status,_that.associatedPageId,_that.submittedAt,_that.startedAt,_that.completedAt,_that.errorMessage,_that.resultUrl);case _:
@@ -448,7 +448,7 @@ return $default(_that.jobId,_that.type,_that.status,_that.associatedPageId,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String jobId,  String type,  String status,  String? associatedPageId,  DateTime submittedAt,  DateTime? startedAt,  DateTime? completedAt,  String? errorMessage,  String? resultUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String jobId,  String type,  String status,  String? associatedPageId, @UnixTimestampConverter()  DateTime submittedAt, @UnixTimestampConverter()  DateTime? startedAt, @UnixTimestampConverter()  DateTime? completedAt,  String? errorMessage,  String? resultUrl)  $default,) {final _that = this;
 switch (_that) {
 case _Job():
 return $default(_that.jobId,_that.type,_that.status,_that.associatedPageId,_that.submittedAt,_that.startedAt,_that.completedAt,_that.errorMessage,_that.resultUrl);case _:
@@ -468,7 +468,7 @@ return $default(_that.jobId,_that.type,_that.status,_that.associatedPageId,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String jobId,  String type,  String status,  String? associatedPageId,  DateTime submittedAt,  DateTime? startedAt,  DateTime? completedAt,  String? errorMessage,  String? resultUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String jobId,  String type,  String status,  String? associatedPageId, @UnixTimestampConverter()  DateTime submittedAt, @UnixTimestampConverter()  DateTime? startedAt, @UnixTimestampConverter()  DateTime? completedAt,  String? errorMessage,  String? resultUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _Job() when $default != null:
 return $default(_that.jobId,_that.type,_that.status,_that.associatedPageId,_that.submittedAt,_that.startedAt,_that.completedAt,_that.errorMessage,_that.resultUrl);case _:
@@ -483,16 +483,16 @@ return $default(_that.jobId,_that.type,_that.status,_that.associatedPageId,_that
 @JsonSerializable()
 
 class _Job implements Job {
-  const _Job({required this.jobId, required this.type, required this.status, this.associatedPageId, required this.submittedAt, this.startedAt, this.completedAt, this.errorMessage, this.resultUrl});
+  const _Job({required this.jobId, required this.type, required this.status, this.associatedPageId, @UnixTimestampConverter() required this.submittedAt, @UnixTimestampConverter() this.startedAt, @UnixTimestampConverter() this.completedAt, this.errorMessage, this.resultUrl});
   factory _Job.fromJson(Map<String, dynamic> json) => _$JobFromJson(json);
 
 @override final  String jobId;
 @override final  String type;
 @override final  String status;
 @override final  String? associatedPageId;
-@override final  DateTime submittedAt;
-@override final  DateTime? startedAt;
-@override final  DateTime? completedAt;
+@override@UnixTimestampConverter() final  DateTime submittedAt;
+@override@UnixTimestampConverter() final  DateTime? startedAt;
+@override@UnixTimestampConverter() final  DateTime? completedAt;
 @override final  String? errorMessage;
 @override final  String? resultUrl;
 
@@ -529,7 +529,7 @@ abstract mixin class _$JobCopyWith<$Res> implements $JobCopyWith<$Res> {
   factory _$JobCopyWith(_Job value, $Res Function(_Job) _then) = __$JobCopyWithImpl;
 @override @useResult
 $Res call({
- String jobId, String type, String status, String? associatedPageId, DateTime submittedAt, DateTime? startedAt, DateTime? completedAt, String? errorMessage, String? resultUrl
+ String jobId, String type, String status, String? associatedPageId,@UnixTimestampConverter() DateTime submittedAt,@UnixTimestampConverter() DateTime? startedAt,@UnixTimestampConverter() DateTime? completedAt, String? errorMessage, String? resultUrl
 });
 
 

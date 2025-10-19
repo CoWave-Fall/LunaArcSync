@@ -13,6 +13,7 @@ import 'package:luna_arc_sync/core/animations/animated_list_item.dart';
 import 'package:luna_arc_sync/core/animations/animated_button.dart';
 import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
 import 'package:luna_arc_sync/core/theme/no_overscroll_behavior.dart';
+import 'package:luna_arc_sync/presentation/widgets/optimized_glassmorphic_list.dart';
 
 class DocumentListPage extends StatelessWidget {
   const DocumentListPage({super.key});
@@ -219,9 +220,7 @@ class _DocumentListViewState extends State<_DocumentListView> {
                   return RadioListTile<SortOption>(
                     title: Text(option.displayName),
                     value: option,
-                    // ignore: deprecated_member_use
                     groupValue: state.sortOption,
-                    // ignore: deprecated_member_use
                     onChanged: (value) {
                       if (value != null) {
                         cubit.changeSort(value);
@@ -360,29 +359,58 @@ class _DocumentListViewState extends State<_DocumentListView> {
                 child: Selector<DocumentListCubit, List<Document>>(
                 selector: (context, cubit) => cubit.state.documents,
                 builder: (context, documents, child) {
-                  return ListView.builder(
-                    controller: _scrollController,
-                    itemCount: documents.length,
-                    itemBuilder: (context, index) {
-                      final document = documents[index];
-                      final isSelected = _selectedDocumentIds.contains(document.documentId);
+                  // 使用优化的毛玻璃列表
+                  if (hasCustomBackground) {
+                    return OptimizedGlassmorphicListBuilder(
+                      blurGroup: 'document_list',
+                      itemCount: documents.length,
+                      controller: _scrollController,
+                      itemBuilder: (context, index) {
+                        final document = documents[index];
+                        final isSelected = _selectedDocumentIds.contains(document.documentId);
 
-                      return AnimatedListItem(
-                        key: ValueKey(document.documentId),
-                        index: index,
-                        delay: const Duration(milliseconds: 30),
-                        duration: const Duration(milliseconds: 400),
-                        animationType: AnimationType.fadeSlideUp,
-                        child: DocumentListItem(
-                          key: ValueKey('item_${document.documentId}'), // 添加key以优化列表性能
-                          document: document,
-                          isSelected: isSelected,
-                          onTap: () => _handleItemTap(document.documentId),
-                          onLongPress: () => _enableSelectionMode(document.documentId),
-                        ),
-                      );
-                    },
-                  );
+                        return AnimatedListItem(
+                          key: ValueKey(document.documentId),
+                          index: index,
+                          delay: const Duration(milliseconds: 30),
+                          duration: const Duration(milliseconds: 400),
+                          animationType: AnimationType.fadeSlideUp,
+                          child: DocumentListItem(
+                            key: ValueKey('item_${document.documentId}'),
+                            document: document,
+                            isSelected: isSelected,
+                            onTap: () => _handleItemTap(document.documentId),
+                            onLongPress: () => _enableSelectionMode(document.documentId),
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    // 没有自定义背景时使用普通列表
+                    return ListView.builder(
+                      controller: _scrollController,
+                      itemCount: documents.length,
+                      itemBuilder: (context, index) {
+                        final document = documents[index];
+                        final isSelected = _selectedDocumentIds.contains(document.documentId);
+
+                        return AnimatedListItem(
+                          key: ValueKey(document.documentId),
+                          index: index,
+                          delay: const Duration(milliseconds: 30),
+                          duration: const Duration(milliseconds: 400),
+                          animationType: AnimationType.fadeSlideUp,
+                          child: DocumentListItem(
+                            key: ValueKey('item_${document.documentId}'),
+                            document: document,
+                            isSelected: isSelected,
+                            onTap: () => _handleItemTap(document.documentId),
+                            onLongPress: () => _enableSelectionMode(document.documentId),
+                          ),
+                        );
+                      },
+                    );
+                  }
                 },
               ),
               ),

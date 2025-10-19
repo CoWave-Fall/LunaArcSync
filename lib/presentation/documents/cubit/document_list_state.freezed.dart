@@ -18,7 +18,10 @@ mixin _$DocumentListState {
  List<Document> get documents; bool get isLoading; String? get error; int get pageNumber; bool get hasReachedMax;// --- START: NEW SORTING AND FILTERING STATE ---
 // Sorting
  SortOption get sortOption;// Tag Filtering
- List<String> get selectedTags; List<String> get allTags; bool get areTagsLoading; String? get tagsError;
+ List<String> get selectedTags; List<String> get allTags; bool get areTagsLoading; String? get tagsError;// --- END: NEW SORTING AND FILTERING STATE ---
+// --- START: USER INFO CACHE FOR ADMIN ---
+// 用户信息缓存（userId -> UserDto）
+ Map<String, UserDto> get userInfoCache;
 /// Create a copy of DocumentListState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +32,16 @@ $DocumentListStateCopyWith<DocumentListState> get copyWith => _$DocumentListStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DocumentListState&&const DeepCollectionEquality().equals(other.documents, documents)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error)&&(identical(other.pageNumber, pageNumber) || other.pageNumber == pageNumber)&&(identical(other.hasReachedMax, hasReachedMax) || other.hasReachedMax == hasReachedMax)&&(identical(other.sortOption, sortOption) || other.sortOption == sortOption)&&const DeepCollectionEquality().equals(other.selectedTags, selectedTags)&&const DeepCollectionEquality().equals(other.allTags, allTags)&&(identical(other.areTagsLoading, areTagsLoading) || other.areTagsLoading == areTagsLoading)&&(identical(other.tagsError, tagsError) || other.tagsError == tagsError));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DocumentListState&&const DeepCollectionEquality().equals(other.documents, documents)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error)&&(identical(other.pageNumber, pageNumber) || other.pageNumber == pageNumber)&&(identical(other.hasReachedMax, hasReachedMax) || other.hasReachedMax == hasReachedMax)&&(identical(other.sortOption, sortOption) || other.sortOption == sortOption)&&const DeepCollectionEquality().equals(other.selectedTags, selectedTags)&&const DeepCollectionEquality().equals(other.allTags, allTags)&&(identical(other.areTagsLoading, areTagsLoading) || other.areTagsLoading == areTagsLoading)&&(identical(other.tagsError, tagsError) || other.tagsError == tagsError)&&const DeepCollectionEquality().equals(other.userInfoCache, userInfoCache));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(documents),isLoading,error,pageNumber,hasReachedMax,sortOption,const DeepCollectionEquality().hash(selectedTags),const DeepCollectionEquality().hash(allTags),areTagsLoading,tagsError);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(documents),isLoading,error,pageNumber,hasReachedMax,sortOption,const DeepCollectionEquality().hash(selectedTags),const DeepCollectionEquality().hash(allTags),areTagsLoading,tagsError,const DeepCollectionEquality().hash(userInfoCache));
 
 @override
 String toString() {
-  return 'DocumentListState(documents: $documents, isLoading: $isLoading, error: $error, pageNumber: $pageNumber, hasReachedMax: $hasReachedMax, sortOption: $sortOption, selectedTags: $selectedTags, allTags: $allTags, areTagsLoading: $areTagsLoading, tagsError: $tagsError)';
+  return 'DocumentListState(documents: $documents, isLoading: $isLoading, error: $error, pageNumber: $pageNumber, hasReachedMax: $hasReachedMax, sortOption: $sortOption, selectedTags: $selectedTags, allTags: $allTags, areTagsLoading: $areTagsLoading, tagsError: $tagsError, userInfoCache: $userInfoCache)';
 }
 
 
@@ -49,7 +52,7 @@ abstract mixin class $DocumentListStateCopyWith<$Res>  {
   factory $DocumentListStateCopyWith(DocumentListState value, $Res Function(DocumentListState) _then) = _$DocumentListStateCopyWithImpl;
 @useResult
 $Res call({
- List<Document> documents, bool isLoading, String? error, int pageNumber, bool hasReachedMax, SortOption sortOption, List<String> selectedTags, List<String> allTags, bool areTagsLoading, String? tagsError
+ List<Document> documents, bool isLoading, String? error, int pageNumber, bool hasReachedMax, SortOption sortOption, List<String> selectedTags, List<String> allTags, bool areTagsLoading, String? tagsError, Map<String, UserDto> userInfoCache
 });
 
 
@@ -66,7 +69,7 @@ class _$DocumentListStateCopyWithImpl<$Res>
 
 /// Create a copy of DocumentListState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? documents = null,Object? isLoading = null,Object? error = freezed,Object? pageNumber = null,Object? hasReachedMax = null,Object? sortOption = null,Object? selectedTags = null,Object? allTags = null,Object? areTagsLoading = null,Object? tagsError = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? documents = null,Object? isLoading = null,Object? error = freezed,Object? pageNumber = null,Object? hasReachedMax = null,Object? sortOption = null,Object? selectedTags = null,Object? allTags = null,Object? areTagsLoading = null,Object? tagsError = freezed,Object? userInfoCache = null,}) {
   return _then(_self.copyWith(
 documents: null == documents ? _self.documents : documents // ignore: cast_nullable_to_non_nullable
 as List<Document>,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
@@ -78,7 +81,8 @@ as SortOption,selectedTags: null == selectedTags ? _self.selectedTags : selected
 as List<String>,allTags: null == allTags ? _self.allTags : allTags // ignore: cast_nullable_to_non_nullable
 as List<String>,areTagsLoading: null == areTagsLoading ? _self.areTagsLoading : areTagsLoading // ignore: cast_nullable_to_non_nullable
 as bool,tagsError: freezed == tagsError ? _self.tagsError : tagsError // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,userInfoCache: null == userInfoCache ? _self.userInfoCache : userInfoCache // ignore: cast_nullable_to_non_nullable
+as Map<String, UserDto>,
   ));
 }
 
@@ -163,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Document> documents,  bool isLoading,  String? error,  int pageNumber,  bool hasReachedMax,  SortOption sortOption,  List<String> selectedTags,  List<String> allTags,  bool areTagsLoading,  String? tagsError)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Document> documents,  bool isLoading,  String? error,  int pageNumber,  bool hasReachedMax,  SortOption sortOption,  List<String> selectedTags,  List<String> allTags,  bool areTagsLoading,  String? tagsError,  Map<String, UserDto> userInfoCache)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DocumentListState() when $default != null:
-return $default(_that.documents,_that.isLoading,_that.error,_that.pageNumber,_that.hasReachedMax,_that.sortOption,_that.selectedTags,_that.allTags,_that.areTagsLoading,_that.tagsError);case _:
+return $default(_that.documents,_that.isLoading,_that.error,_that.pageNumber,_that.hasReachedMax,_that.sortOption,_that.selectedTags,_that.allTags,_that.areTagsLoading,_that.tagsError,_that.userInfoCache);case _:
   return orElse();
 
 }
@@ -184,10 +188,10 @@ return $default(_that.documents,_that.isLoading,_that.error,_that.pageNumber,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Document> documents,  bool isLoading,  String? error,  int pageNumber,  bool hasReachedMax,  SortOption sortOption,  List<String> selectedTags,  List<String> allTags,  bool areTagsLoading,  String? tagsError)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Document> documents,  bool isLoading,  String? error,  int pageNumber,  bool hasReachedMax,  SortOption sortOption,  List<String> selectedTags,  List<String> allTags,  bool areTagsLoading,  String? tagsError,  Map<String, UserDto> userInfoCache)  $default,) {final _that = this;
 switch (_that) {
 case _DocumentListState():
-return $default(_that.documents,_that.isLoading,_that.error,_that.pageNumber,_that.hasReachedMax,_that.sortOption,_that.selectedTags,_that.allTags,_that.areTagsLoading,_that.tagsError);case _:
+return $default(_that.documents,_that.isLoading,_that.error,_that.pageNumber,_that.hasReachedMax,_that.sortOption,_that.selectedTags,_that.allTags,_that.areTagsLoading,_that.tagsError,_that.userInfoCache);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -204,10 +208,10 @@ return $default(_that.documents,_that.isLoading,_that.error,_that.pageNumber,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Document> documents,  bool isLoading,  String? error,  int pageNumber,  bool hasReachedMax,  SortOption sortOption,  List<String> selectedTags,  List<String> allTags,  bool areTagsLoading,  String? tagsError)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Document> documents,  bool isLoading,  String? error,  int pageNumber,  bool hasReachedMax,  SortOption sortOption,  List<String> selectedTags,  List<String> allTags,  bool areTagsLoading,  String? tagsError,  Map<String, UserDto> userInfoCache)?  $default,) {final _that = this;
 switch (_that) {
 case _DocumentListState() when $default != null:
-return $default(_that.documents,_that.isLoading,_that.error,_that.pageNumber,_that.hasReachedMax,_that.sortOption,_that.selectedTags,_that.allTags,_that.areTagsLoading,_that.tagsError);case _:
+return $default(_that.documents,_that.isLoading,_that.error,_that.pageNumber,_that.hasReachedMax,_that.sortOption,_that.selectedTags,_that.allTags,_that.areTagsLoading,_that.tagsError,_that.userInfoCache);case _:
   return null;
 
 }
@@ -219,7 +223,7 @@ return $default(_that.documents,_that.isLoading,_that.error,_that.pageNumber,_th
 
 
 class _DocumentListState implements DocumentListState {
-  const _DocumentListState({final  List<Document> documents = const [], this.isLoading = false, this.error = null, this.pageNumber = 1, this.hasReachedMax = false, this.sortOption = SortOption.dateDesc, final  List<String> selectedTags = const [], final  List<String> allTags = const [], this.areTagsLoading = false, this.tagsError = null}): _documents = documents,_selectedTags = selectedTags,_allTags = allTags;
+  const _DocumentListState({final  List<Document> documents = const [], this.isLoading = false, this.error = null, this.pageNumber = 1, this.hasReachedMax = false, this.sortOption = SortOption.dateDesc, final  List<String> selectedTags = const [], final  List<String> allTags = const [], this.areTagsLoading = false, this.tagsError = null, final  Map<String, UserDto> userInfoCache = const {}}): _documents = documents,_selectedTags = selectedTags,_allTags = allTags,_userInfoCache = userInfoCache;
   
 
 // Core list properties
@@ -256,6 +260,19 @@ class _DocumentListState implements DocumentListState {
 
 @override@JsonKey() final  bool areTagsLoading;
 @override@JsonKey() final  String? tagsError;
+// --- END: NEW SORTING AND FILTERING STATE ---
+// --- START: USER INFO CACHE FOR ADMIN ---
+// 用户信息缓存（userId -> UserDto）
+ final  Map<String, UserDto> _userInfoCache;
+// --- END: NEW SORTING AND FILTERING STATE ---
+// --- START: USER INFO CACHE FOR ADMIN ---
+// 用户信息缓存（userId -> UserDto）
+@override@JsonKey() Map<String, UserDto> get userInfoCache {
+  if (_userInfoCache is EqualUnmodifiableMapView) return _userInfoCache;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_userInfoCache);
+}
+
 
 /// Create a copy of DocumentListState
 /// with the given fields replaced by the non-null parameter values.
@@ -267,16 +284,16 @@ _$DocumentListStateCopyWith<_DocumentListState> get copyWith => __$DocumentListS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DocumentListState&&const DeepCollectionEquality().equals(other._documents, _documents)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error)&&(identical(other.pageNumber, pageNumber) || other.pageNumber == pageNumber)&&(identical(other.hasReachedMax, hasReachedMax) || other.hasReachedMax == hasReachedMax)&&(identical(other.sortOption, sortOption) || other.sortOption == sortOption)&&const DeepCollectionEquality().equals(other._selectedTags, _selectedTags)&&const DeepCollectionEquality().equals(other._allTags, _allTags)&&(identical(other.areTagsLoading, areTagsLoading) || other.areTagsLoading == areTagsLoading)&&(identical(other.tagsError, tagsError) || other.tagsError == tagsError));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DocumentListState&&const DeepCollectionEquality().equals(other._documents, _documents)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.error, error) || other.error == error)&&(identical(other.pageNumber, pageNumber) || other.pageNumber == pageNumber)&&(identical(other.hasReachedMax, hasReachedMax) || other.hasReachedMax == hasReachedMax)&&(identical(other.sortOption, sortOption) || other.sortOption == sortOption)&&const DeepCollectionEquality().equals(other._selectedTags, _selectedTags)&&const DeepCollectionEquality().equals(other._allTags, _allTags)&&(identical(other.areTagsLoading, areTagsLoading) || other.areTagsLoading == areTagsLoading)&&(identical(other.tagsError, tagsError) || other.tagsError == tagsError)&&const DeepCollectionEquality().equals(other._userInfoCache, _userInfoCache));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_documents),isLoading,error,pageNumber,hasReachedMax,sortOption,const DeepCollectionEquality().hash(_selectedTags),const DeepCollectionEquality().hash(_allTags),areTagsLoading,tagsError);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_documents),isLoading,error,pageNumber,hasReachedMax,sortOption,const DeepCollectionEquality().hash(_selectedTags),const DeepCollectionEquality().hash(_allTags),areTagsLoading,tagsError,const DeepCollectionEquality().hash(_userInfoCache));
 
 @override
 String toString() {
-  return 'DocumentListState(documents: $documents, isLoading: $isLoading, error: $error, pageNumber: $pageNumber, hasReachedMax: $hasReachedMax, sortOption: $sortOption, selectedTags: $selectedTags, allTags: $allTags, areTagsLoading: $areTagsLoading, tagsError: $tagsError)';
+  return 'DocumentListState(documents: $documents, isLoading: $isLoading, error: $error, pageNumber: $pageNumber, hasReachedMax: $hasReachedMax, sortOption: $sortOption, selectedTags: $selectedTags, allTags: $allTags, areTagsLoading: $areTagsLoading, tagsError: $tagsError, userInfoCache: $userInfoCache)';
 }
 
 
@@ -287,7 +304,7 @@ abstract mixin class _$DocumentListStateCopyWith<$Res> implements $DocumentListS
   factory _$DocumentListStateCopyWith(_DocumentListState value, $Res Function(_DocumentListState) _then) = __$DocumentListStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<Document> documents, bool isLoading, String? error, int pageNumber, bool hasReachedMax, SortOption sortOption, List<String> selectedTags, List<String> allTags, bool areTagsLoading, String? tagsError
+ List<Document> documents, bool isLoading, String? error, int pageNumber, bool hasReachedMax, SortOption sortOption, List<String> selectedTags, List<String> allTags, bool areTagsLoading, String? tagsError, Map<String, UserDto> userInfoCache
 });
 
 
@@ -304,7 +321,7 @@ class __$DocumentListStateCopyWithImpl<$Res>
 
 /// Create a copy of DocumentListState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? documents = null,Object? isLoading = null,Object? error = freezed,Object? pageNumber = null,Object? hasReachedMax = null,Object? sortOption = null,Object? selectedTags = null,Object? allTags = null,Object? areTagsLoading = null,Object? tagsError = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? documents = null,Object? isLoading = null,Object? error = freezed,Object? pageNumber = null,Object? hasReachedMax = null,Object? sortOption = null,Object? selectedTags = null,Object? allTags = null,Object? areTagsLoading = null,Object? tagsError = freezed,Object? userInfoCache = null,}) {
   return _then(_DocumentListState(
 documents: null == documents ? _self._documents : documents // ignore: cast_nullable_to_non_nullable
 as List<Document>,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
@@ -316,7 +333,8 @@ as SortOption,selectedTags: null == selectedTags ? _self._selectedTags : selecte
 as List<String>,allTags: null == allTags ? _self._allTags : allTags // ignore: cast_nullable_to_non_nullable
 as List<String>,areTagsLoading: null == areTagsLoading ? _self.areTagsLoading : areTagsLoading // ignore: cast_nullable_to_non_nullable
 as bool,tagsError: freezed == tagsError ? _self.tagsError : tagsError // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,userInfoCache: null == userInfoCache ? _self._userInfoCache : userInfoCache // ignore: cast_nullable_to_non_nullable
+as Map<String, UserDto>,
   ));
 }
 

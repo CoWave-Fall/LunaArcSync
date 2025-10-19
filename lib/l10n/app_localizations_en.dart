@@ -1186,4 +1186,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get impErr002 => 'data.json not found in the import archive.';
+
+  @override
+  String get networkErrorTitle => 'Network Error';
+
+  @override
+  String get networkErrorServerOffline =>
+      'Server is offline or unreachable\n\nSuggestions:\n1. Check network connection\n2. Try switching servers\n3. Retry later';
+
+  @override
+  String get networkErrorConnectionFailed =>
+      'Unable to connect to server\n\nSuggestions:\n1. Check if server address is correct\n2. Check network connection\n3. Check firewall settings';
+
+  @override
+  String get networkErrorConnectionTimeout =>
+      'Connection timeout\n\nSuggestions:\n1. Check network speed\n2. Try switching to a more stable network\n3. Retry later';
+
+  @override
+  String get networkErrorUnauthorized =>
+      'Authentication failed\n\nYour session has expired, please login again';
+
+  @override
+  String get networkErrorForbidden =>
+      'Insufficient permissions\n\nYou don\'t have permission to access this resource';
+
+  @override
+  String get networkErrorNotFound =>
+      'Resource not found\n\nThe requested resource was not found';
+
+  @override
+  String get networkErrorServerError =>
+      'Server error\n\nThe server encountered an error, please try again later';
+
+  @override
+  String get networkErrorGeneric =>
+      'Network error\n\nPlease check your connection and try again';
+
+  @override
+  String get errorRetry => 'Retry';
+
+  @override
+  String get errorDismiss => 'Dismiss';
+
+  @override
+  String get errorDetails => 'Technical Details';
+
+  @override
+  String get errorServerUnreachable => 'Server Unreachable';
+
+  @override
+  String get errorAuthenticationFailed => 'Authentication Failed';
+
+  @override
+  String get errorOccurredTitle => 'An Error Occurred';
 }

@@ -6,8 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:luna_arc_sync/l10n/app_localizations.dart';
 import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
 import 'package:luna_arc_sync/core/theme/fullscreen_notifier.dart';
-// TODO: 暂时注释掉滑块功能，留到以后解决
-// import 'package:luna_arc_sync/core/theme/page_navigation_notifier.dart';
+import 'package:luna_arc_sync/core/theme/page_navigation_notifier.dart';
 
 const double _kBreakpoint = 720.0; // 设置响应式断点
 
@@ -21,15 +20,12 @@ class MainShell extends StatelessWidget {
     final String location = GoRouterState.of(context).uri.toString();
     final int selectedIndex = _calculateSelectedIndex(location);
 
-    // 检查当前路由是否不是PageDetailPage，如果不是则隐藏滑块
-    // TODO: 暂时注释掉滑块功能，留到以后解决
-    /*
+    // 检查当前路由是否不是PageDetailPage，如果不是则清除滑块
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!location.contains('/page/')) {
-        context.read<PageNavigationNotifier>().forceHide();
+        context.read<PageNavigationNotifier>().clear();
       }
     });
-    */
 
     // 使用 LayoutBuilder 来根据屏幕宽度选择不同的布局
     return LayoutBuilder(
@@ -93,8 +89,8 @@ class MainShell extends StatelessWidget {
   }
 
   Widget _buildGlassmorphicNavigationRail(BuildContext context, int selectedIndex, bool hasCustomBackground) {
-    // TODO: 暂时注释掉滑块功能，留到以后解决
-    // final pageNavNotifier = context.watch<PageNavigationNotifier>();
+    final pageNavNotifier = context.watch<PageNavigationNotifier>();
+    final isFullscreen = context.watch<FullscreenNotifier>().isFullscreen;
     
     final railContent = Column(
       children: [
@@ -136,6 +132,11 @@ class MainShell extends StatelessWidget {
                 label: Text('Jobs'),
               ),
               NavigationRailDestination(
+                icon: Icon(Icons.person_outline),
+                selectedIcon: Icon(Icons.person),
+                label: Text('User'),
+              ),
+              NavigationRailDestination(
                 icon: Icon(Icons.settings_outlined),
                 selectedIcon: Icon(Icons.settings),
                 label: Text('Settings'),
@@ -143,9 +144,7 @@ class MainShell extends StatelessWidget {
             ],
           ),
         ),
-        // 页码滑块 - 只在PageDetailPage显示时出现，带动画效果
-        // TODO: 暂时注释掉滑块功能，留到以后解决
-        /*
+        // 页码滑块 - 只在PageDetailPage显示且非全屏时出现，带动画效果
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           transitionBuilder: (child, animation) {
@@ -163,11 +162,12 @@ class MainShell extends StatelessWidget {
               ),
             );
           },
-          child: (pageNavNotifier.isPageDetailVisible && pageNavNotifier.totalPages > 1)
+          child: (pageNavNotifier.isPageDetailVisible && 
+                  pageNavNotifier.totalPages > 1 && 
+                  !isFullscreen)
               ? _buildPageSlider(context, pageNavNotifier, hasCustomBackground)
               : const SizedBox.shrink(),
         ),
-        */
       ],
     );
 
@@ -194,21 +194,23 @@ class MainShell extends StatelessWidget {
       ),
     );
   }
-  
+
   // 构建页码滑块
-  // TODO: 暂时注释掉滑块功能，留到以后解决
-  /*
   Widget _buildPageSlider(BuildContext context, PageNavigationNotifier notifier, bool hasCustomBackground) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
         border: Border(
           top: BorderSide(
             color: hasCustomBackground 
-                ? Colors.white.withValues(alpha: 0.1)
-                : Theme.of(context).dividerColor,
+                ? Colors.white.withOpacity(0.15)
+                : colorScheme.outline.withOpacity(0.3),
             width: 1,
           ),
         ),
@@ -216,31 +218,72 @@ class MainShell extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // 页码显示
-          Text(
-            '${notifier.currentPage}/${notifier.totalPages}',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              fontWeight: FontWeight.w600,
+          // 页码显示 - 更美观的样式
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: hasCustomBackground 
+                  ? (isDarkMode ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05))
+                  : colorScheme.primaryContainer.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: hasCustomBackground 
+                    ? Colors.white.withOpacity(0.2)
+                    : colorScheme.primary.withOpacity(0.3),
+                width: 1,
+              ),
+            ),
+            child: Text(
+              '${notifier.currentPage}/${notifier.totalPages}',
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: hasCustomBackground 
+                    ? (isDarkMode ? Colors.white : Colors.black87)
+                    : colorScheme.onSurface,
+                letterSpacing: 0.5,
+              ),
             ),
           ),
-          const SizedBox(height: 8),
-          // 垂直滑块 - 旋转180度并延长长度
+          const SizedBox(height: 16),
+          // 垂直滑块 - 改进的样式
           SizedBox(
-            height: 300, // 延长滑块长度从200到300
-            width: 40,
+            height: 320,
+            width: 48,
             child: RotatedBox(
-              quarterTurns: 1, // 旋转180度（从3改为1）
+              quarterTurns: 1,
               child: SliderTheme(
                 data: SliderTheme.of(context).copyWith(
-                  trackHeight: 3,
-                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-                  overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
+                  trackHeight: 4,
+                  thumbShape: RoundSliderThumbShape(
+                    enabledThumbRadius: 8,
+                    elevation: 2,
+                    pressedElevation: 4,
+                  ),
+                  overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
+                  activeTrackColor: hasCustomBackground
+                      ? (isDarkMode ? Colors.white.withOpacity(0.8) : colorScheme.primary)
+                      : colorScheme.primary,
+                  inactiveTrackColor: hasCustomBackground
+                      ? (isDarkMode ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.1))
+                      : colorScheme.primary.withOpacity(0.2),
+                  thumbColor: hasCustomBackground
+                      ? (isDarkMode ? Colors.white : colorScheme.primary)
+                      : colorScheme.primary,
+                  overlayColor: (hasCustomBackground
+                      ? (isDarkMode ? Colors.white : colorScheme.primary)
+                      : colorScheme.primary).withOpacity(0.2),
+                  valueIndicatorColor: colorScheme.primary,
+                  valueIndicatorTextStyle: TextStyle(
+                    color: colorScheme.onPrimary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 child: Slider(
                   value: notifier.currentPage.toDouble(),
                   min: 1,
                   max: notifier.totalPages.toDouble(),
-                  divisions: notifier.totalPages - 1,
+                  divisions: notifier.totalPages > 1 ? notifier.totalPages - 1 : null,
+                  label: '${notifier.currentPage}',
                   onChanged: (value) {
                     notifier.jumpToPage(value.round());
                   },
@@ -248,11 +291,82 @@ class MainShell extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 8),
+          // 快捷按钮
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // 上一页按钮
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: notifier.currentPage > 1
+                      ? () => notifier.jumpToPage(notifier.currentPage - 1)
+                      : null,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: hasCustomBackground 
+                            ? Colors.white.withOpacity(0.2)
+                            : colorScheme.outline.withOpacity(0.3),
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.arrow_upward,
+                      size: 16,
+                      color: notifier.currentPage > 1
+                          ? (hasCustomBackground 
+                              ? (isDarkMode ? Colors.white : Colors.black87)
+                              : colorScheme.primary)
+                          : (hasCustomBackground 
+                              ? Colors.white.withOpacity(0.3)
+                              : colorScheme.onSurface.withOpacity(0.3)),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // 下一页按钮
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: notifier.currentPage < notifier.totalPages
+                      ? () => notifier.jumpToPage(notifier.currentPage + 1)
+                      : null,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: hasCustomBackground 
+                            ? Colors.white.withOpacity(0.2)
+                            : colorScheme.outline.withOpacity(0.3),
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.arrow_downward,
+                      size: 16,
+                      color: notifier.currentPage < notifier.totalPages
+                          ? (hasCustomBackground 
+                              ? (isDarkMode ? Colors.white : Colors.black87)
+                              : colorScheme.primary)
+                          : (hasCustomBackground 
+                              ? Colors.white.withOpacity(0.3)
+                              : colorScheme.onSurface.withOpacity(0.3)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
-  */
 
   // 窄屏布局
   Widget _buildNarrowLayout(BuildContext context, int selectedIndex) {
@@ -377,6 +491,11 @@ class MainShell extends StatelessWidget {
         selectedIcon: Icon(Icons.work),
         label: Text('Jobs'),
       ),
+      const NavigationDrawerDestination(
+        icon: Icon(Icons.person_outline),
+        selectedIcon: Icon(Icons.person),
+        label: Text('User'),
+      ),
       const Padding(
         padding: EdgeInsets.symmetric(horizontal: 28),
         child: Divider(),
@@ -393,7 +512,8 @@ class MainShell extends StatelessWidget {
   int _calculateSelectedIndex(String location) {
     if (location.startsWith('/documents')) return 1;
     if (location.startsWith('/jobs')) return 2;
-    if (location.startsWith('/settings')) return 3;
+    if (location.startsWith('/user')) return 3;
+    if (location.startsWith('/settings')) return 4;
     return 0; // About page
   }
 
@@ -410,6 +530,9 @@ class MainShell extends StatelessWidget {
         context.go('/jobs');
         break;
       case 3:
+        context.go('/user');
+        break;
+      case 4:
         context.go('/settings');
         break;
     }

@@ -3,16 +3,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:luna_arc_sync/data/repositories/auth_repository.dart';
 import 'package:luna_arc_sync/core/services/auto_login_service.dart';
+import 'package:luna_arc_sync/core/storage/server_cache_service.dart';
+import 'package:luna_arc_sync/core/storage/secure_storage_service.dart';
+import 'package:luna_arc_sync/core/api/api_client.dart';
+import 'package:luna_arc_sync/data/models/about_models.dart';
+import 'package:luna_arc_sync/data/models/auth_models.dart';
 import 'auth_state.dart';
 
 @lazySingleton
 class AuthCubit extends Cubit<AuthState> {
   final IAuthRepository _authRepository;
   final AutoLoginService _autoLoginService;
+  final ServerCacheService _serverCacheService;
+  final SecureStorageService _secureStorageService;
+  final ApiClient _apiClient;
 
   AuthCubit(
     this._authRepository,
     this._autoLoginService,
+    this._serverCacheService,
+    this._secureStorageService,
+    this._apiClient,
   ) : super(const AuthState.initial());
 
   /// 检查认证状态
@@ -25,8 +36,17 @@ class AuthCubit extends Cubit<AuthState> {
       final userId = await _autoLoginService.checkValidSession();
       
       if (userId != null) {
+        // 获取存储的角色信息
+        final role = await _autoLoginService.getStoredRole();
+        final isAdmin = await _autoLoginService.getStoredIsAdmin();
+        
         debugPrint('🔐 AuthCubit: Valid session found for user $userId');
-        emit(AuthState.authenticated(userId: userId));
+        debugPrint('🔐 AuthCubit: User role: $role, isAdmin: $isAdmin');
+        emit(AuthState.authenticated(
+          userId: userId,
+          isAdmin: isAdmin ?? false,
+          role: role ?? 'User',
+        ));
       } else {
         debugPrint('🔐 AuthCubit: No valid session found');
         emit(const AuthState.unauthenticated());
@@ -45,8 +65,15 @@ class AuthCubit extends Cubit<AuthState> {
       
       final response = await _autoLoginService.attemptAutoLogin();
       
+      // 保存用户信息到服务器缓存
+      await _saveUserInfoToServerCache(response);
+      
       debugPrint('🔐 AuthCubit: Auto-login successful for user ${response.userId}');
-      emit(AuthState.authenticated(userId: response.userId));
+      emit(AuthState.authenticated(
+        userId: response.userId,
+        isAdmin: response.isAdmin,
+        role: response.role,
+      ));
     } catch (e) {
       debugPrint('🔐 AuthCubit: Auto-login failed - $e');
       emit(AuthState.unauthenticated(error: e.toString()));
@@ -75,11 +102,47 @@ class AuthCubit extends Cubit<AuthState> {
         debugPrint('🔐 AuthCubit: Credentials saved for auto-login');
       }
       
+      // 保存用户信息到服务器缓存
+      await _saveUserInfoToServerCache(response);
+      
       debugPrint('🔐 AuthCubit: Login successful for user ${response.userId}');
-      emit(AuthState.authenticated(userId: response.userId));
+      emit(AuthState.authenticated(
+        userId: response.userId,
+        isAdmin: response.isAdmin,
+        role: response.role,
+      ));
     } catch (e) {
       debugPrint('🔐 AuthCubit: Login failed - $e');
       emit(AuthState.unauthenticated(error: e.toString()));
+    }
+  }
+  
+  /// 保存用户信息到服务器缓存
+  Future<void> _saveUserInfoToServerCache(LoginResponse response) async {
+    try {
+      // 获取当前服务器URL
+      final serverUrl = await _secureStorageService.getServerUrl();
+      if (serverUrl == null || serverUrl.isEmpty) {
+        debugPrint('🔐 AuthCubit: 无法保存用户信息到服务器缓存 - 服务器URL为空');
+        return;
+      }
+      
+      // 获取服务器信息
+      final aboutResponse = await _apiClient.dio.get('/api/about');
+      final about = AboutResponse.fromJson(aboutResponse.data);
+      
+      // 更新服务器缓存，包含用户信息
+      await _serverCacheService.cacheServerInfo(
+        about,
+        serverUrl: serverUrl,
+        username: response.username,
+        nickname: response.nickname,
+      );
+      
+      debugPrint('🔐 AuthCubit: 用户信息已保存到服务器缓存: ${response.nickname} (${response.username})');
+    } catch (e) {
+      debugPrint('🔐 AuthCubit: 保存用户信息到服务器缓存失败 - $e');
+      // 不抛出异常，因为这不是关键操作
     }
   }
 

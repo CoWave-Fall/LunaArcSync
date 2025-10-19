@@ -148,6 +148,37 @@ class _ServerCardState extends State<ServerCard> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
+                    // 显示用户昵称或用户名
+                    if (widget.serverInfo.nickname != null || widget.serverInfo.username != null) ...[
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.person,
+                            size: 12,
+                            color: Theme.of(context).colorScheme.primary.withValues(
+                              alpha: isOffline ? 0.5 : 1.0,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              widget.serverInfo.nickname?.isNotEmpty == true 
+                                  ? widget.serverInfo.nickname! 
+                                  : widget.serverInfo.username ?? '',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.primary.withValues(
+                                  alpha: isOffline ? 0.5 : 1.0,
+                                ),
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                    ],
                     Text(
                       widget.serverInfo.about.appName,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(

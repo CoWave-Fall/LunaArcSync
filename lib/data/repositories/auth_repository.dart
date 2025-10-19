@@ -57,7 +57,11 @@ class AuthRepository implements IAuthRepository {
       }
       
       await _storageService.saveUserId(loginResponse.userId);
+      await _storageService.saveUserRole(loginResponse.role);
+      await _storageService.saveIsAdmin(loginResponse.isAdmin);
       debugPrint('User ID saved: ${loginResponse.userId}');
+      debugPrint('User role saved: ${loginResponse.role}');
+      debugPrint('Is admin: ${loginResponse.isAdmin}');
       debugPrint('------------------------------------');
       
       return loginResponse;
@@ -95,10 +99,12 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<void> logout() async {
-    // Clear token, userId and expiration from secure storage
+    // Clear token, userId, expiration, role and admin status from secure storage
     await _storageService.deleteToken();
     await _storageService.deleteUserId();
     await _storageService.deleteExpiration();
+    await _storageService.deleteUserRole();
+    await _storageService.deleteIsAdmin();
     // Here you might also call a backend logout endpoint if it exists
   }
 }

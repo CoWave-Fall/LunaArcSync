@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:luna_arc_sync/core/api/json_converters.dart';
 part 'job_models.freezed.dart';
 part 'job_models.g.dart';
 
@@ -63,8 +64,11 @@ abstract class Job with _$Job {
     required String type,
     required String status,
     String? associatedPageId,
+    @UnixTimestampConverter()
     required DateTime submittedAt,
+    @UnixTimestampConverter()
     DateTime? startedAt,
+    @UnixTimestampConverter()
     DateTime? completedAt,
     String? errorMessage,
     String? resultUrl,

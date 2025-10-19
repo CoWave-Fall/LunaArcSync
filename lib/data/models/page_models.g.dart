@@ -35,12 +35,8 @@ Map<String, dynamic> _$PaginatedResultToJson<T>(
 _Page _$PageFromJson(Map<String, dynamic> json) => _Page(
   pageId: json['pageId'] as String,
   title: json['title'] as String,
-  createdAt: const HighPrecisionDateTimeConverter().fromJson(
-    json['createdAt'] as String,
-  ),
-  updatedAt: const HighPrecisionDateTimeConverter().fromJson(
-    json['updatedAt'] as String,
-  ),
+  createdAt: const UnixTimestampConverter().fromJson(json['createdAt']),
+  updatedAt: const UnixTimestampConverter().fromJson(json['updatedAt']),
   order: (json['order'] as num?)?.toInt() ?? 0,
   thumbnailUrl: json['thumbnailUrl'] as String?,
 );
@@ -48,12 +44,8 @@ _Page _$PageFromJson(Map<String, dynamic> json) => _Page(
 Map<String, dynamic> _$PageToJson(_Page instance) => <String, dynamic>{
   'pageId': instance.pageId,
   'title': instance.title,
-  'createdAt': const HighPrecisionDateTimeConverter().toJson(
-    instance.createdAt,
-  ),
-  'updatedAt': const HighPrecisionDateTimeConverter().toJson(
-    instance.updatedAt,
-  ),
+  'createdAt': const UnixTimestampConverter().toJson(instance.createdAt),
+  'updatedAt': const UnixTimestampConverter().toJson(instance.updatedAt),
   'order': instance.order,
   'thumbnailUrl': instance.thumbnailUrl,
 };
@@ -125,9 +117,7 @@ _PageVersion _$PageVersionFromJson(Map<String, dynamic> json) => _PageVersion(
   versionId: json['versionId'] as String,
   versionNumber: (json['versionNumber'] as num).toInt(),
   message: json['message'] as String?,
-  createdAt: const HighPrecisionDateTimeConverter().fromJson(
-    json['createdAt'] as String,
-  ),
+  createdAt: const UnixTimestampConverter().fromJson(json['createdAt']),
   ocrResult: json['ocrResult'] == null
       ? null
       : OcrResult.fromJson(json['ocrResult'] as Map<String, dynamic>),
@@ -140,9 +130,7 @@ Map<String, dynamic> _$PageVersionToJson(_PageVersion instance) =>
       'versionId': instance.versionId,
       'versionNumber': instance.versionNumber,
       'message': instance.message,
-      'createdAt': const HighPrecisionDateTimeConverter().toJson(
-        instance.createdAt,
-      ),
+      'createdAt': const UnixTimestampConverter().toJson(instance.createdAt),
       'ocrResult': instance.ocrResult,
       'fileUrl': instance.fileUrl,
       'mimeType': instance.mimeType,
@@ -151,12 +139,8 @@ Map<String, dynamic> _$PageVersionToJson(_PageVersion instance) =>
 _PageDetail _$PageDetailFromJson(Map<String, dynamic> json) => _PageDetail(
   pageId: json['pageId'] as String,
   title: json['title'] as String,
-  createdAt: const HighPrecisionDateTimeConverter().fromJson(
-    json['createdAt'] as String,
-  ),
-  updatedAt: const HighPrecisionDateTimeConverter().fromJson(
-    json['updatedAt'] as String,
-  ),
+  createdAt: const UnixTimestampConverter().fromJson(json['createdAt']),
+  updatedAt: const UnixTimestampConverter().fromJson(json['updatedAt']),
   currentVersion: json['currentVersion'] == null
       ? null
       : PageVersion.fromJson(json['currentVersion'] as Map<String, dynamic>),
@@ -168,12 +152,8 @@ Map<String, dynamic> _$PageDetailToJson(_PageDetail instance) =>
     <String, dynamic>{
       'pageId': instance.pageId,
       'title': instance.title,
-      'createdAt': const HighPrecisionDateTimeConverter().toJson(
-        instance.createdAt,
-      ),
-      'updatedAt': const HighPrecisionDateTimeConverter().toJson(
-        instance.updatedAt,
-      ),
+      'createdAt': const UnixTimestampConverter().toJson(instance.createdAt),
+      'updatedAt': const UnixTimestampConverter().toJson(instance.updatedAt),
       'currentVersion': instance.currentVersion,
       'totalVersions': instance.totalVersions,
       'thumbnailUrl': instance.thumbnailUrl,

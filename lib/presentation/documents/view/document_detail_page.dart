@@ -5,6 +5,7 @@ import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 
 import 'package:luna_arc_sync/core/api/authenticated_image_provider.dart';
 import 'package:luna_arc_sync/presentation/documents/widgets/batch_image_editor_page.dart';
+import 'package:luna_arc_sync/presentation/scanner/view/scan_interface_page.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,6 @@ import 'package:luna_arc_sync/presentation/pages/view/page_detail_page.dart';
 import 'package:luna_arc_sync/presentation/pages/widgets/page_list_item.dart';
 import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_notifier.dart';
 import 'package:luna_arc_sync/core/animations/animated_list_item.dart';
-import 'package:provider/provider.dart';
 import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
 import 'package:luna_arc_sync/core/theme/no_overscroll_behavior.dart';
 
@@ -259,11 +259,21 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                   _pickFiles(pageContext, documentId);
                 },
               ),
-              // Conditionally show the scan button only on supported platforms
+              // Network/USB Scanner option (all platforms)
+              ListTile(
+                leading: const Icon(Icons.scanner),
+                title: const Text('Network/USB Scanner'),
+                subtitle: const Text('Use network or local scanner'),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _showScannerSelection(pageContext, documentId);
+                },
+              ),
+              // Conditionally show the camera scan button only on supported platforms
               if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
                 ListTile(
                   leading: const Icon(Icons.camera_alt),
-                  title: Text(AppLocalizations.of(context)?.scanDocument ?? 'Scan Document'),
+                  title: Text(AppLocalizations.of(context)?.scanDocument ?? 'Camera Scan'),
                   onTap: () {
                     Navigator.of(context).pop();
                     _scanDocuments(pageContext, documentId);
@@ -355,6 +365,23 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error scanning: ${e.message}')),
       );
+    }
+  }
+
+  Future<void> _showScannerSelection(BuildContext context, String documentId) async {
+    if (!context.mounted) return;
+    
+    // 直接跳转到扫描界面
+    final result = await Navigator.of(context).push<List<String>>(
+      MaterialPageRoute(
+        builder: (context) => ScanInterfacePage(documentId: documentId),
+      ),
+    );
+    
+    // 如果返回了扫描结果（文件路径列表），跳转到图像编辑页面
+    if (result != null && result.isNotEmpty) {
+      if (!context.mounted) return;
+      _navigateToStitchingPage(context, documentId, result);
     }
   }
 
@@ -656,6 +683,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                     pageIds: pageIds,
                     currentIndex: index,
                     totalPageCount: totalPageCount,
+                    documentId: widget.documentId,
                   ),
                 ));
               },
@@ -703,6 +731,7 @@ class _DocumentDetailPageState extends State<DocumentDetailPage> {
                     pageIds: pageIds,
                     currentIndex: index,
                     totalPageCount: totalPageCount,
+                    documentId: widget.documentId,
                   ),
               ));
             },

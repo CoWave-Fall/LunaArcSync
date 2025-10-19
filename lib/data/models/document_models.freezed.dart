@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Document {
 
- String get documentId; String get title; List<String> get tags;@HighPrecisionDateTimeConverter() DateTime get createdAt;@HighPrecisionDateTimeConverter() DateTime get updatedAt; int get pageCount;
+ String get documentId; String get title; List<String> get tags;@UnixTimestampConverter() DateTime get createdAt;@UnixTimestampConverter() DateTime get updatedAt; int get pageCount; String? get ownerUserId; String? get thumbnailUrl;
 /// Create a copy of Document
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $DocumentCopyWith<Document> get copyWith => _$DocumentCopyWithImpl<Document>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Document&&(identical(other.documentId, documentId) || other.documentId == documentId)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.pageCount, pageCount) || other.pageCount == pageCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Document&&(identical(other.documentId, documentId) || other.documentId == documentId)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.pageCount, pageCount) || other.pageCount == pageCount)&&(identical(other.ownerUserId, ownerUserId) || other.ownerUserId == ownerUserId)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,documentId,title,const DeepCollectionEquality().hash(tags),createdAt,updatedAt,pageCount);
+int get hashCode => Object.hash(runtimeType,documentId,title,const DeepCollectionEquality().hash(tags),createdAt,updatedAt,pageCount,ownerUserId,thumbnailUrl);
 
 @override
 String toString() {
-  return 'Document(documentId: $documentId, title: $title, tags: $tags, createdAt: $createdAt, updatedAt: $updatedAt, pageCount: $pageCount)';
+  return 'Document(documentId: $documentId, title: $title, tags: $tags, createdAt: $createdAt, updatedAt: $updatedAt, pageCount: $pageCount, ownerUserId: $ownerUserId, thumbnailUrl: $thumbnailUrl)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $DocumentCopyWith<$Res>  {
   factory $DocumentCopyWith(Document value, $Res Function(Document) _then) = _$DocumentCopyWithImpl;
 @useResult
 $Res call({
- String documentId, String title, List<String> tags,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int pageCount
+ String documentId, String title, List<String> tags,@UnixTimestampConverter() DateTime createdAt,@UnixTimestampConverter() DateTime updatedAt, int pageCount, String? ownerUserId, String? thumbnailUrl
 });
 
 
@@ -62,7 +62,7 @@ class _$DocumentCopyWithImpl<$Res>
 
 /// Create a copy of Document
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? documentId = null,Object? title = null,Object? tags = null,Object? createdAt = null,Object? updatedAt = null,Object? pageCount = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? documentId = null,Object? title = null,Object? tags = null,Object? createdAt = null,Object? updatedAt = null,Object? pageCount = null,Object? ownerUserId = freezed,Object? thumbnailUrl = freezed,}) {
   return _then(_self.copyWith(
 documentId: null == documentId ? _self.documentId : documentId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -70,7 +70,9 @@ as String,tags: null == tags ? _self.tags : tags // ignore: cast_nullable_to_non
 as List<String>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,pageCount: null == pageCount ? _self.pageCount : pageCount // ignore: cast_nullable_to_non_nullable
-as int,
+as int,ownerUserId: freezed == ownerUserId ? _self.ownerUserId : ownerUserId // ignore: cast_nullable_to_non_nullable
+as String?,thumbnailUrl: freezed == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -155,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int pageCount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String documentId,  String title,  List<String> tags, @UnixTimestampConverter()  DateTime createdAt, @UnixTimestampConverter()  DateTime updatedAt,  int pageCount,  String? ownerUserId,  String? thumbnailUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Document() when $default != null:
-return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pageCount);case _:
+return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pageCount,_that.ownerUserId,_that.thumbnailUrl);case _:
   return orElse();
 
 }
@@ -176,10 +178,10 @@ return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.up
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int pageCount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String documentId,  String title,  List<String> tags, @UnixTimestampConverter()  DateTime createdAt, @UnixTimestampConverter()  DateTime updatedAt,  int pageCount,  String? ownerUserId,  String? thumbnailUrl)  $default,) {final _that = this;
 switch (_that) {
 case _Document():
-return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pageCount);case _:
+return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pageCount,_that.ownerUserId,_that.thumbnailUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +198,10 @@ return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.up
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  int pageCount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String documentId,  String title,  List<String> tags, @UnixTimestampConverter()  DateTime createdAt, @UnixTimestampConverter()  DateTime updatedAt,  int pageCount,  String? ownerUserId,  String? thumbnailUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _Document() when $default != null:
-return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pageCount);case _:
+return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pageCount,_that.ownerUserId,_that.thumbnailUrl);case _:
   return null;
 
 }
@@ -211,7 +213,7 @@ return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.up
 
 
 class _Document implements Document {
-  const _Document({required this.documentId, required this.title, final  List<String> tags = const [], @HighPrecisionDateTimeConverter() required this.createdAt, @HighPrecisionDateTimeConverter() required this.updatedAt, this.pageCount = 0}): _tags = tags;
+  const _Document({required this.documentId, required this.title, final  List<String> tags = const [], @UnixTimestampConverter() required this.createdAt, @UnixTimestampConverter() required this.updatedAt, this.pageCount = 0, this.ownerUserId, this.thumbnailUrl}): _tags = tags;
   
 
 @override final  String documentId;
@@ -223,9 +225,11 @@ class _Document implements Document {
   return EqualUnmodifiableListView(_tags);
 }
 
-@override@HighPrecisionDateTimeConverter() final  DateTime createdAt;
-@override@HighPrecisionDateTimeConverter() final  DateTime updatedAt;
+@override@UnixTimestampConverter() final  DateTime createdAt;
+@override@UnixTimestampConverter() final  DateTime updatedAt;
 @override@JsonKey() final  int pageCount;
+@override final  String? ownerUserId;
+@override final  String? thumbnailUrl;
 
 /// Create a copy of Document
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +241,16 @@ _$DocumentCopyWith<_Document> get copyWith => __$DocumentCopyWithImpl<_Document>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Document&&(identical(other.documentId, documentId) || other.documentId == documentId)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.pageCount, pageCount) || other.pageCount == pageCount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Document&&(identical(other.documentId, documentId) || other.documentId == documentId)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.pageCount, pageCount) || other.pageCount == pageCount)&&(identical(other.ownerUserId, ownerUserId) || other.ownerUserId == ownerUserId)&&(identical(other.thumbnailUrl, thumbnailUrl) || other.thumbnailUrl == thumbnailUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,documentId,title,const DeepCollectionEquality().hash(_tags),createdAt,updatedAt,pageCount);
+int get hashCode => Object.hash(runtimeType,documentId,title,const DeepCollectionEquality().hash(_tags),createdAt,updatedAt,pageCount,ownerUserId,thumbnailUrl);
 
 @override
 String toString() {
-  return 'Document(documentId: $documentId, title: $title, tags: $tags, createdAt: $createdAt, updatedAt: $updatedAt, pageCount: $pageCount)';
+  return 'Document(documentId: $documentId, title: $title, tags: $tags, createdAt: $createdAt, updatedAt: $updatedAt, pageCount: $pageCount, ownerUserId: $ownerUserId, thumbnailUrl: $thumbnailUrl)';
 }
 
 
@@ -257,7 +261,7 @@ abstract mixin class _$DocumentCopyWith<$Res> implements $DocumentCopyWith<$Res>
   factory _$DocumentCopyWith(_Document value, $Res Function(_Document) _then) = __$DocumentCopyWithImpl;
 @override @useResult
 $Res call({
- String documentId, String title, List<String> tags,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, int pageCount
+ String documentId, String title, List<String> tags,@UnixTimestampConverter() DateTime createdAt,@UnixTimestampConverter() DateTime updatedAt, int pageCount, String? ownerUserId, String? thumbnailUrl
 });
 
 
@@ -274,7 +278,7 @@ class __$DocumentCopyWithImpl<$Res>
 
 /// Create a copy of Document
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? documentId = null,Object? title = null,Object? tags = null,Object? createdAt = null,Object? updatedAt = null,Object? pageCount = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? documentId = null,Object? title = null,Object? tags = null,Object? createdAt = null,Object? updatedAt = null,Object? pageCount = null,Object? ownerUserId = freezed,Object? thumbnailUrl = freezed,}) {
   return _then(_Document(
 documentId: null == documentId ? _self.documentId : documentId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -282,7 +286,9 @@ as String,tags: null == tags ? _self._tags : tags // ignore: cast_nullable_to_no
 as List<String>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,pageCount: null == pageCount ? _self.pageCount : pageCount // ignore: cast_nullable_to_non_nullable
-as int,
+as int,ownerUserId: freezed == ownerUserId ? _self.ownerUserId : ownerUserId // ignore: cast_nullable_to_non_nullable
+as String?,thumbnailUrl: freezed == thumbnailUrl ? _self.thumbnailUrl : thumbnailUrl // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -292,7 +298,7 @@ as int,
 /// @nodoc
 mixin _$DocumentDetail {
 
- String get documentId; String get title; List<String> get tags;@HighPrecisionDateTimeConverter() DateTime get createdAt;@HighPrecisionDateTimeConverter() DateTime get updatedAt; List<Page> get pages;
+ String get documentId; String get title; List<String> get tags;@UnixTimestampConverter() DateTime get createdAt;@UnixTimestampConverter() DateTime get updatedAt; List<Page> get pages;
 /// Create a copy of DocumentDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -323,7 +329,7 @@ abstract mixin class $DocumentDetailCopyWith<$Res>  {
   factory $DocumentDetailCopyWith(DocumentDetail value, $Res Function(DocumentDetail) _then) = _$DocumentDetailCopyWithImpl;
 @useResult
 $Res call({
- String documentId, String title, List<String> tags,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, List<Page> pages
+ String documentId, String title, List<String> tags,@UnixTimestampConverter() DateTime createdAt,@UnixTimestampConverter() DateTime updatedAt, List<Page> pages
 });
 
 
@@ -433,7 +439,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  List<Page> pages)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String documentId,  String title,  List<String> tags, @UnixTimestampConverter()  DateTime createdAt, @UnixTimestampConverter()  DateTime updatedAt,  List<Page> pages)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DocumentDetail() when $default != null:
 return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pages);case _:
@@ -454,7 +460,7 @@ return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.up
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  List<Page> pages)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String documentId,  String title,  List<String> tags, @UnixTimestampConverter()  DateTime createdAt, @UnixTimestampConverter()  DateTime updatedAt,  List<Page> pages)  $default,) {final _that = this;
 switch (_that) {
 case _DocumentDetail():
 return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pages);case _:
@@ -474,7 +480,7 @@ return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.up
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String documentId,  String title,  List<String> tags, @HighPrecisionDateTimeConverter()  DateTime createdAt, @HighPrecisionDateTimeConverter()  DateTime updatedAt,  List<Page> pages)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String documentId,  String title,  List<String> tags, @UnixTimestampConverter()  DateTime createdAt, @UnixTimestampConverter()  DateTime updatedAt,  List<Page> pages)?  $default,) {final _that = this;
 switch (_that) {
 case _DocumentDetail() when $default != null:
 return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.updatedAt,_that.pages);case _:
@@ -489,7 +495,7 @@ return $default(_that.documentId,_that.title,_that.tags,_that.createdAt,_that.up
 
 
 class _DocumentDetail implements DocumentDetail {
-  const _DocumentDetail({required this.documentId, required this.title, final  List<String> tags = const [], @HighPrecisionDateTimeConverter() required this.createdAt, @HighPrecisionDateTimeConverter() required this.updatedAt, final  List<Page> pages = const []}): _tags = tags,_pages = pages;
+  const _DocumentDetail({required this.documentId, required this.title, final  List<String> tags = const [], @UnixTimestampConverter() required this.createdAt, @UnixTimestampConverter() required this.updatedAt, final  List<Page> pages = const []}): _tags = tags,_pages = pages;
   
 
 @override final  String documentId;
@@ -501,8 +507,8 @@ class _DocumentDetail implements DocumentDetail {
   return EqualUnmodifiableListView(_tags);
 }
 
-@override@HighPrecisionDateTimeConverter() final  DateTime createdAt;
-@override@HighPrecisionDateTimeConverter() final  DateTime updatedAt;
+@override@UnixTimestampConverter() final  DateTime createdAt;
+@override@UnixTimestampConverter() final  DateTime updatedAt;
  final  List<Page> _pages;
 @override@JsonKey() List<Page> get pages {
   if (_pages is EqualUnmodifiableListView) return _pages;
@@ -541,7 +547,7 @@ abstract mixin class _$DocumentDetailCopyWith<$Res> implements $DocumentDetailCo
   factory _$DocumentDetailCopyWith(_DocumentDetail value, $Res Function(_DocumentDetail) _then) = __$DocumentDetailCopyWithImpl;
 @override @useResult
 $Res call({
- String documentId, String title, List<String> tags,@HighPrecisionDateTimeConverter() DateTime createdAt,@HighPrecisionDateTimeConverter() DateTime updatedAt, List<Page> pages
+ String documentId, String title, List<String> tags,@UnixTimestampConverter() DateTime createdAt,@UnixTimestampConverter() DateTime updatedAt, List<Page> pages
 });
 
 

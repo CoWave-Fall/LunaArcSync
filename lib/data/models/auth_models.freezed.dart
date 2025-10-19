@@ -281,7 +281,7 @@ as String,
 /// @nodoc
 mixin _$LoginResponse {
 
- String get token; DateTime get expiration; String get userId; String get email;
+ String get token;@UnixTimestampConverter() DateTime get expiration; String get userId; String get username; String get nickname; String get email; String? get avatar; String? get bio; bool get isAdmin; String get role;
 /// Create a copy of LoginResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -294,16 +294,16 @@ $LoginResponseCopyWith<LoginResponse> get copyWith => _$LoginResponseCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginResponse&&(identical(other.token, token) || other.token == token)&&(identical(other.expiration, expiration) || other.expiration == expiration)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginResponse&&(identical(other.token, token) || other.token == token)&&(identical(other.expiration, expiration) || other.expiration == expiration)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.username, username) || other.username == username)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.email, email) || other.email == email)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.role, role) || other.role == role));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token,expiration,userId,email);
+int get hashCode => Object.hash(runtimeType,token,expiration,userId,username,nickname,email,avatar,bio,isAdmin,role);
 
 @override
 String toString() {
-  return 'LoginResponse(token: $token, expiration: $expiration, userId: $userId, email: $email)';
+  return 'LoginResponse(token: $token, expiration: $expiration, userId: $userId, username: $username, nickname: $nickname, email: $email, avatar: $avatar, bio: $bio, isAdmin: $isAdmin, role: $role)';
 }
 
 
@@ -314,7 +314,7 @@ abstract mixin class $LoginResponseCopyWith<$Res>  {
   factory $LoginResponseCopyWith(LoginResponse value, $Res Function(LoginResponse) _then) = _$LoginResponseCopyWithImpl;
 @useResult
 $Res call({
- String token, DateTime expiration, String userId, String email
+ String token,@UnixTimestampConverter() DateTime expiration, String userId, String username, String nickname, String email, String? avatar, String? bio, bool isAdmin, String role
 });
 
 
@@ -331,12 +331,18 @@ class _$LoginResponseCopyWithImpl<$Res>
 
 /// Create a copy of LoginResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? token = null,Object? expiration = null,Object? userId = null,Object? email = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? token = null,Object? expiration = null,Object? userId = null,Object? username = null,Object? nickname = null,Object? email = null,Object? avatar = freezed,Object? bio = freezed,Object? isAdmin = null,Object? role = null,}) {
   return _then(_self.copyWith(
 token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String,expiration: null == expiration ? _self.expiration : expiration // ignore: cast_nullable_to_non_nullable
 as DateTime,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
+as String,nickname: null == nickname ? _self.nickname : nickname // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
+as String?,bio: freezed == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
+as String?,isAdmin: null == isAdmin ? _self.isAdmin : isAdmin // ignore: cast_nullable_to_non_nullable
+as bool,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -422,10 +428,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String token,  DateTime expiration,  String userId,  String email)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String token, @UnixTimestampConverter()  DateTime expiration,  String userId,  String username,  String nickname,  String email,  String? avatar,  String? bio,  bool isAdmin,  String role)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoginResponse() when $default != null:
-return $default(_that.token,_that.expiration,_that.userId,_that.email);case _:
+return $default(_that.token,_that.expiration,_that.userId,_that.username,_that.nickname,_that.email,_that.avatar,_that.bio,_that.isAdmin,_that.role);case _:
   return orElse();
 
 }
@@ -443,10 +449,10 @@ return $default(_that.token,_that.expiration,_that.userId,_that.email);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String token,  DateTime expiration,  String userId,  String email)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String token, @UnixTimestampConverter()  DateTime expiration,  String userId,  String username,  String nickname,  String email,  String? avatar,  String? bio,  bool isAdmin,  String role)  $default,) {final _that = this;
 switch (_that) {
 case _LoginResponse():
-return $default(_that.token,_that.expiration,_that.userId,_that.email);case _:
+return $default(_that.token,_that.expiration,_that.userId,_that.username,_that.nickname,_that.email,_that.avatar,_that.bio,_that.isAdmin,_that.role);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -463,10 +469,10 @@ return $default(_that.token,_that.expiration,_that.userId,_that.email);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String token,  DateTime expiration,  String userId,  String email)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String token, @UnixTimestampConverter()  DateTime expiration,  String userId,  String username,  String nickname,  String email,  String? avatar,  String? bio,  bool isAdmin,  String role)?  $default,) {final _that = this;
 switch (_that) {
 case _LoginResponse() when $default != null:
-return $default(_that.token,_that.expiration,_that.userId,_that.email);case _:
+return $default(_that.token,_that.expiration,_that.userId,_that.username,_that.nickname,_that.email,_that.avatar,_that.bio,_that.isAdmin,_that.role);case _:
   return null;
 
 }
@@ -478,13 +484,19 @@ return $default(_that.token,_that.expiration,_that.userId,_that.email);case _:
 @JsonSerializable()
 
 class _LoginResponse implements LoginResponse {
-  const _LoginResponse({required this.token, required this.expiration, required this.userId, required this.email});
+  const _LoginResponse({required this.token, @UnixTimestampConverter() required this.expiration, required this.userId, required this.username, required this.nickname, required this.email, this.avatar, this.bio, required this.isAdmin, required this.role});
   factory _LoginResponse.fromJson(Map<String, dynamic> json) => _$LoginResponseFromJson(json);
 
 @override final  String token;
-@override final  DateTime expiration;
+@override@UnixTimestampConverter() final  DateTime expiration;
 @override final  String userId;
+@override final  String username;
+@override final  String nickname;
 @override final  String email;
+@override final  String? avatar;
+@override final  String? bio;
+@override final  bool isAdmin;
+@override final  String role;
 
 /// Create a copy of LoginResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -499,16 +511,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginResponse&&(identical(other.token, token) || other.token == token)&&(identical(other.expiration, expiration) || other.expiration == expiration)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginResponse&&(identical(other.token, token) || other.token == token)&&(identical(other.expiration, expiration) || other.expiration == expiration)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.username, username) || other.username == username)&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.email, email) || other.email == email)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin)&&(identical(other.role, role) || other.role == role));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token,expiration,userId,email);
+int get hashCode => Object.hash(runtimeType,token,expiration,userId,username,nickname,email,avatar,bio,isAdmin,role);
 
 @override
 String toString() {
-  return 'LoginResponse(token: $token, expiration: $expiration, userId: $userId, email: $email)';
+  return 'LoginResponse(token: $token, expiration: $expiration, userId: $userId, username: $username, nickname: $nickname, email: $email, avatar: $avatar, bio: $bio, isAdmin: $isAdmin, role: $role)';
 }
 
 
@@ -519,7 +531,7 @@ abstract mixin class _$LoginResponseCopyWith<$Res> implements $LoginResponseCopy
   factory _$LoginResponseCopyWith(_LoginResponse value, $Res Function(_LoginResponse) _then) = __$LoginResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String token, DateTime expiration, String userId, String email
+ String token,@UnixTimestampConverter() DateTime expiration, String userId, String username, String nickname, String email, String? avatar, String? bio, bool isAdmin, String role
 });
 
 
@@ -536,12 +548,18 @@ class __$LoginResponseCopyWithImpl<$Res>
 
 /// Create a copy of LoginResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? token = null,Object? expiration = null,Object? userId = null,Object? email = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? token = null,Object? expiration = null,Object? userId = null,Object? username = null,Object? nickname = null,Object? email = null,Object? avatar = freezed,Object? bio = freezed,Object? isAdmin = null,Object? role = null,}) {
   return _then(_LoginResponse(
 token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String,expiration: null == expiration ? _self.expiration : expiration // ignore: cast_nullable_to_non_nullable
 as DateTime,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
+as String,nickname: null == nickname ? _self.nickname : nickname // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,avatar: freezed == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
+as String?,bio: freezed == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
+as String?,isAdmin: null == isAdmin ? _self.isAdmin : isAdmin // ignore: cast_nullable_to_non_nullable
+as bool,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

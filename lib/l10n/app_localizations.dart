@@ -2227,6 +2227,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'data.json not found in the import archive.'**
   String get impErr002;
+
+  /// No description provided for @networkErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Network Error'**
+  String get networkErrorTitle;
+
+  /// No description provided for @networkErrorServerOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'Server is offline or unreachable\n\nSuggestions:\n1. Check network connection\n2. Try switching servers\n3. Retry later'**
+  String get networkErrorServerOffline;
+
+  /// No description provided for @networkErrorConnectionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to connect to server\n\nSuggestions:\n1. Check if server address is correct\n2. Check network connection\n3. Check firewall settings'**
+  String get networkErrorConnectionFailed;
+
+  /// No description provided for @networkErrorConnectionTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection timeout\n\nSuggestions:\n1. Check network speed\n2. Try switching to a more stable network\n3. Retry later'**
+  String get networkErrorConnectionTimeout;
+
+  /// No description provided for @networkErrorUnauthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication failed\n\nYour session has expired, please login again'**
+  String get networkErrorUnauthorized;
+
+  /// No description provided for @networkErrorForbidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Insufficient permissions\n\nYou don\'t have permission to access this resource'**
+  String get networkErrorForbidden;
+
+  /// No description provided for @networkErrorNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Resource not found\n\nThe requested resource was not found'**
+  String get networkErrorNotFound;
+
+  /// No description provided for @networkErrorServerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Server error\n\nThe server encountered an error, please try again later'**
+  String get networkErrorServerError;
+
+  /// No description provided for @networkErrorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Network error\n\nPlease check your connection and try again'**
+  String get networkErrorGeneric;
+
+  /// No description provided for @errorRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get errorRetry;
+
+  /// No description provided for @errorDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get errorDismiss;
+
+  /// No description provided for @errorDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Technical Details'**
+  String get errorDetails;
+
+  /// No description provided for @errorServerUnreachable.
+  ///
+  /// In en, this message translates to:
+  /// **'Server Unreachable'**
+  String get errorServerUnreachable;
+
+  /// No description provided for @errorAuthenticationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication Failed'**
+  String get errorAuthenticationFailed;
+
+  /// No description provided for @errorOccurredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'An Error Occurred'**
+  String get errorOccurredTitle;
 }
 
 class _AppLocalizationsDelegate

@@ -626,5 +626,20 @@
         }
     },
     "impErr001": "User ID must be provided for non-admin export.",
-    "impErr002": "data.json not found in the import archive."
+    "impErr002": "data.json not found in the import archive.",
+    "networkErrorTitle": "Network Error",
+    "networkErrorServerOffline": "Server is offline or unreachable\n\nSuggestions:\n1. Check network connection\n2. Try switching servers\n3. Retry later",
+    "networkErrorConnectionFailed": "Unable to connect to server\n\nSuggestions:\n1. Check if server address is correct\n2. Check network connection\n3. Check firewall settings",
+    "networkErrorConnectionTimeout": "Connection timeout\n\nSuggestions:\n1. Check network speed\n2. Try switching to a more stable network\n3. Retry later",
+    "networkErrorUnauthorized": "Authentication failed\n\nYour session has expired, please login again",
+    "networkErrorForbidden": "Insufficient permissions\n\nYou don't have permission to access this resource",
+    "networkErrorNotFound": "Resource not found\n\nThe requested resource was not found",
+    "networkErrorServerError": "Server error\n\nThe server encountered an error, please try again later",
+    "networkErrorGeneric": "Network error\n\nPlease check your connection and try again",
+    "errorRetry": "Retry",
+    "errorDismiss": "Dismiss",
+    "errorDetails": "Technical Details",
+    "errorServerUnreachable": "Server Unreachable",
+    "errorAuthenticationFailed": "Authentication Failed",
+    "errorOccurredTitle": "An Error Occurred"
 }

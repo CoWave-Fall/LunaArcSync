@@ -43,7 +43,6 @@ class JobsCubit extends Cubit<JobsState> {
 
     final newInterval = _getPollingInterval();
     if (newInterval != _pollingIntervalSeconds) {
-      debugPrint('🔍 JobsCubit: 调整轮询频率 - 状态: $_currentLifecycleState, 间隔: $newInterval秒');
       _pollingIntervalSeconds = newInterval;
       startPolling(); // 重新启动轮询
     }
@@ -77,12 +76,16 @@ class JobsCubit extends Cubit<JobsState> {
     // 检查是否已认证，如果未认证则停止轮询
     final isAuth = await _isAuthenticated();
     if (!isAuth) {
-      debugPrint('🔍 JobsCubit: 用户未认证，停止job刷新');
       stopPolling();
       return;
     }
     
     _isUpdating = true;
+    
+    // 输出简化的调试信息
+    final now = DateTime.now();
+    final timeStr = '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}:${now.second.toString().padLeft(2, '0')}';
+    debugPrint('任务列表刷新（$timeStr）');
     
     // 只有在强制更新或首次加载时才显示加载状态
     if ((forceUpdate || _lastKnownJobs.isEmpty) && !isClosed) {
@@ -185,7 +188,6 @@ class JobsCubit extends Cubit<JobsState> {
     // 检查认证状态，如果未认证则不开始轮询
     final isAuth = await _isAuthenticated();
     if (!isAuth) {
-      debugPrint('🔍 JobsCubit: 用户未认证，不开始job轮询');
       return;
     }
     

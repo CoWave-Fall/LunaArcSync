@@ -32,18 +32,25 @@ class ServerCacheService {
   }
 
   // 保存服务器信息到缓存
-  Future<void> cacheServerInfo(AboutResponse aboutResponse, {required String serverUrl}) async {
+  Future<void> cacheServerInfo(
+    AboutResponse aboutResponse, {
+    required String serverUrl,
+    String? username,
+    String? nickname,
+  }) async {
     final serverId = getServerId(aboutResponse, serverUrl);
     
     try {
       final prefs = await SharedPreferences.getInstance();
       final cacheKey = '$_serverCachePrefix$serverId';
       
-      // 创建包含服务器URL的完整信息
+      // 创建包含服务器URL和用户信息的完整信息
       final serverData = {
         'about': aboutResponse.toJson(),
         'serverUrl': serverUrl,
-        'cachedAt': DateTime.now().toIso8601String(),
+        'cachedAt': DateTime.now().millisecondsSinceEpoch,
+        if (username != null) 'username': username,
+        if (nickname != null) 'nickname': nickname,
       };
       
       final jsonString = jsonEncode(serverData);
@@ -54,7 +61,7 @@ class ServerCacheService {
       // 更新服务器列表
       await _updateServerList(serverId);
       
-      debugPrint('🔍 服务器缓存 - 已缓存服务器: $serverId (URL: $serverUrl, Name: ${aboutResponse.serverName})');
+      debugPrint('🔍 服务器缓存 - 已缓存服务器: $serverId (URL: $serverUrl, Name: ${aboutResponse.serverName}, User: $username)');
     } catch (e) {
       debugPrint('🔍 服务器缓存 - 缓存失败: $e');
     }
@@ -122,12 +129,19 @@ class ServerCacheService {
         final json = jsonDecode(jsonString) as Map<String, dynamic>;
         final aboutJson = json['about'] as Map<String, dynamic>;
         final serverUrl = json['serverUrl'] as String?;
-        final cachedAt = DateTime.parse(json['cachedAt'] as String);
+        final cachedAtTimestamp = json['cachedAt'];
+        final cachedAt = cachedAtTimestamp is int 
+            ? DateTime.fromMillisecondsSinceEpoch(cachedAtTimestamp)
+            : DateTime.parse(cachedAtTimestamp as String); // 兼容旧数据
+        final username = json['username'] as String?;
+        final nickname = json['nickname'] as String?;
         
         return CachedServerInfo(
           about: AboutResponse.fromJson(aboutJson),
           serverUrl: serverUrl,
           cachedAt: cachedAt,
+          username: username,
+          nickname: nickname,
         );
       }
     } catch (e) {
@@ -279,14 +293,19 @@ class ServerInfo {
   Map<String, dynamic> toJson() {
     return {
       'serverId': serverId,
-      'lastAccessed': lastAccessed.toIso8601String(),
+      'lastAccessed': lastAccessed.millisecondsSinceEpoch,
     };
   }
 
   factory ServerInfo.fromJson(Map<String, dynamic> json) {
+    final lastAccessedValue = json['lastAccessed'];
+    final lastAccessed = lastAccessedValue is int 
+        ? DateTime.fromMillisecondsSinceEpoch(lastAccessedValue)
+        : DateTime.parse(lastAccessedValue as String); // 兼容旧数据
+    
     return ServerInfo(
       serverId: json['serverId'] as String,
-      lastAccessed: DateTime.parse(json['lastAccessed'] as String),
+      lastAccessed: lastAccessed,
     );
   }
 }
@@ -296,10 +315,14 @@ class CachedServerInfo {
   final AboutResponse about;
   final String? serverUrl;
   final DateTime cachedAt;
+  final String? username;  // 用户名
+  final String? nickname;  // 昵称
 
   CachedServerInfo({
     required this.about,
     this.serverUrl,
     required this.cachedAt,
+    this.username,
+    this.nickname,
   });
 }

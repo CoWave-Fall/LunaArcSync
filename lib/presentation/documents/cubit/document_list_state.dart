@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:luna_arc_sync/data/models/document_models.dart';
+import 'package:luna_arc_sync/data/models/user_models.dart';
 
 part 'document_list_state.freezed.dart';
 
@@ -42,6 +43,13 @@ abstract class DocumentListState with _$DocumentListState {
     @Default(null) String? tagsError,
     
     // --- END: NEW SORTING AND FILTERING STATE ---
+
+    // --- START: USER INFO CACHE FOR ADMIN ---
+    
+    // 用户信息缓存（userId -> UserDto）
+    @Default({}) Map<String, UserDto> userInfoCache,
+    
+    // --- END: USER INFO CACHE FOR ADMIN ---
 
   }) = _DocumentListState;
 }

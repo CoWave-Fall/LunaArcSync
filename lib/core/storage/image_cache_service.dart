@@ -8,14 +8,24 @@ import 'package:dio/dio.dart';
 
 class ImageCacheService {
   static const String _cacheDirName = 'image_cache';
-  late Directory _cacheDir;
+  Directory? _cacheDir;
   final Dio _dio = Dio();
 
   Future<void> init() async {
-    final appDir = await getApplicationDocumentsDirectory();
-    _cacheDir = Directory('${appDir.path}/$_cacheDirName');
-    if (!await _cacheDir.exists()) {
-      await _cacheDir.create(recursive: true);
+    // Web平台不支持文件系统操作，跳过初始化
+    if (kIsWeb) {
+      return;
+    }
+    
+    try {
+      final appDir = await getApplicationDocumentsDirectory();
+      _cacheDir = Directory('${appDir.path}/$_cacheDirName');
+      if (!await _cacheDir!.exists()) {
+        await _cacheDir!.create(recursive: true);
+      }
+    } catch (e) {
+      debugPrint('🔍 初始化缓存目录失败: $e');
+      _cacheDir = null;
     }
   }
 
@@ -27,10 +37,15 @@ class ImageCacheService {
 
   String _getCachePath(String url) {
     final key = _getCacheKey(url);
-    return '${_cacheDir.path}/$key';
+    return '${_cacheDir?.path}/$key';
   }
 
   Future<File?> getCachedImage(String url) async {
+    // Web平台不支持文件缓存
+    if (kIsWeb || _cacheDir == null) {
+      return null;
+    }
+    
     try {
       await init();
       final cachePath = _getCachePath(url);
@@ -45,6 +60,11 @@ class ImageCacheService {
   }
 
   Future<File?> cacheImage(String url) async {
+    // Web平台不支持文件缓存
+    if (kIsWeb || _cacheDir == null) {
+      return null;
+    }
+    
     try {
       await init();
       final cachePath = _getCachePath(url);
@@ -74,11 +94,16 @@ class ImageCacheService {
   }
 
   Future<void> clearCache() async {
+    // Web平台不支持文件缓存
+    if (kIsWeb || _cacheDir == null) {
+      return;
+    }
+    
     try {
       await init();
-      if (await _cacheDir.exists()) {
-        await _cacheDir.delete(recursive: true);
-        await _cacheDir.create(recursive: true);
+      if (await _cacheDir!.exists()) {
+        await _cacheDir!.delete(recursive: true);
+        await _cacheDir!.create(recursive: true);
         debugPrint('🔍 图片缓存已清空');
       }
     } catch (e) {
@@ -87,11 +112,16 @@ class ImageCacheService {
   }
 
   Future<int> getCacheSize() async {
+    // Web平台不支持文件缓存
+    if (kIsWeb || _cacheDir == null) {
+      return 0;
+    }
+    
     try {
       await init();
-      if (await _cacheDir.exists()) {
+      if (await _cacheDir!.exists()) {
         int totalSize = 0;
-        await for (final entity in _cacheDir.list(recursive: true)) {
+        await for (final entity in _cacheDir!.list(recursive: true)) {
           if (entity is File) {
             totalSize += await entity.length();
           }

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:luna_arc_sync/core/api/json_converters.dart';
 
 part 'auth_models.freezed.dart';
 part 'auth_models.g.dart';
@@ -20,9 +21,16 @@ abstract class LoginRequest with _$LoginRequest {
 abstract class LoginResponse with _$LoginResponse {
   const factory LoginResponse({
     required String token,
+    @UnixTimestampConverter()
     required DateTime expiration,
     required String userId,
+    required String username,
+    required String nickname,
     required String email,
+    String? avatar,
+    String? bio,
+    required bool isAdmin,
+    required String role,
   }) = _LoginResponse;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) =>

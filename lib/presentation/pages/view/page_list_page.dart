@@ -1,11 +1,15 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:luna_arc_sync/core/di/injection.dart';
 import 'package:luna_arc_sync/presentation/pages/cubit/page_list_cubit.dart';
 import 'package:luna_arc_sync/presentation/pages/cubit/page_list_state.dart';
 import 'package:luna_arc_sync/presentation/pages/view/page_detail_page_with_pageview.dart';
 import 'package:luna_arc_sync/presentation/pages/widgets/page_list_item.dart';
+import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
+import 'package:luna_arc_sync/presentation/widgets/optimized_glassmorphic_list.dart';
+import 'package:luna_arc_sync/core/config/glassmorphic_presets.dart';
 
 // PageListPage 现在是一个更简单的容器，只负责提供 Bloc
 class PageListPage extends StatelessWidget {
@@ -185,38 +189,78 @@ class _PageListViewState extends State<PageListView> {
               if (state.pages.isEmpty) {
                 return const Center(child: Text('No pages found. Add one!'));
               }
+              
+              // 检查是否有自定义背景
+              final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
+              
               return RefreshIndicator(
                 onRefresh: () => context.read<PageListCubit>().fetchPages(),
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: state.pages.length,
-                  itemBuilder: (context, index) {
-                    final page = state.pages[index];
-                    return PageListItem(
-                      page: page,
-                      onTap: () {
-                        // 提取所有页面ID
-                        final pageIds = state.pages.map((p) => p.pageId).toList();
-                        Navigator.of(context).push<bool>( // 接收返回值
-                          MaterialPageRoute(
-                            builder: (_) => PageDetailPageWithPageView(
-                              pageId: page.pageId,
-                              pageIds: pageIds,
-                              currentIndex: index,
-                            ),
-                          ),
-                        ).then((result) {
-                           // 从详情页返回后，无论是否有变动，都刷新一下列表
-                           // 这是一个简单而可靠的策略
-                           if (mounted) {
-                             // ignore: use_build_context_synchronously
-                             context.read<PageListCubit>().fetchPages();
-                           }
-                        });
-                      },
-                    );
-                  },
-                ),
+                child: hasCustomBackground
+                    // 使用优化的毛玻璃列表（共享渲染）
+                    ? OptimizedGlassmorphicListBuilder(
+                        blurGroup: 'page_list',
+                        blur: GlassmorphicPresets.pageListBlur,
+                        opacity: GlassmorphicPresets.pageListOpacity,
+                        controller: _scrollController,
+                        itemCount: state.pages.length,
+                        itemBuilder: (context, index) {
+                          final page = state.pages[index];
+                          return PageListItem(
+                            page: page,
+                            onTap: () {
+                              // 提取所有页面ID
+                              final pageIds = state.pages.map((p) => p.pageId).toList();
+                              Navigator.of(context).push<bool>( // 接收返回值
+                                MaterialPageRoute(
+                                  builder: (_) => PageDetailPageWithPageView(
+                                    pageId: page.pageId,
+                                    pageIds: pageIds,
+                                    currentIndex: index,
+                                  ),
+                                ),
+                              ).then((result) {
+                                 // 从详情页返回后，无论是否有变动，都刷新一下列表
+                                 // 这是一个简单而可靠的策略
+                                 if (mounted) {
+                                   // ignore: use_build_context_synchronously
+                                   context.read<PageListCubit>().fetchPages();
+                                 }
+                              });
+                            },
+                          );
+                        },
+                      )
+                    // 普通列表（无背景时）
+                    : ListView.builder(
+                        controller: _scrollController,
+                        itemCount: state.pages.length,
+                        itemBuilder: (context, index) {
+                          final page = state.pages[index];
+                          return PageListItem(
+                            page: page,
+                            onTap: () {
+                              // 提取所有页面ID
+                              final pageIds = state.pages.map((p) => p.pageId).toList();
+                              Navigator.of(context).push<bool>( // 接收返回值
+                                MaterialPageRoute(
+                                  builder: (_) => PageDetailPageWithPageView(
+                                    pageId: page.pageId,
+                                    pageIds: pageIds,
+                                    currentIndex: index,
+                                  ),
+                                ),
+                              ).then((result) {
+                                 // 从详情页返回后，无论是否有变动，都刷新一下列表
+                                 // 这是一个简单而可靠的策略
+                                 if (mounted) {
+                                   // ignore: use_build_context_synchronously
+                                   context.read<PageListCubit>().fetchPages();
+                                 }
+                              });
+                            },
+                          );
+                        },
+                      ),
               );
           }
         },

@@ -13,10 +13,17 @@ import 'package:luna_arc_sync/presentation/auth/cubit/auth_cubit.dart';
 import 'package:luna_arc_sync/presentation/auth/cubit/auth_state.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:luna_arc_sync/core/animations/animated_page_content.dart';
-import 'package:provider/provider.dart';
 import 'package:luna_arc_sync/core/theme/background_image_notifier.dart';
-import 'package:luna_arc_sync/presentation/widgets/glassmorphic_container.dart';
+import 'package:luna_arc_sync/presentation/widgets/optimized_glassmorphic_container.dart';
+import 'package:luna_arc_sync/core/theme/glassmorphic_performance_notifier.dart';
 import 'package:luna_arc_sync/core/theme/no_overscroll_behavior.dart';
+import 'package:luna_arc_sync/core/cache/glassmorphic_cache.dart';
+import 'package:luna_arc_sync/core/config/glassmorphic_presets.dart';
+import 'package:provider/provider.dart';
+
+import 'package:luna_arc_sync/data/repositories/user_repository.dart';
+import 'package:luna_arc_sync/presentation/user/cubit/user_cubit.dart';
+import 'package:luna_arc_sync/presentation/user/cubit/user_state.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
@@ -45,6 +52,11 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
       parent: _animationController,
       curve: Curves.easeInOutCubic,
     ));
+    
+    // 加载用户信息
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<UserCubit>().getCurrentUserProfile();
+    });
   }
 
   @override
@@ -236,12 +248,9 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
   Widget _buildServerInfoCard(BuildContext context, AboutResponse about) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
     
-    return GlassmorphicCard(
-      blur: 15.0,
-      opacity: 0.2,
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
+    final cardContent = Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -321,19 +330,49 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
               isLink: true,
             ),
           ],
-        ),
+        );
+
+    // 如果有自定义背景，使用优化的毛玻璃卡片
+    if (hasCustomBackground) {
+      return Consumer<GlassmorphicPerformanceNotifier>(
+        builder: (context, performanceNotifier, child) {
+          final config = performanceNotifier.config;
+          // 使用关于页面卡片预设（最强的毛玻璃效果）
+          final blur = config.getActualBlur(GlassmorphicPresets.aboutCardBlur);
+          final opacity = config.getActualOpacity(GlassmorphicPresets.aboutCardOpacity);
+          
+          return OptimizedGlassmorphicCard(
+            blur: blur,
+            opacity: opacity,
+            padding: const EdgeInsets.all(20.0),
+            useSharedBlur: false,  // 使用独立模糊，因为没有父组件提供共享模糊
+            blurGroup: 'about',
+            blurMethod: config.blurMethod,
+            kawaseConfig: config.blurMethod == BlurMethod.kawase ? config.getKawaseConfig() : null,
+            child: cardContent,
+          );
+        },
       );
+    }
+    
+    // 否则使用普通卡片
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: cardContent,
+      ),
+    );
   }
 
   Widget _buildUserAccountCard(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
     
-    return GlassmorphicCard(
-      blur: 15.0,
-      opacity: 0.2,
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
+    final cardContent = BlocBuilder<UserCubit, UserState>(
+      builder: (context, userState) {
+        return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -349,7 +388,7 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                   builder: (context, state) {
                     return state.when(
                       initial: () => const SizedBox.shrink(),
-                      authenticated: (userId) => IconButton(
+                      authenticated: (userId, isAdmin, role) => IconButton(
                         icon: const Icon(Icons.logout),
                         tooltip: l10n.logoutButtonTooltip,
                         onPressed: () {
@@ -372,22 +411,111 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                     l10n.aboutLoginStatus,
                     l10n.aboutChecking,
                   ),
-                  authenticated: (userId) => Column(
-                    children: [
-                      _buildInfoRow(
-                        context,
-                        Icons.person,
-                        l10n.aboutLoginStatus,
-                        l10n.aboutLoggedIn,
-                      ),
-                      const SizedBox(height: 12),
-                      _buildInfoRow(
-                        context,
-                        Icons.badge,
-                        l10n.aboutUserId,
-                        userId,
-                      ),
-                    ],
+                  authenticated: (userId, isAdmin, role) => userState.maybeWhen(
+                    currentUserLoaded: (user) => Column(
+                      children: [
+                        // 用户头像和昵称
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 30,
+                              backgroundColor: theme.colorScheme.surfaceVariant,
+                              child: user.avatar != null && user.avatar!.isNotEmpty
+                                  ? ClipOval(
+                                      child: Image.network(
+                                        _getAvatarUrl(user.avatar!, userId),
+                                        width: 60,
+                                        height: 60,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Icon(
+                                            Icons.person,
+                                            size: 30,
+                                            color: theme.colorScheme.primary,
+                                          );
+                                        },
+                                      ),
+                                    )
+                                  : Icon(
+                                      Icons.person,
+                                      size: 30,
+                                      color: theme.colorScheme.primary,
+                                    ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    user.nickname.isNotEmpty ? user.nickname : user.username,
+                                    style: theme.textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    user.email,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        _buildInfoRow(
+                          context,
+                          Icons.person,
+                          l10n.aboutLoginStatus,
+                          l10n.aboutLoggedIn,
+                        ),
+                        const SizedBox(height: 12),
+                        _buildInfoRow(
+                          context,
+                          Icons.badge,
+                          l10n.aboutUserId,
+                          userId,
+                        ),
+                        if (isAdmin) ...[
+                          const SizedBox(height: 12),
+                          _buildInfoRow(
+                            context,
+                            Icons.admin_panel_settings,
+                            '管理员',
+                            '是',
+                          ),
+                        ],
+                      ],
+                    ),
+                    orElse: () => Column(
+                      children: [
+                        _buildInfoRow(
+                          context,
+                          Icons.person,
+                          l10n.aboutLoginStatus,
+                          l10n.aboutLoggedIn,
+                        ),
+                        const SizedBox(height: 12),
+                        _buildInfoRow(
+                          context,
+                          Icons.badge,
+                          l10n.aboutUserId,
+                          userId,
+                        ),
+                        if (isAdmin) ...[
+                          const SizedBox(height: 12),
+                          _buildInfoRow(
+                            context,
+                            Icons.admin_panel_settings,
+                            '管理员',
+                            '是',
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
                   unauthenticated: (isLoading, error) => _buildInfoRow(
                     context,
@@ -395,26 +523,55 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
                     l10n.aboutLoginStatus,
                     l10n.aboutNotLoggedIn,
                   ),
-                );
+                );  
               },
             ),
           ],
-        ),
+        );
+      },
+    );
+
+    // 如果有自定义背景，使用优化的毛玻璃卡片
+    if (hasCustomBackground) {
+      return Consumer<GlassmorphicPerformanceNotifier>(
+        builder: (context, performanceNotifier, child) {
+          final config = performanceNotifier.config;
+          // 使用关于页面卡片预设（最强的毛玻璃效果）
+          final blur = config.getActualBlur(GlassmorphicPresets.aboutCardBlur);
+          final opacity = config.getActualOpacity(GlassmorphicPresets.aboutCardOpacity);
+          
+          return OptimizedGlassmorphicCard(
+            blur: blur,
+            opacity: opacity,
+            padding: const EdgeInsets.all(20.0),
+            useSharedBlur: false,  // 使用独立模糊，因为没有父组件提供共享模糊
+            blurGroup: 'about',
+            blurMethod: config.blurMethod,
+            kawaseConfig: config.blurMethod == BlurMethod.kawase ? config.getKawaseConfig() : null,
+            child: cardContent,
+          );
+        },
       );
+    }
     
+    // 否则使用普通卡片
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: cardContent,
+      ),
+    );
   }
 
-  Widget _buildClientInfoCard(BuildContext context, AboutResponse about) {
+Widget _buildClientInfoCard(BuildContext context, AboutResponse about) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final hasCustomBackground = context.watch<BackgroundImageNotifier>().hasCustomBackground;
     
-    return GlassmorphicCard(
-      blur: 15.0,
-      opacity: 0.2,
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+    final cardContent = Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Text(
               l10n.aboutClientInfo,
               style: theme.textTheme.titleLarge?.copyWith(
@@ -493,9 +650,39 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
               },
             ),
           ],
-        ),
+        );
+
+    // 如果有自定义背景，使用优化的毛玻璃卡片
+    if (hasCustomBackground) {
+      return Consumer<GlassmorphicPerformanceNotifier>(
+        builder: (context, performanceNotifier, child) {
+          final config = performanceNotifier.config;
+          // 使用关于页面卡片预设（最强的毛玻璃效果）
+          final blur = config.getActualBlur(GlassmorphicPresets.aboutCardBlur);
+          final opacity = config.getActualOpacity(GlassmorphicPresets.aboutCardOpacity);
+          
+          return OptimizedGlassmorphicCard(
+            blur: blur,
+            opacity: opacity,
+            padding: const EdgeInsets.all(20.0),
+            useSharedBlur: false,  // 使用独立模糊，因为没有父组件提供共享模糊
+            blurGroup: 'about',
+            blurMethod: config.blurMethod,
+            kawaseConfig: config.blurMethod == BlurMethod.kawase ? config.getKawaseConfig() : null,
+            child: cardContent,
+          );
+        },
       );
+    }
     
+    // 否则使用普通卡片
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: cardContent,
+      ),
+    );
   }
 
   Future<Map<String, String>> _getDeviceInfo() async {
@@ -649,5 +836,15 @@ class _AboutPageState extends State<AboutPage> with TickerProviderStateMixin {
         ),
       ],
     );
+  }
+  
+  String _getAvatarUrl(String avatar, String userId) {
+    // 如果是完整URL，直接返回
+    if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
+      return avatar;
+    }
+    // 否则使用repository的方法构建URL
+    final userRepository = getIt<IUserRepository>();
+    return userRepository.getAvatarUrl(userId);
   }
 }

@@ -42,13 +42,18 @@ dependencies:
   image_cropper_platform_interface: ^8.0.0
   flutter_inappwebview: ^6.1.5 # WebView for PDF.js rendering (Apache 2.0 license)
   pdfx: ^2.7.0 # High quality PDF rendering (MIT license)
-  pdfrx: ^1.0.88 # Modern PDF rendering with advanced features (MIT license)
+  pdfrx: ^2.2.0 # Modern PDF rendering with advanced features (MIT license)
   path: ^1.9.0
   bloc: ^9.0.1
   device_info_plus: ^12.1.0
   package_info_plus: ^9.0.0
   flutter_svg: ^2.0.10+1
   url_launcher: ^6.3.1
+  connectivity_plus: ^6.1.2
+  http: ^1.2.2              # For network scanner HTTP communication
+  xml: ^6.5.0               # Parse eSCL/IPP XML responses
+  network_info_plus: ^6.0.0 # Network scanner discovery
+  multicast_dns: ^0.3.2+8   # mDNS service discovery
 
 dev_dependencies:
   flutter_test:

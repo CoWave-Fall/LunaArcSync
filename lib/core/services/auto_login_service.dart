@@ -129,6 +129,26 @@ class AutoLoginService {
     }
   }
 
+  /// 获取存储的角色信息
+  Future<String?> getStoredRole() async {
+    try {
+      return await _storageService.getUserRole();
+    } catch (e) {
+      debugPrint('🔐 AutoLoginService: Error getting stored role - $e');
+      return null;
+    }
+  }
+
+  /// 获取存储的管理员状态
+  Future<bool?> getStoredIsAdmin() async {
+    try {
+      return await _storageService.getIsAdmin();
+    } catch (e) {
+      debugPrint('🔐 AutoLoginService: Error getting stored isAdmin - $e');
+      return null;
+    }
+  }
+
   /// 完全登出（清除所有数据）
   Future<void> fullLogout() async {
     try {

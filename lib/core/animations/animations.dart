@@ -10,6 +10,7 @@
 /// ```dart
 /// import 'package:luna_arc_sync/core/animations/animations.dart';
 /// ```
+library;
 
 export 'page_transitions.dart';
 export 'animated_list_item.dart';

@@ -20,13 +20,9 @@ _Job _$JobFromJson(Map<String, dynamic> json) => _Job(
   type: json['type'] as String,
   status: json['status'] as String,
   associatedPageId: json['associatedPageId'] as String?,
-  submittedAt: DateTime.parse(json['submittedAt'] as String),
-  startedAt: json['startedAt'] == null
-      ? null
-      : DateTime.parse(json['startedAt'] as String),
-  completedAt: json['completedAt'] == null
-      ? null
-      : DateTime.parse(json['completedAt'] as String),
+  submittedAt: const UnixTimestampConverter().fromJson(json['submittedAt']),
+  startedAt: const UnixTimestampConverter().fromJson(json['startedAt']),
+  completedAt: const UnixTimestampConverter().fromJson(json['completedAt']),
   errorMessage: json['errorMessage'] as String?,
   resultUrl: json['resultUrl'] as String?,
 );
@@ -36,9 +32,20 @@ Map<String, dynamic> _$JobToJson(_Job instance) => <String, dynamic>{
   'type': instance.type,
   'status': instance.status,
   'associatedPageId': instance.associatedPageId,
-  'submittedAt': instance.submittedAt.toIso8601String(),
-  'startedAt': instance.startedAt?.toIso8601String(),
-  'completedAt': instance.completedAt?.toIso8601String(),
+  'submittedAt': const UnixTimestampConverter().toJson(instance.submittedAt),
+  'startedAt': _$JsonConverterToJson<dynamic, DateTime>(
+    instance.startedAt,
+    const UnixTimestampConverter().toJson,
+  ),
+  'completedAt': _$JsonConverterToJson<dynamic, DateTime>(
+    instance.completedAt,
+    const UnixTimestampConverter().toJson,
+  ),
   'errorMessage': instance.errorMessage,
   'resultUrl': instance.resultUrl,
 };
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) => value == null ? null : toJson(value);

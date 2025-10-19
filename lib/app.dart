@@ -22,9 +22,13 @@ import 'package:luna_arc_sync/presentation/documents/view/document_list_page.dar
 import 'package:luna_arc_sync/presentation/settings/view/settings_page.dart';
 import 'package:luna_arc_sync/presentation/settings/notifiers/grid_settings_notifier.dart';
 import 'package:luna_arc_sync/presentation/settings/notifiers/precaching_settings_notifier.dart';
+import 'package:luna_arc_sync/core/theme/glassmorphic_performance_notifier.dart';
 import 'package:luna_arc_sync/presentation/search/view/search_page.dart';
 import 'package:luna_arc_sync/presentation/jobs/view/jobs_page.dart';
 import 'package:luna_arc_sync/presentation/jobs/cubit/jobs_cubit.dart';
+import 'package:luna_arc_sync/presentation/user/cubit/user_cubit.dart';
+import 'package:luna_arc_sync/presentation/user/view/user_profile_page.dart';
+import 'package:luna_arc_sync/presentation/user/view/admin_users_page.dart';
 import 'package:luna_arc_sync/presentation/pages/svg_animation_demo_page.dart';
 import 'package:luna_arc_sync/presentation/pages/simple_animation_example_page.dart';
 import 'package:luna_arc_sync/core/animations/page_transitions.dart';
@@ -40,6 +44,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider.value(
           value: getIt<JobsCubit>(),
+        ),
+        BlocProvider.value(
+          value: getIt<UserCubit>(),
         ),
         ChangeNotifierProvider(
           create: (_) => LocaleNotifier(),
@@ -61,6 +68,9 @@ class App extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => getIt<PrecachingSettingsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => getIt<GlassmorphicPerformanceNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => FullscreenNotifier(),
@@ -138,6 +148,22 @@ class AppView extends StatelessWidget {
                     ),
                 ),
                 GoRoute(
+                  path: '/user',
+                  pageBuilder: (BuildContext context, GoRouterState state) => 
+                    CustomPageTransition.fade(
+                      child: const UserProfilePage(),
+                      state: state,
+                    ),
+                ),
+                GoRoute(
+                  path: '/admin/users',
+                  pageBuilder: (BuildContext context, GoRouterState state) => 
+                    CustomPageTransition.fade(
+                      child: const AdminUsersPage(),
+                      state: state,
+                    ),
+                ),
+                GoRoute(
                   path: '/svg-animation-demo',
                   pageBuilder: (BuildContext context, GoRouterState state) => 
                     CustomPageTransition.fade(
@@ -162,7 +188,7 @@ class AppView extends StatelessWidget {
             final location = state.matchedLocation;
 
             // 明确计算登录状态
-            final isLoggedIn = authState.maybeWhen(authenticated: (_) => true, orElse: () => false);
+            final isLoggedIn = authState.maybeWhen(authenticated: (_, _, _) => true, orElse: () => false);
             final isLoggingIn = location == '/login';
 
             // 核心规则 1：未登录用户只能访问 /login 页面

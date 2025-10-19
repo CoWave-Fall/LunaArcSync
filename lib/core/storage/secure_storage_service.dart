@@ -11,6 +11,8 @@ class SecureStorageService {
   static const _serverUrlKey = 'server_url';
   static const _emailKey = 'user_email';
   static const _passwordKey = 'user_password';
+  static const _userRoleKey = 'user_role';
+  static const _isAdminKey = 'is_admin';
 
   Future<void> saveToken(String token) async {
     await _storage.write(key: _tokenKey, value: token);
@@ -33,7 +35,7 @@ class SecureStorageService {
   }
 
   Future<void> saveExpiration(DateTime expiration) async {
-    await _storage.write(key: _expirationKey, value: expiration.toIso8601String());
+    await _storage.write(key: _expirationKey, value: expiration.millisecondsSinceEpoch.toString());
   }
 
   Future<DateTime?> getExpiration() async {
@@ -41,6 +43,11 @@ class SecureStorageService {
     if (expirationString == null) {
       return null;
     }
+    final timestamp = int.tryParse(expirationString);
+    if (timestamp != null) {
+      return DateTime.fromMillisecondsSinceEpoch(timestamp);
+    }
+    // 兼容旧的 ISO8601 格式
     return DateTime.tryParse(expirationString);
   }
 
@@ -88,6 +95,34 @@ class SecureStorageService {
     await _storage.delete(key: _userIdKey);
   }
 
+  Future<void> saveUserRole(String role) async {
+    await _storage.write(key: _userRoleKey, value: role);
+  }
+
+  Future<String?> getUserRole() async {
+    return await _storage.read(key: _userRoleKey);
+  }
+
+  Future<void> deleteUserRole() async {
+    await _storage.delete(key: _userRoleKey);
+  }
+
+  Future<void> saveIsAdmin(bool isAdmin) async {
+    await _storage.write(key: _isAdminKey, value: isAdmin.toString());
+  }
+
+  Future<bool?> getIsAdmin() async {
+    final isAdminString = await _storage.read(key: _isAdminKey);
+    if (isAdminString == null) {
+      return null;
+    }
+    return isAdminString.toLowerCase() == 'true';
+  }
+
+  Future<void> deleteIsAdmin() async {
+    await _storage.delete(key: _isAdminKey);
+  }
+
   /// 清除所有认证相关的数据
   Future<void> clearAllAuthData() async {
     await Future.wait([
@@ -96,6 +131,8 @@ class SecureStorageService {
       deleteExpiration(),
       deleteEmail(),
       deletePassword(),
+      deleteUserRole(),
+      deleteIsAdmin(),
     ]);
   }
 
